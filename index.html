@@ -796,14 +796,8 @@ function getError(error) {
 // CREATE GAME
 // ======================================
 
-async function createGame() {    try {      const maxTickets = Number(       document.getElementById("maxTickets").value     );      const winnersPerPrize = Number(       document.getElementById("winnersPerPrize").value     );      const winningMode = document.getElementById(       "winningMode"     ).value;      const claimWindow = Number(       document.getElementById("claimWindow").value     );      const customRules =       winningMode === "custom"         ? getCustomPrizeRules()         : {};      const {data,error} = await db.rpc(       "create_game_v2",       {         p_max_tickets: maxTickets,          p_winners_per_prize: winnersPerPrize,          p_winning_mode: winningMode,          p_claim_window_seconds: claimWindow,          p_custom_prize_rules: customRules       }     );      if(error) throw error;      if(realtimeChannel) {       await db.removeChannel(realtimeChannel);       realtimeChannel = null;     }      if(refreshTimer) {       clearInterval(refreshTimer);       refreshTimer = null;     }      initialWinnersLoaded = false;     lastWinnerIds.clear();     notifiedClaims.clear();      winners = [];     players = [];     tickets = [];      hostToken = data.host_token;      playerToken = null;     player = null;      game = {       id: data.game_id,       code: data.code,       called: [],       status: "lobby",       locked: false,       winning_mode: winningMode,       claim_window_seconds: claimWindow     };      saveSession();      show("adminPanel");      await refreshGame();      subscribeToGame();      startRefreshing();      alert(       "🎉 Game Created Successfully!
-
-" +       "Room Code: " + game.code + "
-" +       "Winning Mode: " + winningMode + "
-" +       "Claim Timer: " +       (claimWindow === 0         ? "Unlimited"         : claimWindow + " seconds")     );    } catch(error) {      getError(error);    }  }
-
+async function createGame() {
   try {
-
     const maxTickets = Number(
       document.getElementById("maxTickets").value
     );
@@ -812,18 +806,50 @@ async function createGame() {    try {      const maxTickets = Number(       doc
       document.getElementById("winnersPerPrize").value
     );
 
-    const {data,error} = await db.rpc(
-      "create_game",
+    const winningMode =
+      document.getElementById("winningMode").value;
+
+    const claimWindow = Number(
+      document.getElementById("claimWindow").value
+    );
+
+    const customRules =
+      winningMode === "custom"
+        ? getCustomPrizeRules()
+        : {};
+
+    const { data, error } = await db.rpc(
+      "create_game_v2",
       {
         p_max_tickets: maxTickets,
-        p_winners_per_prize: winnersPerPrize
+        p_winners_per_prize: winnersPerPrize,
+        p_winning_mode: winningMode,
+        p_claim_window_seconds: claimWindow,
+        p_custom_prize_rules: customRules
       }
     );
 
-    if(error) throw error;
+    if (error) throw error;
+
+    if (realtimeChannel) {
+      await db.removeChannel(realtimeChannel);
+      realtimeChannel = null;
+    }
+
+    if (refreshTimer) {
+      clearInterval(refreshTimer);
+      refreshTimer = null;
+    }
+
+    initialWinnersLoaded = false;
+    lastWinnerIds.clear();
+    notifiedClaims.clear();
+
+    winners = [];
+    players = [];
+    tickets = [];
 
     hostToken = data.host_token;
-
     playerToken = null;
     player = null;
 
@@ -832,7 +858,9 @@ async function createGame() {    try {      const maxTickets = Number(       doc
       code: data.code,
       called: [],
       status: "lobby",
-      locked: false
+      locked: false,
+      winning_mode: winningMode,
+      claim_window_seconds: claimWindow
     };
 
     saveSession();
@@ -846,22 +874,25 @@ async function createGame() {    try {      const maxTickets = Number(       doc
     startRefreshing();
 
     alert(
-      "Game created!\nRoom Code: " + game.code
+      "🎉 Game Created Successfully!\n\n" +
+      "Room Code: " + game.code + "\n" +
+      "Winning Mode: " + winningMode + "\n" +
+      "Claim Timer: " +
+      (claimWindow === 0
+        ? "Unlimited"
+        : claimWindow + " seconds")
     );
 
-  } catch(error) {
-
+  } catch (error) {
     getError(error);
-
   }
-
 }
 
-
-// ======================================
+  // ======================================
 // JOIN GAME
 // ======================================
 
+  
 async function joinGame() {
 
   const name = document
