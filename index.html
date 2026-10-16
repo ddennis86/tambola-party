@@ -307,7 +307,55 @@ input, select {
 </select>
 
 <br>
+<hr>
 
+<h3>🏆 Winning Rules</h3>
+
+<p>Choose how winners will be selected.</p>
+
+<select id="winningMode" onchange="updateWinningMode()">
+
+  <option value="first_claim">
+    ⚡ Option A - First to Claim
+  </option>
+
+  <option value="same_number">
+    🎊 Option B - Same Number Winners
+  </option>
+
+  <option value="custom">
+    🎛️ Option C - Custom Prize Rules
+  </option>
+
+</select>
+
+<h3>⏱️ Claim Timer</h3>
+
+<select id="claimWindow">
+
+  <option value="15">15 Seconds</option>
+
+  <option value="30" selected>
+    30 Seconds
+  </option>
+
+  <option value="60">60 Seconds</option>
+
+  <option value="0">Unlimited</option>
+
+</select>
+
+<div id="customPrizeSettings" class="hidden">
+
+  <h3>🎛️ Custom Winning Rules</h3>
+
+  <p>
+    Choose the winning rule for each prize.
+  </p>
+
+  <div id="customPrizeList"></div>
+
+</div>
 <button onclick="createGame()">
 🎮 Create Room
 </button>
@@ -366,7 +414,9 @@ Join Game 🎉
 <div class="card">
 
 <h2>👑 Admin Dashboard</h2>
-
+<button onclick="prepareNewGame()">
+➕ Create New Game
+</button>
 <h3 id="adminRoomCode"></h3>
 
 <button onclick="shareGame()">
@@ -589,12 +639,101 @@ const prizes = [
   "Four Corners",
   "Full House"
 ];
+function updateWinningMode() {
 
+  const mode = document.getElementById(
+    "winningMode"
+  ).value;
+
+  const customSettings = document.getElementById(
+    "customPrizeSettings"
+  );
+
+  customSettings.classList.toggle(
+    "hidden",
+    mode !== "custom"
+  );
+
+}
+
+function renderCustomPrizeSettings() {
+
+  const container = document.getElementById(
+    "customPrizeList"
+  );
+
+  container.innerHTML = "";
+
+  prizes.forEach((prize,index) => {
+
+    const row = document.createElement("div");
+
+    row.className = "prize";
+
+    row.style.marginBottom = "12px";
+
+    const label = document.createElement("p");
+
+    label.textContent = "🏆 " + prize;
+
+    const select = document.createElement("select");
+
+    select.id = "customPrize_" + index;
+
+    select.innerHTML = `
+      <option value="first_claim">
+        ⚡ First to Claim
+      </option>
+
+      <option value="same_number">
+        🎊 Same Number Winners
+      </option>
+    `;
+
+    row.appendChild(label);
+
+    row.appendChild(select);
+
+    container.appendChild(row);
+
+  });
+
+}
+
+function getCustomPrizeRules() {
+
+  const rules = {};
+
+  prizes.forEach((prize,index) => {
+
+    const select = document.getElementById(
+      "customPrize_" + index
+    );
+
+    rules[prize] = select.value;
+
+  });
+
+  return rules;
+
+}
 
 // ======================================
 // HELPERS
 // ======================================
+function prepareNewGame() {
 
+  const confirmed = confirm(
+    "Create another game?\n\n" +
+    "Your current game will remain in Supabase, " +
+    "but this browser will switch to the new game."
+  );
+
+  if(!confirmed) return;
+
+  show("adminSetup");
+
+}
 function show(id) {
 
   [
@@ -657,7 +796,11 @@ function getError(error) {
 // CREATE GAME
 // ======================================
 
-async function createGame() {
+async function createGame() {    try {      const maxTickets = Number(       document.getElementById("maxTickets").value     );      const winnersPerPrize = Number(       document.getElementById("winnersPerPrize").value     );      const winningMode = document.getElementById(       "winningMode"     ).value;      const claimWindow = Number(       document.getElementById("claimWindow").value     );      const customRules =       winningMode === "custom"         ? getCustomPrizeRules()         : {};      const {data,error} = await db.rpc(       "create_game_v2",       {         p_max_tickets: maxTickets,          p_winners_per_prize: winnersPerPrize,          p_winning_mode: winningMode,          p_claim_window_seconds: claimWindow,          p_custom_prize_rules: customRules       }     );      if(error) throw error;      if(realtimeChannel) {       await db.removeChannel(realtimeChannel);       realtimeChannel = null;     }      if(refreshTimer) {       clearInterval(refreshTimer);       refreshTimer = null;     }      initialWinnersLoaded = false;     lastWinnerIds.clear();     notifiedClaims.clear();      winners = [];     players = [];     tickets = [];      hostToken = data.host_token;      playerToken = null;     player = null;      game = {       id: data.game_id,       code: data.code,       called: [],       status: "lobby",       locked: false,       winning_mode: winningMode,       claim_window_seconds: claimWindow     };      saveSession();      show("adminPanel");      await refreshGame();      subscribeToGame();      startRefreshing();      alert(       "🎉 Game Created Successfully!
+
+" +       "Room Code: " + game.code + "
+" +       "Winning Mode: " + winningMode + "
+" +       "Claim Timer: " +       (claimWindow === 0         ? "Unlimited"         : claimWindow + " seconds")     );    } catch(error) {      getError(error);    }  }
 
   try {
 
@@ -1735,7 +1878,7 @@ if(room) {
     .value = room.toUpperCase();
 
 }
-
+renderCustomPrizeSettings();
 restoreSession().then(() => {
 
   if(!game && room) {
