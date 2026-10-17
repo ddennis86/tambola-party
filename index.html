@@ -442,7 +442,10 @@ Join Game 🎉
       <button onclick="toggleLock()" class="btn btn-secondary" id="lockBtn">🔒 Lock / Unlock Entries</button>
     </div>
     <div class="text-sm mt-2 text-gray-600">
-      <span id="adminRoomCode">Room Code: </span> | 
+  <span id="adminRoomCode"></span> | 
+  <span id="gameStatus"></span> | 
+  <span id="entryStatus"></span>
+</div>
       <span id="gameStatus">Status: waiting</span> | 
       <span id="entryStatus">Entries: Open</span>
     </div>
@@ -464,9 +467,7 @@ Join Game 🎉
             <button id="callNextBtn" onclick="callNextNumber()" class="btn btn-primary mt-2 px-6 py-2 text-base">
               🎲 CALL NEXT NUMBER
             </button>
-            <p class="mt-2 text-sm text-gray-600">
-              <span id="calledCount">0</span>/90
-            </p>
+            <p id="calledCount" class="mt-2 text-sm text-gray-600"></p>
           </div>
         </div>
 
@@ -483,16 +484,18 @@ Join Game 🎉
       <!-- RIGHT COLUMN: Players + Claims + Winners -->
       <div class="space-y-4">
 
-        <!-- Players -->
-            <!-- Players Section -->
-    <div class="card">
-      <h2 class="text-xl font-bold mb-3 flex items-center gap-2">
-        👥 Players
-      </h2>
-      <div id="playersList">
-        <p class="text-sm text-gray-600 mb-2">
-          Total Players: <span id="playerCount">0</span>
-        </p>
+        <!-- Players Section -->
+<div class="card">
+  <h2 class="text-xl font-bold mb-3 flex items-center gap-2">
+    👥 Players
+  </h2>
+  <div id="playerList">
+    <p class="text-sm text-gray-600 mb-2">Total Players: 0</p>
+  </div>
+  <div id="adminPlayersList" class="space-y-2 max-h-64 overflow-y-auto"></div>
+</div>
+      <div id="adminPlayersList" class="space-y-2 max-h-64 overflow-y-auto"></div>
+    </div>
       </div>
       <!-- This ID is what the JavaScript is missing -->
       <div id="adminPlayersList" class="space-y-2 max-h-64 overflow-y-auto"></div>
