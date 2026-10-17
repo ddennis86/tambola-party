@@ -13,8 +13,24 @@ content="width=device-width, initial-scale=1.0">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
+#currentNumber {
+  font-size: clamp(2.75rem, 6vw, 4rem) !important;
+  line-height: 1.05 !important;
+  margin: 0.25rem 0 0.5rem 0 !important;
+}
+.admin-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  align-items: start;
+}
 
-* {
+@media (min-width: 1024px) {
+  .admin-grid {
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+  }
+}
+  * {
   box-sizing: border-box;
 }
 
@@ -410,87 +426,99 @@ Join Game 🎉
 <!-- ADMIN PANEL -->
 
 <section id="adminPanel" class="hidden">
+  <div class="max-w-7xl mx-auto space-y-4">
 
-<div class="card">
+    <!-- Admin Dashboard (Full Width) -->
+    <div class="card">
+      <h2 class="text-xl font-bold mb-3 flex items-center gap-2">
+        👑 Admin Dashboard
+      </h2>
+      <div class="flex flex-wrap gap-2 mb-3">
+        <button onclick="prepareNewGame()" class="btn btn-primary">➕ Create New Game</button>
+        <button onclick="shareGame()" class="btn btn-secondary">🔗 Share Game</button>
+        <button onclick="togglePause()" class="btn btn-warning" id="pauseBtn">⏸️ Pause</button>
+        <button onclick="resumeGame()" class="btn btn-success hidden" id="resumeBtn">▶️ Resume</button>
+        <button onclick="endGame()" class="btn btn-danger">🏁 End Game</button>
+        <button onclick="toggleLock()" class="btn btn-secondary" id="lockBtn">🔒 Lock / Unlock Entries</button>
+      </div>
+      <p class="text-sm text-gray-600">
+        Room Code: <span id="roomCodeDisplay" class="font-mono font-bold"></span> |
+        Status: <span id="gameStatus">waiting</span> |
+        Entries: <span id="entriesStatus">Open</span>
+      </p>
+    </div>
 
-<h2>👑 Admin Dashboard</h2>
-<button onclick="prepareNewGame()">
-➕ Create New Game
-</button>
-<h3 id="adminRoomCode"></h3>
+    <!-- Two Column Layout: Caller + Claims/Winners -->
+    <div class="admin-grid">
 
-<button onclick="shareGame()">
-🔗 Share Game
-</button>
+      <!-- LEFT COLUMN: Number Caller + Number Board -->
+      <div class="space-y-4">
 
-<button onclick="setStatus('paused')">
-⏸ Pause
-</button>
+        <!-- Number Caller -->
+        <div class="card">
+          <h2 class="text-xl font-bold mb-2 flex items-center gap-2">
+            🎲 Number Caller
+          </h2>
+          <div class="text-center">
+            <div id="currentNumber" class="font-extrabold text-purple-700">--</div>
+            <button onclick="callNextNumber()" class="btn btn-primary mt-2 px-6 py-2 text-base">
+              🎲 CALL NEXT NUMBER
+            </button>
+            <p class="mt-2 text-sm text-gray-600">
+              Numbers Called: <span id="calledCount">0</span>/90
+            </p>
+          </div>
+        </div>
 
-<button onclick="setStatus('running')">
-▶ Resume
-</button>
+        <!-- Number Board -->
+        <div class="card">
+          <h2 class="text-xl font-bold mb-3 flex items-center gap-2">
+            🔢 Number Board
+          </h2>
+          <div id="numberBoard" class="grid grid-cols-10 gap-1 text-center"></div>
+        </div>
 
-<button onclick="setStatus('ended')">
-🛑 End Game
-</button>
+      </div>
 
-<button onclick="toggleLock()">
-🔒 Lock / Unlock Entries
-</button>
+      <!-- RIGHT COLUMN: Players + Claims + Winners -->
+      <div class="space-y-4">
 
-<p id="gameStatus"></p>
+        <!-- Players -->
+        <div class="card">
+          <h2 class="text-xl font-bold mb-3 flex items-center gap-2">
+            👥 Players
+          </h2>
+          <p class="text-sm text-gray-600 mb-2">
+            Total Players: <span id="playerCount">0</span>
+          </p>
+          <div id="playersList" class="space-y-2 max-h-64 overflow-y-auto"></div>
+        </div>
 
-</div>
+        <!-- Claims (Pending) -->
+        <div class="card">
+          <h2 class="text-xl font-bold mb-3 flex items-center gap-2">
+            🏆 Pending Claims
+          </h2>
+          <div id="pendingClaims" class="space-y-2 max-h-72 overflow-y-auto">
+            <p class="text-sm text-gray-500">No pending claims yet.</p>
+          </div>
+        </div>
 
+        <!-- Winners -->
+        <div class="card">
+          <h2 class="text-xl font-bold mb-3 flex items-center gap-2">
+            🏆 Winners
+          </h2>
+          <div id="winnersList" class="space-y-2 max-h-64 overflow-y-auto">
+            <p class="text-sm text-gray-500">No winners yet.</p>
+          </div>
+        </div>
 
-<div class="card">
+      </div>
 
-<h2>🎲 Number Caller</h2>
+    </div>
 
-<div id="adminNumber" class="number">
---
-</div>
-
-<div class="center">
-
-<button onclick="callNumber()">
-🎲 CALL NEXT NUMBER
-</button>
-
-</div>
-
-<p id="calledCount"></p>
-
-</div>
-
-
-<div class="card">
-
-<h2>🔢 Number Board</h2>
-
-<div id="numberBoard" class="board"></div>
-
-</div>
-
-
-<div class="card">
-
-<h2>👥 Players</h2>
-
-<div id="playerList"></div>
-
-</div>
-
-
-<div class="card">
-
-<h2>🏆 Winners</h2>
-
-<div id="adminWinners"></div>
-
-</div>
-
+  </div>
 </section>
 
 
