@@ -686,24 +686,11 @@ button.ticket-cell:disabled {
 <section id="joinSetup" class="card hidden">
   <h2>🎟️ Join Tambola Game</h2>
 
-  <input
-    id="playerName"
-    placeholder="Your Name"
-    maxlength="30"
-    autocomplete="name"
-  >
-
+  <input id="playerName" placeholder="Your Name" maxlength="30" autocomplete="name">
   <br>
-
-  <input
-    id="roomCode"
-    placeholder="Room Code"
-    maxlength="6"
-    autocapitalize="characters"
-  >
+  <input id="roomCode" placeholder="Room Code" maxlength="6" autocapitalize="characters">
 
   <p>Number of Tickets</p>
-
   <select id="ticketCount">
     <option value="1">1 Ticket</option>
     <option value="2">2 Tickets</option>
@@ -714,10 +701,7 @@ button.ticket-cell:disabled {
   </select>
 
   <br>
-
-  <button id="joinGameBtn" onclick="joinGame()">
-    Join Game 🎉
-  </button>
+  <button id="joinGameBtn" onclick="joinGame()">Join Game 🎉</button>
 </section>
 
 <!-- ADMIN PANEL -->
@@ -729,26 +713,11 @@ button.ticket-cell:disabled {
 
     <div class="admin-actions">
       <button onclick="prepareNewGame()">➕ Create New Game</button>
-
-      <button onclick="shareGame()" class="btn-secondary">
-        🔗 Share Game
-      </button>
-
-      <button onclick="togglePause()" class="btn-warning" id="pauseBtn">
-        ⏸ Pause
-      </button>
-
-      <button onclick="resumeGame()" class="btn-success hidden" id="resumeBtn">
-        ▶ Resume
-      </button>
-
-      <button onclick="endGame()" class="btn-danger" id="endBtn">
-        🏁 End Game
-      </button>
-
-      <button onclick="toggleLock()" class="btn-secondary" id="lockBtn">
-        🔒 Lock Entries
-      </button>
+      <button onclick="shareGame()" class="btn-secondary">🔗 Share Game</button>
+      <button onclick="togglePause()" class="btn-warning" id="pauseBtn">⏸ Pause</button>
+      <button onclick="resumeGame()" class="btn-success hidden" id="resumeBtn">▶ Resume</button>
+      <button onclick="endGame()" class="btn-danger" id="endBtn">🏁 End Game</button>
+      <button onclick="toggleLock()" class="btn-secondary" id="lockBtn">🔒 Lock Entries</button>
     </div>
 
     <div class="status">
@@ -764,25 +733,18 @@ button.ticket-cell:disabled {
   </div>
 
   <div class="admin-grid">
-
     <div>
       <div class="card center">
         <h2>🎲 Number Caller</h2>
-
         <div id="adminNumber" class="number">--</div>
 
         <div id="adminTimerBox" class="timer-box">
           <div class="timer-title">⏱️ Latest Number Claim Window</div>
           <div id="adminTimer" class="timer-value">--</div>
-          <div class="timer-subtitle">
-            Time remaining from the latest number call
-          </div>
+          <div class="timer-subtitle">Time remaining from the latest number call</div>
         </div>
 
-        <button id="callNextBtn" onclick="callNextNumber()">
-          🎲 CALL NEXT NUMBER
-        </button>
-
+        <button id="callNextBtn" onclick="callNextNumber()">🎲 CALL NEXT NUMBER</button>
         <p id="calledCount"></p>
       </div>
 
@@ -809,7 +771,6 @@ button.ticket-cell:disabled {
         <div id="adminWinners"></div>
       </div>
     </div>
-
   </div>
 </section>
 
@@ -833,45 +794,23 @@ button.ticket-cell:disabled {
     </div>
   </div>
 
-  <!-- CLAIM BUTTONS DIRECTLY BELOW NUMBER -->
-
   <div class="card player-claims-card">
     <h2>🏆 Claim Prizes</h2>
     <div id="claimContainer"></div>
   </div>
 
-  <!-- TICKETS -->
-
   <div class="card">
     <h2>🎟️ My Tambola Tickets</h2>
-
-    <p class="ticket-legend">
-      🟡 Yellow = Called &nbsp;&nbsp; 🟢 Green = Selected
-    </p>
-
+    <p class="ticket-legend">🟡 Yellow = Called &nbsp;&nbsp; 🟢 Green = Selected</p>
     <div id="ticketsContainer"></div>
   </div>
 
   <!-- TIMER NOTE MOVED BELOW TICKETS -->
-
   <div class="claim-note">
     <strong>📢 Important Claim Rule</strong>
-
-    <p>
-      The default claim time is <strong>10 seconds</strong>.
-      Your admin has selected
-      <strong id="playerClaimDuration">10 seconds</strong>
-      for this game.
-    </p>
-
-    <p>
-      The countdown begins when the number completing your
-      winning combination is called. Claim your prize before
-      the timer expires.
-    </p>
+    <p>The default claim time is <strong>10 seconds</strong>. Your admin has selected <strong id="playerClaimDuration">10 seconds</strong> for this game.</p>
+    <p>The countdown begins when the number completing your winning combination is called. Claim your prize before the timer expires.</p>
   </div>
-
-  <!-- WINNERS -->
 
   <div class="card">
     <h2>🎊 Winners</h2>
@@ -891,10 +830,7 @@ button.ticket-cell:disabled {
     <h2 id="winnerPrize"></h2>
     <p id="winnerTicket"></p>
     <p>🏆 Congratulations! 🏆</p>
-
-    <button onclick="closePopup()">
-      Continue Playing
-    </button>
+    <button onclick="closePopup()">Continue Playing</button>
   </div>
 </div>
 
@@ -905,16 +841,10 @@ button.ticket-cell:disabled {
 // SUPABASE CONFIGURATION
 // =====================================
 
-const SUPABASE_URL =
-  "https://prdgeodluuiylzrywdxm.supabase.co";
+const SUPABASE_URL = "https://prdgeodluuiylzrywdxm.supabase.co";
+const SUPABASE_KEY = "sb_publishable_W0xi00YmUDEpF8j38xs7kw_PVRCgRjy";
 
-const SUPABASE_KEY =
-  "sb_publishable_W0xi00YmUDEpF8j38xs7kw_PVRCgRjy";
-
-const db = window.supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_KEY
-);
+const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 // =====================================
 // GLOBAL VARIABLES
@@ -981,25 +911,16 @@ function show(id) {
     "joinSetup",
     "adminPanel",
     "playerPanel"
-  ].forEach(section => {
-    element(section).classList.add("hidden");
-  });
+  ].forEach(section => element(section).classList.add("hidden"));
 
   element(id).classList.remove("hidden");
   currentView = id;
 }
 
 function escapeHtml(value) {
-  return String(value ?? "").replace(
-    /[&<>"']/g,
-    character => ({
-      "&": "&amp;",
-      "<": "&lt;",
-      ">": "&gt;",
-      '"': "&quot;",
-      "'": "&#39;"
-    }[character])
-  );
+  return String(value ?? "").replace(/[&<>"']/g, character => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+  }[character]));
 }
 
 function getError(error) {
@@ -1007,9 +928,7 @@ function getError(error) {
 }
 
 function calledNumbers() {
-  return Array.isArray(game?.called)
-    ? game.called.map(Number)
-    : [];
+  return Array.isArray(game?.called) ? game.called.map(Number) : [];
 }
 
 function calledSet() {
@@ -1019,33 +938,23 @@ function calledSet() {
 function normalizeGame(data) {
   return {
     ...data,
-    called: Array.isArray(data.called)
-      ? data.called.map(Number)
-      : [],
-    prizes: Array.isArray(data.prizes)
-      ? data.prizes
-      : prizes
+    called: Array.isArray(data.called) ? data.called.map(Number) : [],
+    prizes: Array.isArray(data.prizes) ? data.prizes : prizes
   };
 }
 
 function activePrizes() {
-  return Array.isArray(game?.prizes)
-    ? game.prizes
-    : prizes;
+  return Array.isArray(game?.prizes) ? game.prizes : prizes;
 }
 
 function saveSession() {
   if (!game) return;
-
-  localStorage.setItem(
-    SESSION_KEY,
-    JSON.stringify({
-      gameId: game.id,
-      hostToken,
-      playerToken,
-      playerId: player?.id ?? null
-    })
-  );
+  localStorage.setItem(SESSION_KEY, JSON.stringify({
+    gameId: game.id,
+    hostToken,
+    playerToken,
+    playerId: player?.id ?? null
+  }));
 }
 
 function setBusy(id, busy) {
@@ -1084,36 +993,22 @@ function renderPrizeSelection() {
 }
 
 function getSelectedPrizes() {
-  return prizes.filter((prize, index) =>
-    element("prize_" + index)?.checked
-  );
+  return prizes.filter((prize, index) => element("prize_" + index)?.checked);
 }
 
 function selectAllPrizes() {
-  prizes.forEach((prize, index) => {
-    element("prize_" + index).checked = true;
-  });
-
+  prizes.forEach((prize, index) => element("prize_" + index).checked = true);
   updatePrizeSelection();
 }
 
 function clearAllPrizes() {
-  prizes.forEach((prize, index) => {
-    element("prize_" + index).checked = false;
-  });
-
+  prizes.forEach((prize, index) => element("prize_" + index).checked = false);
   updatePrizeSelection();
 }
 
 function updatePrizeSelection() {
   const selected = getSelectedPrizes();
-
-  element("selectedPrizeCount").textContent =
-    "Selected Prizes: " +
-    selected.length +
-    " of " +
-    prizes.length;
-
+  element("selectedPrizeCount").textContent = "Selected Prizes: " + selected.length + " of " + prizes.length;
   renderCustomPrizeSettings();
 }
 
@@ -1122,12 +1017,8 @@ function updatePrizeSelection() {
 // =====================================
 
 function updateWinningMode() {
-  const custom =
-    element("winningMode").value === "custom";
-
-  element("customPrizeSettings")
-    .classList.toggle("hidden", !custom);
-
+  const custom = element("winningMode").value === "custom";
+  element("customPrizeSettings").classList.toggle("hidden", !custom);
   renderCustomPrizeSettings();
 }
 
@@ -1144,7 +1035,6 @@ function renderCustomPrizeSettings() {
 
   getSelectedPrizes().forEach(prize => {
     const index = prizes.indexOf(prize);
-
     const row = document.createElement("div");
     row.className = "custom-prize-row";
 
@@ -1153,12 +1043,10 @@ function renderCustomPrizeSettings() {
 
     const select = document.createElement("select");
     select.id = "customPrize_" + index;
-
     select.innerHTML = `
       <option value="first_claim">⚡ First to Claim</option>
       <option value="same_number">🎊 Same Number Winners</option>
     `;
-
     select.value = previousValues[prize] || "first_claim";
 
     row.appendChild(label);
@@ -1169,12 +1057,10 @@ function renderCustomPrizeSettings() {
 
 function getCustomPrizeRules() {
   const rules = {};
-
   getSelectedPrizes().forEach(prize => {
     const index = prizes.indexOf(prize);
     rules[prize] = element("customPrize_" + index).value;
   });
-
   return rules;
 }
 
@@ -1237,11 +1123,9 @@ async function loadNumberCallHistory(gameId) {
 function updateTimerDisplay(boxId, valueId) {
   const box = element(boxId);
   const value = element(valueId);
-
   if (!box || !value) return;
 
   box.classList.remove("warning", "expired", "unlimited");
-
   const duration = getClaimDuration();
 
   if (duration === 0) {
@@ -1251,7 +1135,6 @@ function updateTimerDisplay(boxId, valueId) {
   }
 
   const deadline = getLatestDeadline();
-
   if (deadline === null) {
     value.textContent = "--";
     return;
@@ -1266,19 +1149,12 @@ function updateTimerDisplay(boxId, valueId) {
   }
 
   value.textContent = formatSeconds(remaining);
-
-  if (remaining <= 5000) {
-    box.classList.add("warning");
-  }
+  if (remaining <= 5000) box.classList.add("warning");
 }
 
 function updateCountdowns() {
   if (!game) return;
-
-  if (currentView === "adminPanel") {
-    updateTimerDisplay("adminTimerBox", "adminTimer");
-  }
-
+  if (currentView === "adminPanel") updateTimerDisplay("adminTimerBox", "adminTimer");
   if (currentView === "playerPanel") {
     updateTimerDisplay("playerTimerBox", "playerTimer");
     updateClaimCountdowns();
@@ -1287,7 +1163,6 @@ function updateCountdowns() {
 
 function startCountdownTimer() {
   if (countdownTimer) clearInterval(countdownTimer);
-
   countdownTimer = setInterval(updateCountdowns, 250);
   updateCountdowns();
 }
@@ -1300,41 +1175,28 @@ function getPrizeCompletionDraw(ticket, prize) {
   const numbers = patternNumbers(ticket, prize);
   if (!numbers.length) return null;
 
-  const required =
-    prize === "Early 5" ? 5 :
-    prize === "Early 7" ? 7 :
-    numbers.length;
-
+  const required = prize === "Early 5" ? 5 : prize === "Early 7" ? 7 : numbers.length;
   const called = calledNumbers();
   const numberLookup = new Set(numbers.map(Number));
 
   let hits = 0;
-
   for (let i = 0; i < called.length; i++) {
     if (numberLookup.has(called[i])) {
       hits++;
-
-      if (hits >= required) {
-        return i + 1;
-      }
+      if (hits >= required) return i + 1;
     }
   }
-
   return null;
 }
 
 function getPrizeDeadline(ticket, prize) {
   const duration = getClaimDuration();
-
   if (duration === 0) return Infinity;
 
   const completionDraw = getPrizeCompletionDraw(ticket, prize);
   if (completionDraw === null) return null;
 
-  const call = numberCallHistory.find(item =>
-    Number(item.draw_position) === completionDraw
-  );
-
+  const call = numberCallHistory.find(item => Number(item.draw_position) === completionDraw);
   if (!call) return null;
 
   const calledAt = Date.parse(call.called_at);
@@ -1346,9 +1208,7 @@ function getPrizeDeadline(ticket, prize) {
 function updateClaimCountdowns() {
   if (!game || !player) return;
 
-  const buttons = document.querySelectorAll(
-    "[data-claim-ticket][data-claim-prize]"
-  );
+  const buttons = document.querySelectorAll("[data-claim-ticket][data-claim-prize]");
 
   buttons.forEach(button => {
     const ticketId = button.dataset.claimTicket;
@@ -1359,7 +1219,6 @@ function updateClaimCountdowns() {
 
     const deadline = getPrizeDeadline(ticket, prize);
     const timeLabel = button.querySelector(".claim-time");
-
     if (!timeLabel) return;
 
     if (getClaimDuration() === 0) {
@@ -1450,11 +1309,7 @@ async function resetGameState() {
 // =====================================
 
 async function prepareNewGame() {
-  const confirmed = confirm(
-    "Create another game?\n\n" +
-    "Your current game will remain in Supabase."
-  );
-
+  const confirmed = confirm("Create another game?\n\nYour current game will remain in Supabase.");
   if (!confirmed) return;
   show("adminSetup");
 }
@@ -1463,7 +1318,6 @@ async function createGame() {
   if (element("createGameBtn").disabled) return;
 
   const selectedPrizes = getSelectedPrizes();
-
   if (!selectedPrizes.length) {
     alert("Please select at least one prize.");
     return;
@@ -1476,11 +1330,7 @@ async function createGame() {
     const winnersPerPrize = Number(element("winnersPerPrize").value);
     const winningMode = element("winningMode").value;
     const claimWindow = Number(element("claimWindow").value);
-
-    const customRules =
-      winningMode === "custom"
-        ? getCustomPrizeRules()
-        : {};
+    const customRules = winningMode === "custom" ? getCustomPrizeRules() : {};
 
     const { data, error } = await db.rpc("create_game_v3", {
       p_max_tickets: maxTickets,
@@ -1492,13 +1342,9 @@ async function createGame() {
     });
 
     if (error) throw error;
-
-    if (!data?.game_id || !data?.host_token) {
-      throw new Error("Invalid game response.");
-    }
+    if (!data?.game_id || !data?.host_token) throw new Error("Invalid game response.");
 
     await resetGameState();
-
     hostToken = data.host_token;
 
     game = normalizeGame({
@@ -1516,7 +1362,6 @@ async function createGame() {
 
     saveSession();
     show("adminPanel");
-
     await refreshGame();
 
     if (game) {
@@ -1524,10 +1369,7 @@ async function createGame() {
       startRefreshing();
     }
 
-    alert(
-      "🎉 Game Created Successfully!\n\n" +
-      "Room Code: " + data.code
-    );
+    alert("🎉 Game Created Successfully!\n\nRoom Code: " + data.code);
 
   } catch (error) {
     getError(error);
@@ -1562,20 +1404,12 @@ async function joinGame() {
     });
 
     if (error) throw error;
-
-    if (!data?.player_token || !data?.game_id) {
-      throw new Error("Invalid player response.");
-    }
+    if (!data?.player_token || !data?.game_id) throw new Error("Invalid player response.");
 
     await resetGameState();
 
     playerToken = data.player_token;
-
-    player = {
-      id: data.player_id,
-      name: data.player_name
-    };
-
+    player = { id: data.player_id, name: data.player_name };
     tickets = data.tickets || [];
 
     game = normalizeGame({
@@ -1617,32 +1451,19 @@ async function restoreSession() {
 
     if (session.hostToken && session.gameId) {
       hostToken = session.hostToken;
-
-      const { data, error } = await db
-        .from("games")
-        .select("*")
-        .eq("id", session.gameId)
-        .single();
+      const { data, error } = await db.from("games").select("*").eq("id", session.gameId).single();
 
       if (error) throw error;
-
       game = normalizeGame(data);
       show("adminPanel");
 
     } else if (session.playerToken) {
       playerToken = session.playerToken;
-
-      const { data, error } = await db.rpc("get_my_state", {
-        p_player_token: playerToken
-      });
+      const { data, error } = await db.rpc("get_my_state", { p_player_token: playerToken });
 
       if (error) throw error;
 
-      player = {
-        id: data.player_id,
-        name: data.player_name
-      };
-
+      player = { id: data.player_id, name: data.player_name };
       tickets = data.tickets || [];
 
       game = normalizeGame({
@@ -1659,7 +1480,6 @@ async function restoreSession() {
 
     if (game) {
       await refreshGame();
-
       if (game) {
         subscribeToGame();
         startRefreshing();
@@ -1690,24 +1510,15 @@ async function refreshGame() {
   const gameId = game.id;
 
   try {
-    const { data, error } = await db
-      .from("games")
-      .select("*")
-      .eq("id", gameId)
-      .single();
-
+    const { data, error } = await db.from("games").select("*").eq("id", gameId).single();
     if (error) throw error;
     if (!game || game.id !== gameId) return;
 
     game = normalizeGame(data);
 
-    if (
-      game.status === "ended" &&
-      currentView === "playerPanel"
-    ) {
+    if (game.status === "ended" && currentView === "playerPanel") {
       switchingGame = true;
       localStorage.removeItem(SESSION_KEY);
-
       await stopLiveUpdates();
 
       game = null;
@@ -1721,22 +1532,14 @@ async function refreshGame() {
       resetNotifications();
       show("home");
       switchingGame = false;
-
-      alert(
-        "🏁 The Tambola Game Has Ended!\n\n" +
-        "Thank you for playing! 🎉"
-      );
-
+      alert("🏁 The Tambola Game Has Ended!\n\nThank you for playing! 🎉");
       return;
     }
 
     await loadNumberCallHistory(gameId);
     if (!game || game.id !== gameId) return;
 
-    const {
-      data: winnerData,
-      error: winnerError
-    } = await db
+    const { data: winnerData, error: winnerError } = await db
       .from("winners")
       .select("*")
       .eq("game_id", gameId)
@@ -1748,26 +1551,12 @@ async function refreshGame() {
     winners = winnerData || [];
 
     if (currentView === "adminPanel") {
-      const {
-        data: playerData,
-        error: playerError
-      } = await db
-        .from("players")
-        .select("id,name")
-        .eq("game_id", gameId);
-
-      if (playerError) {
-        console.error(playerError);
-      } else {
-        players = playerData || [];
-      }
-
+      const { data: playerData, error: playerError } = await db.from("players").select("id,name").eq("game_id", gameId);
+      if (!playerError) players = playerData || [];
       renderAdmin();
     }
 
-    if (currentView === "playerPanel") {
-      renderPlayer();
-    }
+    if (currentView === "playerPanel") renderPlayer();
 
     checkNewWinners();
     updateCountdowns();
@@ -1776,13 +1565,9 @@ async function refreshGame() {
     console.error("Refresh error:", error);
   } finally {
     refreshing = false;
-
     if (refreshAgain) {
       refreshAgain = false;
-
-      if (game && !switchingGame) {
-        setTimeout(refreshGame, 0);
-      }
+      if (game && !switchingGame) setTimeout(refreshGame, 0);
     }
   }
 }
@@ -1793,7 +1578,6 @@ async function refreshGame() {
 
 function subscribeToGame() {
   if (!game) return;
-
   const gameId = game.id;
 
   if (realtimeChannel) {
@@ -1801,48 +1585,14 @@ function subscribeToGame() {
     realtimeChannel = null;
   }
 
-  const channel = db.channel(
-    "tambola-" +
-    gameId +
-    "-" +
-    Math.random().toString(36).slice(2)
-  );
+  const channel = db.channel("tambola-" + gameId + "-" + Math.random().toString(36).slice(2));
 
   channel
-    .on(
-      "postgres_changes",
-      {
-        event: "*",
-        schema: "public",
-        table: "games",
-        filter: "id=eq." + gameId
-      },
-      refreshGame
-    )
-    .on(
-      "postgres_changes",
-      {
-        event: "*",
-        schema: "public",
-        table: "winners",
-        filter: "game_id=eq." + gameId
-      },
-      refreshGame
-    )
-    .on(
-      "postgres_changes",
-      {
-        event: "*",
-        schema: "public",
-        table: "players",
-        filter: "game_id=eq." + gameId
-      },
-      refreshGame
-    )
+    .on("postgres_changes", { event: "*", schema: "public", table: "games", filter: "id=eq." + gameId }, refreshGame)
+    .on("postgres_changes", { event: "*", schema: "public", table: "winners", filter: "game_id=eq." + gameId }, refreshGame)
+    .on("postgres_changes", { event: "*", schema: "public", table: "players", filter: "game_id=eq." + gameId }, refreshGame)
     .subscribe(status => {
-      if (status === "CHANNEL_ERROR") {
-        console.warn("Realtime unavailable. Polling active.");
-      }
+      if (status === "CHANNEL_ERROR") console.warn("Realtime unavailable. Polling active.");
     });
 
   realtimeChannel = channel;
@@ -1850,7 +1600,6 @@ function subscribeToGame() {
 
 function startRefreshing() {
   if (refreshTimer) clearInterval(refreshTimer);
-
   refreshTimer = setInterval(refreshGame, 3000);
   startCountdownTimer();
 }
@@ -1861,30 +1610,16 @@ function startRefreshing() {
 
 async function callNextNumber() {
   if (!game || !hostToken || callingNumber) return;
-
-  if (
-    game.status === "ended" ||
-    game.status === "paused" ||
-    calledNumbers().length >= 90
-  ) return;
+  if (game.status === "ended" || game.status === "paused" || calledNumbers().length >= 90) return;
 
   callingNumber = true;
   element("callNextBtn").disabled = true;
 
   try {
-    const { data, error } = await db.rpc("call_number", {
-      p_game_id: game.id,
-      p_host_token: hostToken
-    });
-
+    const { data, error } = await db.rpc("call_number", { p_game_id: game.id, p_host_token: hostToken });
     if (error) throw error;
-
-    if (data?.number != null) {
-      announceNumber(data.number);
-    }
-
+    if (data?.number != null) announceNumber(data.number);
     await refreshGame();
-
   } catch (error) {
     getError(error);
   } finally {
@@ -1895,17 +1630,11 @@ async function callNextNumber() {
 
 function announceNumber(number) {
   if (!("speechSynthesis" in window)) return;
-
   try {
     speechSynthesis.cancel();
-
-    const speech = new SpeechSynthesisUtterance(
-      "Number " + number
-    );
-
+    const speech = new SpeechSynthesisUtterance("Number " + number);
     speech.rate = 0.85;
     speechSynthesis.speak(speech);
-
   } catch (error) {
     console.warn(error);
   }
@@ -1913,19 +1642,11 @@ function announceNumber(number) {
 
 async function setStatus(status) {
   if (!game || !hostToken) return false;
-
   try {
-    const { error } = await db.rpc("set_game_state", {
-      p_game_id: game.id,
-      p_host_token: hostToken,
-      p_status: status
-    });
-
+    const { error } = await db.rpc("set_game_state", { p_game_id: game.id, p_host_token: hostToken, p_status: status });
     if (error) throw error;
-
     await refreshGame();
     return true;
-
   } catch (error) {
     getError(error);
     return false;
@@ -1933,43 +1654,25 @@ async function setStatus(status) {
 }
 
 async function togglePause() {
-  if (!game || game.status === "ended") return;
-  await setStatus("paused");
+  if (game && game.status !== "ended") await setStatus("paused");
 }
 
 async function resumeGame() {
-  if (!game || game.status === "ended") return;
-  await setStatus("active");
+  if (game && game.status !== "ended") await setStatus("active");
 }
 
 async function endGame() {
   if (!game || game.status === "ended") return;
-
-  const confirmed = confirm(
-    "Are you sure you want to END this game?"
-  );
-
-  if (!confirmed) return;
-
-  const success = await setStatus("ended");
-
-  if (success) alert("Game ended successfully.");
+  if (!confirm("Are you sure you want to END this game?")) return;
+  if (await setStatus("ended")) alert("Game ended successfully.");
 }
 
 async function toggleLock() {
-  if (!game || !hostToken) return;
-  if (game.status === "ended") return;
-
+  if (!game || !hostToken || game.status === "ended") return;
   try {
-    const { error } = await db.rpc("set_game_state", {
-      p_game_id: game.id,
-      p_host_token: hostToken,
-      p_locked: !game.locked
-    });
-
+    const { error } = await db.rpc("set_game_state", { p_game_id: game.id, p_host_token: hostToken, p_locked: !game.locked });
     if (error) throw error;
     await refreshGame();
-
   } catch (error) {
     getError(error);
   }
@@ -1986,17 +1689,11 @@ async function shareGame() {
   url.search = "";
   url.hash = "";
   url.searchParams.set("room", game.code);
-
   const shareUrl = url.toString();
 
   if (navigator.share) {
     try {
-      await navigator.share({
-        title: "Tambola Party",
-        text: "Join my Tambola game! Room: " + game.code,
-        url: shareUrl
-      });
-
+      await navigator.share({ title: "Tambola Party", text: "Join my Tambola game! Room: " + game.code, url: shareUrl });
       return;
     } catch (error) {
       if (error.name === "AbortError") return;
@@ -2021,29 +1718,16 @@ function updateAdminControls() {
   const ended = game.status === "ended";
   const paused = game.status === "paused";
 
-  element("pauseBtn").classList.toggle(
-    "hidden", paused || ended
-  );
-
-  element("resumeBtn").classList.toggle(
-    "hidden", !paused || ended
-  );
+  element("pauseBtn").classList.toggle("hidden", paused || ended);
+  element("resumeBtn").classList.toggle("hidden", !paused || ended);
 
   element("pauseBtn").disabled = ended;
   element("resumeBtn").disabled = ended;
   element("endBtn").disabled = ended;
   element("lockBtn").disabled = ended;
 
-  element("lockBtn").textContent =
-    game.locked
-      ? "🔓 Unlock Entries"
-      : "🔒 Lock Entries";
-
-  element("callNextBtn").disabled =
-    ended ||
-    paused ||
-    callingNumber ||
-    calledNumbers().length >= 90;
+  element("lockBtn").textContent = game.locked ? "🔓 Unlock Entries" : "🔒 Lock Entries";
+  element("callNextBtn").disabled = ended || paused || callingNumber || calledNumbers().length >= 90;
 }
 
 function renderAdmin() {
@@ -2052,54 +1736,32 @@ function renderAdmin() {
   const called = calledNumbers();
   const calledLookup = new Set(called);
 
-  element("adminRoomCode").textContent =
-    "Room Code: " + game.code;
-
-  element("adminNumber").textContent =
-    game.last_number ?? "--";
-
-  element("calledCount").textContent =
-    "Numbers Called: " + called.length + "/90";
-
-  element("gameStatus").textContent =
-    "Status: " + game.status;
-
-  element("entryStatus").textContent =
-    "Entries: " + (game.locked ? "Locked" : "Open");
-
-  element("adminActivePrizes").textContent =
-    activePrizes().join(" • ");
+  element("adminRoomCode").textContent = "Room Code: " + game.code;
+  element("adminNumber").textContent = game.last_number ?? "--";
+  element("calledCount").textContent = "Numbers Called: " + called.length + "/90";
+  element("gameStatus").textContent = "Status: " + game.status;
+  element("entryStatus").textContent = "Entries: " + (game.locked ? "Locked" : "Open");
+  element("adminActivePrizes").textContent = activePrizes().join(" • ");
 
   updateAdminControls();
 
   const board = element("numberBoard");
   board.innerHTML = "";
-
   for (let n = 1; n <= 90; n++) {
     const cell = document.createElement("div");
     cell.className = "board-cell";
-
-    if (calledLookup.has(n)) {
-      cell.classList.add("called");
-    }
-
+    if (calledLookup.has(n)) cell.classList.add("called");
     cell.textContent = n;
     board.appendChild(cell);
   }
 
-  element("playerList").textContent =
-    "Total Players: " + players.length;
-
+  element("playerList").textContent = "Total Players: " + players.length;
   const container = element("adminPlayersList");
   container.innerHTML = "";
-
   players.forEach((p, index) => {
     const row = document.createElement("div");
     row.className = "player-row";
-
-    row.textContent =
-      (index + 1) + ". 🎟️ " + p.name;
-
+    row.textContent = (index + 1) + ". 🎟️ " + p.name;
     container.appendChild(row);
   });
 
@@ -2108,9 +1770,7 @@ function renderAdmin() {
 }
 
 function renderPendingClaims() {
-  element("pendingClaims").textContent =
-    "Claims are processed by the game server. " +
-    "No pending-claim review API is configured.";
+  element("pendingClaims").textContent = "Claims are processed by the game server. No pending-claim review API is configured.";
 }
 
 // =====================================
@@ -2119,21 +1779,10 @@ function renderPendingClaims() {
 
 function loadMarks() {
   if (!player) return;
-
   const key = "tambola_marks_" + player.id;
-
   try {
-    const stored = JSON.parse(
-      localStorage.getItem(key) || "{}"
-    );
-
-    marked =
-      stored &&
-      typeof stored === "object" &&
-      !Array.isArray(stored)
-        ? stored
-        : {};
-
+    const stored = JSON.parse(localStorage.getItem(key) || "{}");
+    marked = (stored && typeof stored === "object" && !Array.isArray(stored)) ? stored : {};
   } catch (error) {
     marked = {};
   }
@@ -2141,31 +1790,20 @@ function loadMarks() {
 
 function saveMarks() {
   if (!player) return;
-
-  localStorage.setItem(
-    "tambola_marks_" + player.id,
-    JSON.stringify(marked)
-  );
+  localStorage.setItem("tambola_marks_" + player.id, JSON.stringify(marked));
 }
 
 function toggleMark(ticketId, number) {
   if (!game || !player) return;
-
   const numericNumber = Number(number);
   if (!calledSet().has(numericNumber)) return;
 
-  if (!Array.isArray(marked[ticketId])) {
-    marked[ticketId] = [];
-  }
-
+  if (!Array.isArray(marked[ticketId])) marked[ticketId] = [];
   marked[ticketId] = marked[ticketId].map(Number);
 
   const values = marked[ticketId];
-
   if (values.includes(numericNumber)) {
-    marked[ticketId] = values.filter(
-      n => n !== numericNumber
-    );
+    marked[ticketId] = values.filter(n => n !== numericNumber);
   } else {
     values.push(numericNumber);
   }
@@ -2182,37 +1820,21 @@ function renderPlayer() {
   if (!player || !game) return;
 
   const called = calledSet();
-
-  element("welcomePlayer").textContent =
-    "Welcome, " + player.name + "! 🎉";
-
-  element("playerRoom").textContent =
-    "Room: " + game.code;
-
-  element("playerNumber").textContent =
-    game.last_number ?? "--";
-
-  element("playerCalledCount").textContent =
-    "Numbers Called: " + called.size + "/90";
-
-  element("playerGameStatus").textContent =
-    "Game Status: " + game.status;
+  element("welcomePlayer").textContent = "Welcome, " + player.name + "! 🎉";
+  element("playerRoom").textContent = "Room: " + game.code;
+  element("playerNumber").textContent = game.last_number ?? "--";
+  element("playerCalledCount").textContent = "Numbers Called: " + called.size + "/90";
+  element("playerGameStatus").textContent = "Game Status: " + game.status;
 
   const duration = getClaimDuration();
-
-  element("playerClaimDuration").textContent =
-    duration === 0
-      ? "Unlimited"
-      : duration + " seconds";
+  element("playerClaimDuration").textContent = duration === 0 ? "Unlimited" : duration + " seconds";
 
   const container = element("ticketsContainer");
   container.innerHTML = "";
 
   tickets.forEach(ticket => {
     const heading = document.createElement("h3");
-    heading.textContent =
-      "🎟️ Ticket #" + ticket.ticket_no;
-
+    heading.textContent = "🎟️ Ticket #" + ticket.ticket_no;
     container.appendChild(heading);
 
     const grid = document.createElement("div");
@@ -2227,12 +1849,8 @@ function renderPlayer() {
 
     ticket.numbers.forEach(row => {
       if (!Array.isArray(row)) return;
-
       row.forEach(number => {
-        const cell = document.createElement(
-          number === null ? "div" : "button"
-        );
-
+        const cell = document.createElement(number === null ? "div" : "button");
         cell.className = "ticket-cell";
 
         if (number === null) {
@@ -2240,13 +1858,7 @@ function renderPlayer() {
         } else {
           const numericNumber = Number(number);
           const wasCalled = called.has(numericNumber);
-
-          const isMarked =
-            wasCalled &&
-            Array.isArray(marked[ticket.id]) &&
-            marked[ticket.id]
-              .map(Number)
-              .includes(numericNumber);
+          const isMarked = wasCalled && Array.isArray(marked[ticket.id]) && marked[ticket.id].map(Number).includes(numericNumber);
 
           cell.textContent = numericNumber;
           cell.type = "button";
@@ -2260,15 +1872,11 @@ function renderPlayer() {
             cell.disabled = true;
           }
 
-          cell.onclick = () => {
-            toggleMark(ticket.id, numericNumber);
-          };
+          cell.onclick = () => toggleMark(ticket.id, numericNumber);
         }
-
         grid.appendChild(cell);
       });
     });
-
     container.appendChild(grid);
   });
 
@@ -2282,14 +1890,8 @@ function renderPlayer() {
 // =====================================
 
 function rowNumbers(ticket, row) {
-  if (
-    !Array.isArray(ticket.numbers) ||
-    !Array.isArray(ticket.numbers[row])
-  ) return [];
-
-  return ticket.numbers[row]
-    .filter(n => n !== null)
-    .map(Number);
+  if (!Array.isArray(ticket.numbers) || !Array.isArray(ticket.numbers[row])) return [];
+  return ticket.numbers[row].filter(n => n !== null).map(Number);
 }
 
 function patternNumbers(ticket, prize) {
@@ -2305,37 +1907,23 @@ function patternNumbers(ticket, prize) {
 
   if (prize === "Four Corners") {
     if (!top.length || !bottom.length) return [];
-
-    return [
-      top[0],
-      top[top.length - 1],
-      bottom[0],
-      bottom[bottom.length - 1]
-    ];
+    return [top[0], top[top.length - 1], bottom[0], bottom[bottom.length - 1]];
   }
 
-  if (
-    prize === "Early 5" ||
-    prize === "Early 7" ||
-    prize === "Full House"
-  ) return all;
-
+  if (prize === "Early 5" || prize === "Early 7" || prize === "Full House") return all;
   return [];
 }
 
 function qualifies(ticket, prize) {
   if (!game || !activePrizes().includes(prize)) return false;
-
   const numbers = patternNumbers(ticket, prize);
   if (!numbers.length) return false;
 
   const called = calledSet();
-
   const hits = numbers.filter(n => called.has(n)).length;
 
   if (prize === "Early 5") return hits >= 5;
   if (prize === "Early 7") return hits >= 7;
-
   return hits === numbers.length;
 }
 
@@ -2345,27 +1933,20 @@ function qualifies(ticket, prize) {
 
 function renderClaims() {
   if (!game || !player) return;
-
   const container = element("claimContainer");
   container.innerHTML = "";
-
   const gamePrizes = activePrizes();
 
   tickets.forEach(ticket => {
     const heading = document.createElement("h3");
-    heading.textContent =
-      "🎟️ Ticket #" + ticket.ticket_no;
-
+    heading.textContent = "🎟️ Ticket #" + ticket.ticket_no;
     container.appendChild(heading);
 
     const buttonRow = document.createElement("div");
     buttonRow.className = "claim-buttons";
 
     gamePrizes.forEach(prize => {
-      const alreadyWon = winners.some(
-        w => w.ticket_id === ticket.id && w.prize === prize
-      );
-
+      const alreadyWon = winners.some(w => w.ticket_id === ticket.id && w.prize === prize);
       if (alreadyWon) {
         const badge = document.createElement("span");
         badge.className = "winner";
@@ -2375,100 +1956,41 @@ function renderClaims() {
       }
 
       const eligible = qualifies(ticket, prize);
-
-      const winnerCount = winners.filter(
-        w => w.prize === prize
-      ).length;
-
-      const maxWinners =
-        Number(game.winners_per_prize ?? 1);
-
+      const winnerCount = winners.filter(w => w.prize === prize).length;
+      const maxWinners = Number(game.winners_per_prize ?? 1);
       const prizeFull = winnerCount >= maxWinners;
-
       const claimKey = ticket.id + "_" + prize;
       const claimInProgress = claimingPrizes.has(claimKey);
-
-      const gameAllowsClaims =
-        game.status !== "ended" &&
-        game.status !== "paused";
-
-      const deadline = eligible
-        ? getPrizeDeadline(ticket, prize)
-        : null;
-
-      const expired =
-        eligible &&
-        deadline !== null &&
-        deadline !== Infinity &&
-        currentTime() >= deadline;
+      const gameAllowsClaims = game.status !== "ended" && game.status !== "paused";
+      const deadline = eligible ? getPrizeDeadline(ticket, prize) : null;
+      const expired = eligible && deadline !== null && deadline !== Infinity && currentTime() >= deadline;
 
       const button = document.createElement("button");
       button.className = "prize-button";
-
       button.dataset.claimTicket = String(ticket.id);
       button.dataset.claimPrize = prize;
+      button.disabled = !eligible || prizeFull || !gameAllowsClaims || claimInProgress || expired;
 
-      button.disabled =
-        !eligible ||
-        prizeFull ||
-        !gameAllowsClaims ||
-        claimInProgress ||
-        expired;
-
-      if (
-        eligible &&
-        !prizeFull &&
-        !expired &&
-        gameAllowsClaims
-      ) {
-        button.classList.add("ready");
-      }
-
-      if (expired) {
-        button.classList.add("expired");
-      }
+      if (eligible && !prizeFull && !expired && gameAllowsClaims) button.classList.add("ready");
+      if (expired) button.classList.add("expired");
 
       const label = document.createElement("span");
-
-      label.textContent =
-        claimInProgress
-          ? "⏳ Claiming..."
-          : prizeFull
-            ? "🏆 " + prize + " Closed"
-            : expired
-              ? "⌛ " + prize
-              : eligible
-                ? "🏆 Claim " + prize
-                : "🔒 " + prize;
-
+      label.textContent = claimInProgress ? "⏳ Claiming..." : prizeFull ? "🏆 " + prize + " Closed" : expired ? "⌛ " + prize : eligible ? "🏆 Claim " + prize : "🔒 " + prize;
       button.appendChild(label);
 
       if (eligible && !prizeFull && !claimInProgress) {
         const time = document.createElement("span");
         time.className = "claim-time";
-
-        if (expired) {
-          time.textContent = "Expired";
-        } else if (deadline === Infinity) {
-          time.textContent = "Unlimited";
-        } else if (deadline === null) {
-          time.textContent = "Checking time";
-        } else {
-          time.textContent = formatSeconds(
-            deadline - currentTime()
-          );
-        }
-
+        if (expired) time.textContent = "Expired";
+        else if (deadline === Infinity) time.textContent = "Unlimited";
+        else if (deadline === null) time.textContent = "Checking time";
+        else time.textContent = formatSeconds(deadline - currentTime());
         button.appendChild(time);
       }
 
-      button.onclick = () => {
-        claimPrize(ticket.id, prize);
-      };
-
+      button.onclick = () => claimPrize(ticket.id, prize);
       buttonRow.appendChild(button);
     });
-
     container.appendChild(buttonRow);
   });
 }
@@ -2478,9 +2000,7 @@ function renderClaims() {
 // =====================================
 
 async function claimPrize(ticketId, prize) {
-  if (!playerToken || !game) return;
-  if (!activePrizes().includes(prize)) return;
-
+  if (!playerToken || !game || !activePrizes().includes(prize)) return;
   const claimKey = ticketId + "_" + prize;
   if (claimingPrizes.has(claimKey)) return;
 
@@ -2497,30 +2017,17 @@ async function claimPrize(ticketId, prize) {
     if (error) throw error;
 
     if (data?.ok === true) {
-      alert(
-        "🏆 Congratulations!\n" +
-        "You won " + prize + "!"
-      );
+      alert("🏆 Congratulations!\nYou won " + prize + "!");
     } else {
-      alert(
-        data?.message ||
-        data?.reason ||
-        "Your claim was not accepted."
-      );
+      alert(data?.message || data?.reason || "Your claim was not accepted.");
     }
-
     await refreshGame();
-
   } catch (error) {
     getError(error);
     await refreshGame();
-
   } finally {
     claimingPrizes.delete(claimKey);
-
-    if (game && currentView === "playerPanel") {
-      renderClaims();
-    }
+    if (game && currentView === "playerPanel") renderClaims();
   }
 }
 
@@ -2535,34 +2042,20 @@ function checkNewWinners() {
     return;
   }
 
-  const newWinners = winners.filter(
-    w => !lastWinnerIds.has(w.id)
-  );
-
+  const newWinners = winners.filter(w => !lastWinnerIds.has(w.id));
   winners.forEach(w => lastWinnerIds.add(w.id));
-
-  newWinners.forEach(winner => {
-    winnerPopupQueue.push(winner);
-  });
-
+  newWinners.forEach(winner => winnerPopupQueue.push(winner));
   showNextWinnerPopup();
 }
 
 function showNextWinnerPopup() {
   if (winnerPopupActive || !winnerPopupQueue.length) return;
-
   const winner = winnerPopupQueue.shift();
   winnerPopupActive = true;
 
-  element("winnerName").textContent =
-    winner.player_name || "Winner";
-
-  element("winnerPrize").textContent =
-    "🏆 " + winner.prize;
-
-  element("winnerTicket").textContent =
-    "Ticket #" + winner.ticket_no;
-
+  element("winnerName").textContent = winner.player_name || "Winner";
+  element("winnerPrize").textContent = "🏆 " + winner.prize;
+  element("winnerTicket").textContent = "Ticket #" + winner.ticket_no;
   element("winnerPopup").classList.remove("hidden");
 
   winnerPopupTimer = setTimeout(closePopup, 5000);
@@ -2573,27 +2066,15 @@ function closePopup() {
     clearTimeout(winnerPopupTimer);
     winnerPopupTimer = null;
   }
-
   element("winnerPopup").classList.add("hidden");
   winnerPopupActive = false;
-
-  if (winnerPopupQueue.length) {
-    setTimeout(showNextWinnerPopup, 300);
-  }
+  if (winnerPopupQueue.length) setTimeout(showNextWinnerPopup, 300);
 }
 
 function renderWinners() {
   const html = winners.length
-    ? winners.map(w => `
-        <div class="winner">
-          🏆 ${escapeHtml(w.player_name)}
-          won
-          <strong>${escapeHtml(w.prize)}</strong>
-          — Ticket #${escapeHtml(w.ticket_no)}
-        </div>
-      `).join("")
+    ? winners.map(w => `<div class="winner">🏆 ${escapeHtml(w.player_name)} won <strong>${escapeHtml(w.prize)}</strong> — Ticket #${escapeHtml(w.ticket_no)}</div>`).join("")
     : "<p>No winners yet.</p>";
-
   element("adminWinners").innerHTML = html;
   element("playerWinners").innerHTML = html;
 }
@@ -2608,20 +2089,13 @@ async function initialise() {
 
   const params = new URLSearchParams(window.location.search);
   const room = params.get("room");
-
-  if (room) {
-    element("roomCode").value = room.toUpperCase();
-  }
+  if (room) element("roomCode").value = room.toUpperCase();
 
   await restoreSession();
-
-  if (!game && room) {
-    show("joinSetup");
-  }
+  if (!game && room) show("joinSetup");
 }
 
 initialise();
 </script>
-
 </body>
 </html>
