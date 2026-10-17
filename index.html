@@ -1,20 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Tambola Party 🎉</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
-
-/* =====================================
-   GENERAL
-===================================== */
-
 * {
   box-sizing: border-box;
 }
@@ -24,11 +17,7 @@ body {
   min-height: 100vh;
   font-family: Arial, sans-serif;
   color: white;
-  background: linear-gradient(
-    135deg,
-    #6026a6,
-    #e83e96
-  );
+  background: linear-gradient(135deg, #6026a6, #e83e96);
 }
 
 .container {
@@ -51,10 +40,6 @@ body {
 .header p {
   font-size: 14px;
 }
-
-/* =====================================
-   CARDS
-===================================== */
 
 .card {
   background: white;
@@ -84,10 +69,6 @@ body {
   border-radius: 8px;
   margin: 8px 0;
 }
-
-/* =====================================
-   BUTTONS
-===================================== */
 
 button {
   background: #762ac2;
@@ -142,16 +123,11 @@ select {
   background: #626b78;
 }
 
-/* =====================================
-   ADMIN PRIZE SELECTION
-===================================== */
+/* ADMIN PRIZE SELECTION */
 
 .prize-selection {
   display: grid;
-  grid-template-columns: repeat(
-    2,
-    minmax(0,1fr)
-  );
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 8px;
   margin: 12px 0;
 }
@@ -193,9 +169,7 @@ select {
   border-radius: 8px;
 }
 
-/* =====================================
-   ADMIN DASHBOARD
-===================================== */
+/* ADMIN DASHBOARD */
 
 .admin-actions {
   display: flex;
@@ -205,7 +179,7 @@ select {
 
 .admin-grid {
   display: grid;
-  grid-template-columns: minmax(0,1fr);
+  grid-template-columns: minmax(0, 1fr);
   gap: 16px;
 }
 
@@ -217,27 +191,21 @@ select {
   margin: 0 0 16px;
 }
 
-@media (min-width:1024px) {
-
+@media (min-width: 1024px) {
   .admin-grid {
-    grid-template-columns:
-      minmax(0,1.05fr)
-      minmax(0,.95fr);
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr);
   }
-
 }
 
 .number {
-  font-size: clamp(3rem,9vw,5rem);
+  font-size: clamp(3rem, 9vw, 5rem);
   color: #762ac2;
   font-weight: bold;
   text-align: center;
   padding: 12px;
 }
 
-/* =====================================
-   CLAIM TIMER DISPLAY
-===================================== */
+/* TIMER */
 
 .timer-box {
   background: #fff3cd;
@@ -284,28 +252,7 @@ select {
   color: #146c43;
 }
 
-/* =====================================
-   PLAYER CLAIM NOTE
-===================================== */
-
-.claim-note {
-  background: #e8f4ff;
-  color: #174b78;
-  border-left: 4px solid #2196f3;
-  border-radius: 8px;
-  padding: 9px;
-  font-size: 12px;
-  line-height: 1.5;
-  margin: 8px 0;
-}
-
-.claim-note strong {
-  color: #0b559b;
-}
-
-/* =====================================
-   PLAYER NUMBER DISPLAY
-===================================== */
+/* COMPACT PLAYER HEADER */
 
 .player-number-card {
   padding: 10px;
@@ -336,9 +283,25 @@ select {
   padding: 3px;
 }
 
-/* =====================================
-   COMPACT CLAIM BUTTONS
-===================================== */
+/* SMALL PLAYER TIMER */
+
+.player-number-card .timer-box {
+  padding: 5px;
+  margin: 5px 0 0;
+  border-radius: 8px;
+}
+
+.player-number-card .timer-title {
+  font-size: 11px;
+  margin-bottom: 2px;
+}
+
+.player-number-card .timer-value {
+  font-size: 24px;
+  line-height: 1.1;
+}
+
+/* PLAYER CLAIM SECTION */
 
 .player-claims-card {
   padding: 10px;
@@ -389,16 +352,28 @@ select {
   font-weight: bold;
 }
 
-/* =====================================
-   NUMBER BOARD
-===================================== */
+/* CLAIM NOTE BELOW TICKETS */
+
+.claim-note {
+  background: #e8f4ff;
+  color: #174b78;
+  border-left: 4px solid #2196f3;
+  border-radius: 8px;
+  padding: 9px;
+  font-size: 12px;
+  line-height: 1.5;
+  margin: 8px 0;
+}
+
+.claim-note strong {
+  color: #0b559b;
+}
+
+/* NUMBER BOARD */
 
 .board {
   display: grid;
-  grid-template-columns: repeat(
-    10,
-    minmax(0,1fr)
-  );
+  grid-template-columns: repeat(10, minmax(0, 1fr));
   gap: 4px;
 }
 
@@ -411,7 +386,7 @@ select {
   background: #eee;
   color: #333;
   border-radius: 6px;
-  font-size: clamp(10px,2vw,15px);
+  font-size: clamp(10px, 2vw, 15px);
   font-weight: bold;
 }
 
@@ -419,16 +394,11 @@ select {
   background: #ffd43b;
 }
 
-/* =====================================
-   TAMBOLA TICKETS
-===================================== */
+/* TICKETS */
 
 .ticket {
   display: grid;
-  grid-template-columns: repeat(
-    9,
-    minmax(0,1fr)
-  );
+  grid-template-columns: repeat(9, minmax(0, 1fr));
   gap: 3px;
   margin: 12px 0;
 }
@@ -456,7 +426,7 @@ button.ticket-cell {
   background: #ddd;
 }
 
-/* Yellow = Called */
+/* YELLOW = CALLED */
 
 .ticket-cell.called,
 .ticket-cell.called:hover:not(:disabled),
@@ -465,7 +435,7 @@ button.ticket-cell {
   color: #333;
 }
 
-/* Green = Selected */
+/* GREEN = MARKED */
 
 .ticket-cell.marked,
 .ticket-cell.marked:hover:not(:disabled),
@@ -489,9 +459,7 @@ button.ticket-cell:disabled {
   margin: 5px 0;
 }
 
-/* =====================================
-   WINNERS
-===================================== */
+/* WINNERS */
 
 .winner {
   background: #fff3c4;
@@ -509,9 +477,7 @@ button.ticket-cell:disabled {
   overflow-wrap: anywhere;
 }
 
-/* =====================================
-   POPUP
-===================================== */
+/* POPUP */
 
 .popup {
   position: fixed;
@@ -535,15 +501,12 @@ button.ticket-cell:disabled {
 }
 
 .popup-box h1 {
-  font-size: clamp(24px,6vw,32px);
+  font-size: clamp(24px, 6vw, 32px);
 }
 
-/* =====================================
-   MOBILE
-===================================== */
+/* MOBILE */
 
-@media(max-width:600px) {
-
+@media (max-width: 600px) {
   .container {
     padding: 7px;
   }
@@ -588,6 +551,19 @@ button.ticket-cell:disabled {
     font-size: 31px;
   }
 
+  .player-number-card .timer-box {
+    padding: 4px;
+    margin-top: 4px;
+  }
+
+  .player-number-card .timer-title {
+    font-size: 10px;
+  }
+
+  .player-number-card .timer-value {
+    font-size: 21px;
+  }
+
   .player-claims-card {
     padding: 8px;
   }
@@ -602,23 +578,6 @@ button.ticket-cell:disabled {
     min-height: 29px;
   }
 
-  .timer-box {
-    padding: 7px;
-    margin: 6px 0;
-  }
-
-  .timer-title {
-    font-size: 11px;
-  }
-
-  .timer-value {
-    font-size: 25px;
-  }
-
-  .timer-subtitle {
-    font-size: 10px;
-  }
-
   .claim-note {
     font-size: 11px;
     padding: 7px;
@@ -627,11 +586,8 @@ button.ticket-cell:disabled {
   .admin-actions button {
     flex: 1 1 140px;
   }
-
 }
-
 </style>
-
 </head>
 
 <body>
@@ -639,564 +595,321 @@ button.ticket-cell:disabled {
 <div class="container">
 
 <header class="header">
-
-<h1>🎉 TAMBOLA PARTY 🎉</h1>
-
-<p>Play Housie With Friends!</p>
-
+  <h1>🎉 TAMBOLA PARTY 🎉</h1>
+  <p>Play Housie With Friends!</p>
 </header>
 
-<!-- =====================================
-     HOME
-===================================== -->
+<!-- HOME -->
 
 <section id="home" class="card center">
+  <h2>Welcome to Tambola Party!</h2>
+  <p>Create a game or join your friends.</p>
 
-<h2>Welcome to Tambola Party!</h2>
-
-<p>Create a game or join your friends.</p>
-
-<button onclick="show('adminSetup')">
-👑 Create Game
-</button>
-
-<button onclick="show('joinSetup')">
-🎟️ Join Game
-</button>
-
+  <button onclick="show('adminSetup')">👑 Create Game</button>
+  <button onclick="show('joinSetup')">🎟️ Join Game</button>
 </section>
 
-<!-- =====================================
-     ADMIN SETUP
-===================================== -->
+<!-- ADMIN SETUP -->
 
 <section id="adminSetup" class="card hidden">
+  <h2>👑 Create Tambola Game</h2>
 
-<h2>👑 Create Tambola Game</h2>
+  <p>Maximum tickets per player</p>
+  <select id="maxTickets">
+    <option value="1">1 Ticket</option>
+    <option value="2">2 Tickets</option>
+    <option value="3">3 Tickets</option>
+    <option value="4">4 Tickets</option>
+    <option value="5">5 Tickets</option>
+    <option value="6" selected>6 Tickets</option>
+  </select>
 
-<p>Maximum tickets per player</p>
+  <p>Winners allowed per prize</p>
+  <select id="winnersPerPrize">
+    <option value="1">1 Winner</option>
+    <option value="2">2 Winners</option>
+    <option value="3">3 Winners</option>
+    <option value="4">4 Winners</option>
+    <option value="5">5 Winners</option>
+  </select>
 
-<select id="maxTickets">
+  <hr>
 
-<option value="1">1 Ticket</option>
-<option value="2">2 Tickets</option>
-<option value="3">3 Tickets</option>
-<option value="4">4 Tickets</option>
-<option value="5">5 Tickets</option>
-<option value="6" selected>6 Tickets</option>
+  <h3>🏆 Select Prizes for This Game</h3>
+  <p>Choose which prizes players can win.</p>
 
-</select>
+  <div class="prize-select-actions">
+    <button type="button" onclick="selectAllPrizes()" class="btn-success">
+      ✅ Select All
+    </button>
 
-<p>Winners allowed per prize</p>
+    <button type="button" onclick="clearAllPrizes()" class="btn-secondary">
+      Clear All
+    </button>
+  </div>
 
-<select id="winnersPerPrize">
+  <div id="prizeSelection" class="prize-selection"></div>
+  <p id="selectedPrizeCount" class="status"></p>
 
-<option value="1">1 Winner</option>
-<option value="2">2 Winners</option>
-<option value="3">3 Winners</option>
-<option value="4">4 Winners</option>
-<option value="5">5 Winners</option>
+  <hr>
 
-</select>
+  <h3>🏆 Winning Rules</h3>
+  <select id="winningMode" onchange="updateWinningMode()">
+    <option value="first_claim">⚡ First to Claim</option>
+    <option value="same_number">🎊 Same Number Winners</option>
+    <option value="custom">🎛️ Custom Prize Rules</option>
+  </select>
 
-<hr>
+  <h3>⏱️ Claim Timer</h3>
+  <select id="claimWindow">
+    <option value="10" selected>10 Seconds</option>
+    <option value="15">15 Seconds</option>
+    <option value="30">30 Seconds</option>
+    <option value="60">60 Seconds</option>
+    <option value="0">Unlimited</option>
+  </select>
 
-<h3>🏆 Select Prizes for This Game</h3>
+  <div id="customPrizeSettings" class="hidden">
+    <h3>🎛️ Custom Winning Rules</h3>
+    <div id="customPrizeList"></div>
+  </div>
 
-<p>
-Choose which prizes players can win.
-</p>
+  <br>
 
-<div class="prize-select-actions">
-
-<button
-type="button"
-onclick="selectAllPrizes()"
-class="btn-success">
-✅ Select All
-</button>
-
-<button
-type="button"
-onclick="clearAllPrizes()"
-class="btn-secondary">
-Clear All
-</button>
-
-</div>
-
-<div
-id="prizeSelection"
-class="prize-selection">
-</div>
-
-<p
-id="selectedPrizeCount"
-class="status">
-</p>
-
-<hr>
-
-<h3>🏆 Winning Rules</h3>
-
-<select
-id="winningMode"
-onchange="updateWinningMode()">
-
-<option value="first_claim">
-⚡ First to Claim
-</option>
-
-<option value="same_number">
-🎊 Same Number Winners
-</option>
-
-<option value="custom">
-🎛️ Custom Prize Rules
-</option>
-
-</select>
-
-<h3>⏱️ Claim Timer</h3>
-
-<select id="claimWindow">
-
-<option value="10" selected>
-10 Seconds
-</option>
-
-<option value="15">
-15 Seconds
-</option>
-
-<option value="30">
-30 Seconds
-</option>
-
-<option value="60">
-60 Seconds
-</option>
-
-<option value="0">
-Unlimited
-</option>
-
-</select>
-
-<p class="claim-note">
-
-<strong>Note:</strong>
-The default claim time is 10 seconds.
-
-Players must claim their completed prizes
-before the selected deadline expires.
-
-</p>
-
-<div
-id="customPrizeSettings"
-class="hidden">
-
-<h3>🎛️ Custom Winning Rules</h3>
-
-<div id="customPrizeList"></div>
-
-</div>
-
-<br>
-
-<button
-id="createGameBtn"
-onclick="createGame()">
-
-🎮 Create Room
-
-</button>
-
+  <button id="createGameBtn" onclick="createGame()">
+    🎮 Create Room
+  </button>
 </section>
 
-<!-- =====================================
-     JOIN GAME
-===================================== -->
+<!-- JOIN GAME -->
 
 <section id="joinSetup" class="card hidden">
+  <h2>🎟️ Join Tambola Game</h2>
 
-<h2>🎟️ Join Tambola Game</h2>
+  <input
+    id="playerName"
+    placeholder="Your Name"
+    maxlength="30"
+    autocomplete="name"
+  >
 
-<input
-id="playerName"
-placeholder="Your Name"
-maxlength="30"
-autocomplete="name">
+  <br>
 
-<br>
+  <input
+    id="roomCode"
+    placeholder="Room Code"
+    maxlength="6"
+    autocapitalize="characters"
+  >
 
-<input
-id="roomCode"
-placeholder="Room Code"
-maxlength="6"
-autocapitalize="characters">
+  <p>Number of Tickets</p>
 
-<p>Number of Tickets</p>
+  <select id="ticketCount">
+    <option value="1">1 Ticket</option>
+    <option value="2">2 Tickets</option>
+    <option value="3">3 Tickets</option>
+    <option value="4">4 Tickets</option>
+    <option value="5">5 Tickets</option>
+    <option value="6">6 Tickets</option>
+  </select>
 
-<select id="ticketCount">
+  <br>
 
-<option value="1">1 Ticket</option>
-<option value="2">2 Tickets</option>
-<option value="3">3 Tickets</option>
-<option value="4">4 Tickets</option>
-<option value="5">5 Tickets</option>
-<option value="6">6 Tickets</option>
-
-</select>
-
-<br>
-
-<button
-id="joinGameBtn"
-onclick="joinGame()">
-
-Join Game 🎉
-
-</button>
-
+  <button id="joinGameBtn" onclick="joinGame()">
+    Join Game 🎉
+  </button>
 </section>
 
-<!-- =====================================
-     ADMIN PANEL
-===================================== -->
+<!-- ADMIN PANEL -->
 
 <section id="adminPanel" class="hidden">
 
-<div class="card">
+  <div class="card">
+    <h2>👑 Admin Dashboard</h2>
 
-<h2>👑 Admin Dashboard</h2>
+    <div class="admin-actions">
+      <button onclick="prepareNewGame()">➕ Create New Game</button>
 
-<div class="admin-actions">
+      <button onclick="shareGame()" class="btn-secondary">
+        🔗 Share Game
+      </button>
 
-<button onclick="prepareNewGame()">
-➕ Create New Game
-</button>
+      <button onclick="togglePause()" class="btn-warning" id="pauseBtn">
+        ⏸ Pause
+      </button>
 
-<button
-onclick="shareGame()"
-class="btn-secondary">
-🔗 Share Game
-</button>
+      <button onclick="resumeGame()" class="btn-success hidden" id="resumeBtn">
+        ▶ Resume
+      </button>
 
-<button
-onclick="togglePause()"
-class="btn-warning"
-id="pauseBtn">
-⏸ Pause
-</button>
+      <button onclick="endGame()" class="btn-danger" id="endBtn">
+        🏁 End Game
+      </button>
 
-<button
-onclick="resumeGame()"
-class="btn-success hidden"
-id="resumeBtn">
-▶ Resume
-</button>
+      <button onclick="toggleLock()" class="btn-secondary" id="lockBtn">
+        🔒 Lock Entries
+      </button>
+    </div>
 
-<button
-onclick="endGame()"
-class="btn-danger"
-id="endBtn">
-🏁 End Game
-</button>
+    <div class="status">
+      <strong id="adminRoomCode"></strong><br>
+      <span id="gameStatus"></span><br>
+      <span id="entryStatus"></span>
+    </div>
 
-<button
-onclick="toggleLock()"
-class="btn-secondary"
-id="lockBtn">
-🔒 Lock Entries
-</button>
+    <div class="status">
+      <strong>🏆 Active Prizes</strong>
+      <div id="adminActivePrizes"></div>
+    </div>
+  </div>
 
-</div>
+  <div class="admin-grid">
 
-<div class="status">
+    <div>
+      <div class="card center">
+        <h2>🎲 Number Caller</h2>
 
-<strong id="adminRoomCode"></strong>
+        <div id="adminNumber" class="number">--</div>
 
-<br>
+        <div id="adminTimerBox" class="timer-box">
+          <div class="timer-title">⏱️ Latest Number Claim Window</div>
+          <div id="adminTimer" class="timer-value">--</div>
+          <div class="timer-subtitle">
+            Time remaining from the latest number call
+          </div>
+        </div>
 
-<span id="gameStatus"></span>
+        <button id="callNextBtn" onclick="callNextNumber()">
+          🎲 CALL NEXT NUMBER
+        </button>
 
-<br>
+        <p id="calledCount"></p>
+      </div>
 
-<span id="entryStatus"></span>
+      <div class="card">
+        <h2>🔢 Number Board</h2>
+        <div id="numberBoard" class="board"></div>
+      </div>
+    </div>
 
-</div>
+    <div>
+      <div class="card">
+        <h2>👥 Players</h2>
+        <div id="playerList">Total Players: 0</div>
+        <div id="adminPlayersList"></div>
+      </div>
 
-<div class="status">
+      <div class="card">
+        <h2>🏆 Pending Claims</h2>
+        <div id="pendingClaims"></div>
+      </div>
 
-<strong>🏆 Active Prizes</strong>
+      <div class="card">
+        <h2>🏆 Winners</h2>
+        <div id="adminWinners"></div>
+      </div>
+    </div>
 
-<div id="adminActivePrizes"></div>
-
-</div>
-
-</div>
-
-<div class="admin-grid">
-
-<div>
-
-<div class="card center">
-
-<h2>🎲 Number Caller</h2>
-
-<div id="adminNumber" class="number">
---
-</div>
-
-<!-- ADMIN TIMER -->
-
-<div
-id="adminTimerBox"
-class="timer-box">
-
-<div class="timer-title">
-⏱️ Latest Number Claim Window
-</div>
-
-<div
-id="adminTimer"
-class="timer-value">
---
-</div>
-
-<div class="timer-subtitle">
-Time remaining from the latest number call
-</div>
-
-</div>
-
-<button
-id="callNextBtn"
-onclick="callNextNumber()">
-
-🎲 CALL NEXT NUMBER
-
-</button>
-
-<p id="calledCount"></p>
-
-</div>
-
-<div class="card">
-
-<h2>🔢 Number Board</h2>
-
-<div id="numberBoard" class="board"></div>
-
-</div>
-
-</div>
-
-<div>
-
-<div class="card">
-
-<h2>👥 Players</h2>
-
-<div id="playerList">
-Total Players: 0
-</div>
-
-<div id="adminPlayersList"></div>
-
-</div>
-
-<div class="card">
-
-<h2>🏆 Pending Claims</h2>
-
-<div id="pendingClaims"></div>
-
-</div>
-
-<div class="card">
-
-<h2>🏆 Winners</h2>
-
-<div id="adminWinners"></div>
-
-</div>
-
-</div>
-
-</div>
-
+  </div>
 </section>
 
-<!-- =====================================
-     PLAYER PANEL
-===================================== -->
+<!-- PLAYER PANEL -->
 
 <section id="playerPanel" class="hidden">
 
-<!-- COMPACT PLAYER DISPLAY -->
+  <div class="card center player-number-card">
+    <h2 id="welcomePlayer"></h2>
+    <p id="playerRoom"></p>
 
-<div class="card center player-number-card">
+    <h3>🎯 Latest Number</h3>
+    <div id="playerNumber" class="player-number">--</div>
 
-<h2 id="welcomePlayer"></h2>
+    <p id="playerCalledCount"></p>
+    <p id="playerGameStatus" class="status"></p>
 
-<p id="playerRoom"></p>
+    <div id="playerTimerBox" class="timer-box">
+      <div class="timer-title">⏱️ Claim Countdown</div>
+      <div id="playerTimer" class="timer-value">--</div>
+    </div>
+  </div>
 
-<h3>🎯 Latest Number</h3>
+  <!-- CLAIM BUTTONS DIRECTLY BELOW NUMBER -->
 
-<div
-id="playerNumber"
-class="player-number">
---
-</div>
+  <div class="card player-claims-card">
+    <h2>🏆 Claim Prizes</h2>
+    <div id="claimContainer"></div>
+  </div>
 
-<p id="playerCalledCount"></p>
+  <!-- TICKETS -->
 
-<p
-id="playerGameStatus"
-class="status">
-</p>
+  <div class="card">
+    <h2>🎟️ My Tambola Tickets</h2>
 
-<!-- PLAYER TIMER -->
+    <p class="ticket-legend">
+      🟡 Yellow = Called &nbsp;&nbsp; 🟢 Green = Selected
+    </p>
 
-<div
-id="playerTimerBox"
-class="timer-box">
+    <div id="ticketsContainer"></div>
+  </div>
 
-<div class="timer-title">
-⏱️ Latest Number Claim Window
-</div>
+  <!-- TIMER NOTE MOVED BELOW TICKETS -->
 
-<div
-id="playerTimer"
-class="timer-value">
---
-</div>
+  <div class="claim-note">
+    <strong>📢 Important Claim Rule</strong>
 
-<div class="timer-subtitle">
-Time remaining from the latest number call
-</div>
+    <p>
+      The default claim time is <strong>10 seconds</strong>.
+      Your admin has selected
+      <strong id="playerClaimDuration">10 seconds</strong>
+      for this game.
+    </p>
 
-</div>
+    <p>
+      The countdown begins when the number completing your
+      winning combination is called. Claim your prize before
+      the timer expires.
+    </p>
+  </div>
 
-</div>
+  <!-- WINNERS -->
 
-<!-- CLAIM TIME NOTICE -->
-
-<div class="claim-note">
-
-<strong>📢 Important Claim Rule</strong>
-
-<br>
-
-The default claim time is
-<strong>10 seconds</strong>.
-
-<br>
-
-Your admin has selected
-<strong id="playerClaimDuration">
-10 seconds
-</strong>
-for this game.
-
-<br>
-
-The countdown begins when the number
-completing your winning combination
-is called.
-
-Claim your prize before the timer expires!
-
-</div>
-
-<!-- CLAIM PRIZES -->
-
-<div class="card player-claims-card">
-
-<h2>🏆 Claim Prizes</h2>
-
-<div id="claimContainer"></div>
-
-</div>
-
-<!-- TICKETS -->
-
-<div class="card">
-
-<h2>🎟️ My Tambola Tickets</h2>
-
-<p class="ticket-legend">
-
-🟡 Yellow = Called
-
-&nbsp;&nbsp;
-
-🟢 Green = Selected
-
-</p>
-
-<div id="ticketsContainer"></div>
-
-</div>
-
-<!-- WINNERS -->
-
-<div class="card">
-
-<h2>🎊 Winners</h2>
-
-<div id="playerWinners"></div>
-
-</div>
+  <div class="card">
+    <h2>🎊 Winners</h2>
+    <div id="playerWinners"></div>
+  </div>
 
 </section>
 
 </div>
 
-<!-- =====================================
-     WINNER POPUP
-===================================== -->
+<!-- WINNER POPUP -->
 
-<div
-id="winnerPopup"
-class="popup hidden">
+<div id="winnerPopup" class="popup hidden">
+  <div class="popup-box">
+    <h1>🎊 WE HAVE A WINNER! 🎊</h1>
+    <h2 id="winnerName"></h2>
+    <h2 id="winnerPrize"></h2>
+    <p id="winnerTicket"></p>
+    <p>🏆 Congratulations! 🏆</p>
 
-<div class="popup-box">
-
-<h1>🎊 WE HAVE A WINNER! 🎊</h1>
-
-<h2 id="winnerName"></h2>
-
-<h2 id="winnerPrize"></h2>
-
-<p id="winnerTicket"></p>
-
-<p>🏆 Congratulations! 🏆</p>
-
-<button onclick="closePopup()">
-Continue Playing
-</button>
-
-</div>
-
+    <button onclick="closePopup()">
+      Continue Playing
+    </button>
+  </div>
 </div>
 
 <script>
-
 "use strict";
 
 // =====================================
-// SUPABASE
+// SUPABASE CONFIGURATION
 // =====================================
 
 const SUPABASE_URL =
-"https://prdgeodluuiylzrywdxm.supabase.co";
+  "https://prdgeodluuiylzrywdxm.supabase.co";
 
 const SUPABASE_KEY =
-"sb_publishable_W0xi00YmUDEpF8j38xs7kw_PVRCgRjy";
+  "sb_publishable_W0xi00YmUDEpF8j38xs7kw_PVRCgRjy";
 
 const db = window.supabase.createClient(
   SUPABASE_URL,
@@ -1216,7 +929,6 @@ let playerToken = null;
 
 let winners = [];
 let players = [];
-
 let marked = {};
 
 let realtimeChannel = null;
@@ -1263,7 +975,6 @@ function element(id) {
 }
 
 function show(id) {
-
   [
     "home",
     "adminSetup",
@@ -1271,18 +982,14 @@ function show(id) {
     "adminPanel",
     "playerPanel"
   ].forEach(section => {
-
     element(section).classList.add("hidden");
-
   });
 
   element(id).classList.remove("hidden");
-
   currentView = id;
 }
 
 function escapeHtml(value) {
-
   return String(value ?? "").replace(
     /[&<>"']/g,
     character => ({
@@ -1300,7 +1007,6 @@ function getError(error) {
 }
 
 function calledNumbers() {
-
   return Array.isArray(game?.called)
     ? game.called.map(Number)
     : [];
@@ -1311,30 +1017,24 @@ function calledSet() {
 }
 
 function normalizeGame(data) {
-
   return {
     ...data,
-
     called: Array.isArray(data.called)
       ? data.called.map(Number)
       : [],
-
     prizes: Array.isArray(data.prizes)
       ? data.prizes
       : prizes
-
   };
 }
 
 function activePrizes() {
-
   return Array.isArray(game?.prizes)
     ? game.prizes
     : prizes;
 }
 
 function saveSession() {
-
   if (!game) return;
 
   localStorage.setItem(
@@ -1349,12 +1049,8 @@ function saveSession() {
 }
 
 function setBusy(id, busy) {
-
   const button = element(id);
-
-  if (button) {
-    button.disabled = busy;
-  }
+  if (button) button.disabled = busy;
 }
 
 // =====================================
@@ -1362,76 +1058,54 @@ function setBusy(id, busy) {
 // =====================================
 
 function renderPrizeSelection() {
-
   const container = element("prizeSelection");
-
   container.innerHTML = "";
 
   prizes.forEach((prize, index) => {
-
     const label = document.createElement("label");
-
     label.className = "prize-option";
 
     const checkbox = document.createElement("input");
-
     checkbox.type = "checkbox";
     checkbox.value = prize;
     checkbox.id = "prize_" + index;
     checkbox.checked = true;
-
-    checkbox.addEventListener(
-      "change",
-      updatePrizeSelection
-    );
+    checkbox.addEventListener("change", updatePrizeSelection);
 
     const text = document.createElement("span");
-
     text.textContent = "🏆 " + prize;
 
     label.appendChild(checkbox);
     label.appendChild(text);
-
     container.appendChild(label);
-
   });
 
   updatePrizeSelection();
 }
 
 function getSelectedPrizes() {
-
-  return prizes.filter((prize, index) => {
-
-    return element("prize_" + index)?.checked;
-
-  });
+  return prizes.filter((prize, index) =>
+    element("prize_" + index)?.checked
+  );
 }
 
 function selectAllPrizes() {
-
   prizes.forEach((prize, index) => {
-
     element("prize_" + index).checked = true;
-
   });
 
   updatePrizeSelection();
 }
 
 function clearAllPrizes() {
-
   prizes.forEach((prize, index) => {
-
     element("prize_" + index).checked = false;
-
   });
 
   updatePrizeSelection();
 }
 
 function updatePrizeSelection() {
-
   const selected = getSelectedPrizes();
 
   element("selectedPrizeCount").textContent =
@@ -1448,7 +1122,6 @@ function updatePrizeSelection() {
 // =====================================
 
 function updateWinningMode() {
-
   const custom =
     element("winningMode").value === "custom";
 
@@ -1459,71 +1132,47 @@ function updateWinningMode() {
 }
 
 function renderCustomPrizeSettings() {
-
   const container = element("customPrizeList");
-
   const previousValues = {};
 
   prizes.forEach((prize, index) => {
-
-    const oldSelect =
-      element("customPrize_" + index);
-
-    if (oldSelect) {
-      previousValues[prize] = oldSelect.value;
-    }
-
+    const oldSelect = element("customPrize_" + index);
+    if (oldSelect) previousValues[prize] = oldSelect.value;
   });
 
   container.innerHTML = "";
 
   getSelectedPrizes().forEach(prize => {
-
     const index = prizes.indexOf(prize);
 
     const row = document.createElement("div");
-
     row.className = "custom-prize-row";
 
     const label = document.createElement("p");
-
     label.textContent = "🏆 " + prize;
 
     const select = document.createElement("select");
-
     select.id = "customPrize_" + index;
 
     select.innerHTML = `
-      <option value="first_claim">
-        ⚡ First to Claim
-      </option>
-      <option value="same_number">
-        🎊 Same Number Winners
-      </option>
+      <option value="first_claim">⚡ First to Claim</option>
+      <option value="same_number">🎊 Same Number Winners</option>
     `;
 
-    select.value =
-      previousValues[prize] || "first_claim";
+    select.value = previousValues[prize] || "first_claim";
 
     row.appendChild(label);
     row.appendChild(select);
-
     container.appendChild(row);
-
   });
 }
 
 function getCustomPrizeRules() {
-
   const rules = {};
 
   getSelectedPrizes().forEach(prize => {
-
     const index = prizes.indexOf(prize);
-
-    rules[prize] =
-      element("customPrize_" + index).value;
-
+    rules[prize] = element("customPrize_" + index).value;
   });
 
   return rules;
@@ -1533,93 +1182,51 @@ function getCustomPrizeRules() {
 // TIMER HELPERS
 // =====================================
 
-// Server remains authoritative.
-// Browser countdowns are informational.
-
 function getClaimDuration() {
-
-  return Number(
-    game?.claim_window_seconds ?? 10
-  );
+  return Number(game?.claim_window_seconds ?? 10);
 }
 
 function currentTime() {
-
   return Date.now() + serverTimeOffset;
 }
 
 function formatSeconds(milliseconds) {
-
-  const seconds = Math.max(
-    0,
-    Math.ceil(milliseconds / 1000)
-  );
-
-  return seconds + "s";
+  return Math.max(0, Math.ceil(milliseconds / 1000)) + "s";
 }
 
 function getLatestCall() {
-
-  if (!numberCallHistory.length) {
-    return null;
-  }
-
-  return numberCallHistory[
-    numberCallHistory.length - 1
-  ];
+  if (!numberCallHistory.length) return null;
+  return numberCallHistory[numberCallHistory.length - 1];
 }
 
 function getLatestDeadline() {
-
   const latest = getLatestCall();
-
   if (!latest) return null;
 
   const duration = getClaimDuration();
-
   if (duration === 0) return Infinity;
 
-  const calledAt = Date.parse(
-    latest.called_at
-  );
-
-  if (!Number.isFinite(calledAt)) {
-    return null;
-  }
+  const calledAt = Date.parse(latest.called_at);
+  if (!Number.isFinite(calledAt)) return null;
 
   return calledAt + duration * 1000;
 }
 
-// =====================================
-// LOAD NUMBER CALL TIMESTAMPS
-// =====================================
-
 async function loadNumberCallHistory(gameId) {
-
   const { data, error } = await db
     .from("number_calls")
     .select("draw_position,called_at")
     .eq("game_id", gameId)
-    .order("draw_position", {
-      ascending: true
-    });
+    .order("draw_position", { ascending: true });
 
   if (error) {
-
-    console.warn(
-      "Number history unavailable:",
-      error
-    );
-
+    console.warn("Number history unavailable:", error);
     return false;
   }
 
-  if (!game || game.id !== gameId) {
-    return false;
-  }
+  if (!game || game.id !== gameId) return false;
 
   numberCallHistory = data || [];
-
   return true;
 }
 
@@ -1627,100 +1234,61 @@ async function loadNumberCallHistory(gameId) {
 // TIMER DISPLAY
 // =====================================
 
-function updateTimerDisplay(
-  boxId,
-  valueId
-) {
-
+function updateTimerDisplay(boxId, valueId) {
   const box = element(boxId);
   const value = element(valueId);
 
   if (!box || !value) return;
 
-  box.classList.remove(
-    "warning",
-    "expired",
-    "unlimited"
-  );
+  box.classList.remove("warning", "expired", "unlimited");
 
   const duration = getClaimDuration();
 
   if (duration === 0) {
-
     value.textContent = "Unlimited";
-
     box.classList.add("unlimited");
-
     return;
   }
 
   const deadline = getLatestDeadline();
 
   if (deadline === null) {
-
     value.textContent = "--";
-
     return;
   }
 
-  const remaining =
-    deadline - currentTime();
+  const remaining = deadline - currentTime();
 
   if (remaining <= 0) {
-
     value.textContent = "Time Up";
-
     box.classList.add("expired");
-
     return;
   }
 
-  value.textContent =
-    formatSeconds(remaining);
+  value.textContent = formatSeconds(remaining);
 
   if (remaining <= 5000) {
-
     box.classList.add("warning");
-
   }
 }
 
 function updateCountdowns() {
-
   if (!game) return;
 
   if (currentView === "adminPanel") {
-
-    updateTimerDisplay(
-      "adminTimerBox",
-      "adminTimer"
-    );
-
+    updateTimerDisplay("adminTimerBox", "adminTimer");
   }
 
   if (currentView === "playerPanel") {
-
-    updateTimerDisplay(
-      "playerTimerBox",
-      "playerTimer"
-    );
-
+    updateTimerDisplay("playerTimerBox", "playerTimer");
     updateClaimCountdowns();
-
   }
 }
 
 function startCountdownTimer() {
+  if (countdownTimer) clearInterval(countdownTimer);
 
-  if (countdownTimer) {
-    clearInterval(countdownTimer);
-  }
-
-  countdownTimer = setInterval(
-    updateCountdowns,
-    250
-  );
-
+  countdownTimer = setInterval(updateCountdowns, 250);
   updateCountdowns();
 }
 
@@ -1728,91 +1296,54 @@ function startCountdownTimer() {
 // PRIZE COMPLETION DRAW
 // =====================================
 
-// Determines the draw where a prize
-// first became complete.
-//
-// This follows the supported prize
-// patterns and uses the actual called
-// number order.
-
-function getPrizeCompletionDraw(
-  ticket,
-  prize
-) {
-
-  const numbers =
-    patternNumbers(ticket, prize);
-
+function getPrizeCompletionDraw(ticket, prize) {
+  const numbers = patternNumbers(ticket, prize);
   if (!numbers.length) return null;
 
   const required =
-    prize === "Early 5"
-      ? 5
-      : prize === "Early 7"
-        ? 7
-        : numbers.length;
+    prize === "Early 5" ? 5 :
+    prize === "Early 7" ? 7 :
+    numbers.length;
 
   const called = calledNumbers();
-
-  const numberLookup = new Set(
-    numbers.map(Number)
-  );
+  const numberLookup = new Set(numbers.map(Number));
 
   let hits = 0;
 
   for (let i = 0; i < called.length; i++) {
-
     if (numberLookup.has(called[i])) {
-
       hits++;
 
       if (hits >= required) {
         return i + 1;
       }
-
     }
-
   }
 
   return null;
 }
 
 function getPrizeDeadline(ticket, prize) {
-
   const duration = getClaimDuration();
 
-  if (duration === 0) {
-    return Infinity;
-  }
+  if (duration === 0) return Infinity;
 
-  const completionDraw =
-    getPrizeCompletionDraw(ticket, prize);
+  const completionDraw = getPrizeCompletionDraw(ticket, prize);
+  if (completionDraw === null) return null;
 
-  if (completionDraw === null) {
-    return null;
-  }
-
-  const call = numberCallHistory.find(
-    item =>
-      Number(item.draw_position) ===
-      completionDraw
+  const call = numberCallHistory.find(item =>
+    Number(item.draw_position) === completionDraw
   );
 
   if (!call) return null;
 
-  const calledAt = Date.parse(
-    call.called_at
-  );
-
-  if (!Number.isFinite(calledAt)) {
-    return null;
-  }
+  const calledAt = Date.parse(call.called_at);
+  if (!Number.isFinite(calledAt)) return null;
 
   return calledAt + duration * 1000;
 }
 
 function updateClaimCountdowns() {
-
   if (!game || !player) return;
 
   const buttons = document.querySelectorAll(
@@ -1820,67 +1351,37 @@ function updateClaimCountdowns() {
   );
 
   buttons.forEach(button => {
+    const ticketId = button.dataset.claimTicket;
+    const prize = button.dataset.claimPrize;
 
-    const ticketId =
-      button.dataset.claimTicket;
-
-    const prize =
-      button.dataset.claimPrize;
-
-    const ticket = tickets.find(
-      t => String(t.id) === ticketId
-    );
-
+    const ticket = tickets.find(t => String(t.id) === ticketId);
     if (!ticket) return;
 
-    const deadline =
-      getPrizeDeadline(ticket, prize);
-
-    const timeLabel =
-      button.querySelector(".claim-time");
+    const deadline = getPrizeDeadline(ticket, prize);
+    const timeLabel = button.querySelector(".claim-time");
 
     if (!timeLabel) return;
 
-    const duration = getClaimDuration();
-
-    if (duration === 0) {
-
+    if (getClaimDuration() === 0) {
       timeLabel.textContent = "Unlimited";
-
       return;
     }
 
     if (deadline === null) {
-
-      timeLabel.textContent =
-        "Checking time";
-
-      // Do not claim the deadline is
-      // valid without timestamp data.
-
+      timeLabel.textContent = "Checking time";
       return;
     }
 
-    const remaining =
-      deadline - currentTime();
+    const remaining = deadline - currentTime();
 
     if (remaining <= 0) {
-
       button.disabled = true;
-
       button.classList.remove("ready");
-
       button.classList.add("expired");
-
       timeLabel.textContent = "Expired";
-
     } else {
-
-      timeLabel.textContent =
-        formatSeconds(remaining);
-
+      timeLabel.textContent = formatSeconds(remaining);
     }
-
   });
 }
 
@@ -1889,68 +1390,47 @@ function updateClaimCountdowns() {
 // =====================================
 
 async function stopLiveUpdates() {
-
   if (refreshTimer) {
-
     clearInterval(refreshTimer);
-
     refreshTimer = null;
-
   }
 
   if (countdownTimer) {
-
     clearInterval(countdownTimer);
-
     countdownTimer = null;
-
   }
 
   if (realtimeChannel) {
-
     const oldChannel = realtimeChannel;
-
     realtimeChannel = null;
-
     await db.removeChannel(oldChannel);
-
   }
 }
 
 function resetNotifications() {
-
   initialWinnersLoaded = false;
-
   lastWinnerIds.clear();
 
   winnerPopupQueue = [];
-
   winnerPopupActive = false;
 
   if (winnerPopupTimer) {
-
     clearTimeout(winnerPopupTimer);
-
     winnerPopupTimer = null;
-
   }
 
   element("winnerPopup").classList.add("hidden");
 }
 
 async function resetGameState() {
-
   switchingGame = true;
-
   await stopLiveUpdates();
 
   game = null;
   player = null;
-
   tickets = [];
   winners = [];
   players = [];
-
   marked = {};
 
   numberCallHistory = [];
@@ -1960,7 +1440,6 @@ async function resetGameState() {
   playerToken = null;
 
   claimingPrizes.clear();
-
   resetNotifications();
 
   switchingGame = false;
@@ -1971,76 +1450,51 @@ async function resetGameState() {
 // =====================================
 
 async function prepareNewGame() {
-
   const confirmed = confirm(
     "Create another game?\n\n" +
     "Your current game will remain in Supabase."
   );
 
   if (!confirmed) return;
-
   show("adminSetup");
 }
 
 async function createGame() {
+  if (element("createGameBtn").disabled) return;
 
-  if (element("createGameBtn").disabled) {
-    return;
-  }
-
-  const selectedPrizes =
-    getSelectedPrizes();
+  const selectedPrizes = getSelectedPrizes();
 
   if (!selectedPrizes.length) {
-
-    alert(
-      "Please select at least one prize."
-    );
-
+    alert("Please select at least one prize.");
     return;
   }
 
   setBusy("createGameBtn", true);
 
   try {
-
-    const maxTickets =
-      Number(element("maxTickets").value);
-
-    const winnersPerPrize =
-      Number(element("winnersPerPrize").value);
-
-    const winningMode =
-      element("winningMode").value;
-
-    const claimWindow =
-      Number(element("claimWindow").value);
+    const maxTickets = Number(element("maxTickets").value);
+    const winnersPerPrize = Number(element("winnersPerPrize").value);
+    const winningMode = element("winningMode").value;
+    const claimWindow = Number(element("claimWindow").value);
 
     const customRules =
       winningMode === "custom"
         ? getCustomPrizeRules()
         : {};
 
-    const { data, error } = await db.rpc(
-      "create_game_v3",
-      {
-        p_max_tickets: maxTickets,
-        p_winners_per_prize: winnersPerPrize,
-        p_winning_mode: winningMode,
-        p_claim_window_seconds: claimWindow,
-        p_custom_prize_rules: customRules,
-        p_prizes: selectedPrizes
-      }
-    );
+    const { data, error } = await db.rpc("create_game_v3", {
+      p_max_tickets: maxTickets,
+      p_winners_per_prize: winnersPerPrize,
+      p_winning_mode: winningMode,
+      p_claim_window_seconds: claimWindow,
+      p_custom_prize_rules: customRules,
+      p_prizes: selectedPrizes
+    });
 
     if (error) throw error;
 
     if (!data?.game_id || !data?.host_token) {
-
-      throw new Error(
-        "Invalid game response."
-      );
-
+      throw new Error("Invalid game response.");
     }
 
     await resetGameState();
@@ -2061,17 +1515,13 @@ async function createGame() {
     });
 
     saveSession();
-
     show("adminPanel");
 
     await refreshGame();
 
     if (game) {
-
       subscribeToGame();
-
       startRefreshing();
-
     }
 
     alert(
@@ -2080,13 +1530,9 @@ async function createGame() {
     );
 
   } catch (error) {
-
     getError(error);
-
   } finally {
-
     setBusy("createGameBtn", false);
-
   }
 }
 
@@ -2095,50 +1541,30 @@ async function createGame() {
 // =====================================
 
 async function joinGame() {
+  if (element("joinGameBtn").disabled) return;
 
-  if (element("joinGameBtn").disabled) {
-    return;
-  }
-
-  const name =
-    element("playerName").value.trim();
-
-  const code =
-    element("roomCode").value
-      .trim()
-      .toUpperCase();
-
-  const count =
-    Number(element("ticketCount").value);
+  const name = element("playerName").value.trim();
+  const code = element("roomCode").value.trim().toUpperCase();
+  const count = Number(element("ticketCount").value);
 
   if (!name || !code) {
-
     alert("Enter your name and room code.");
-
     return;
   }
 
   setBusy("joinGameBtn", true);
 
   try {
-
-    const { data, error } = await db.rpc(
-      "join_game",
-      {
-        p_code: code,
-        p_name: name,
-        p_ticket_count: count
-      }
-    );
+    const { data, error } = await db.rpc("join_game", {
+      p_code: code,
+      p_name: name,
+      p_ticket_count: count
+    });
 
     if (error) throw error;
 
     if (!data?.player_token || !data?.game_id) {
-
-      throw new Error(
-        "Invalid player response."
-      );
-
+      throw new Error("Invalid player response.");
     }
 
     await resetGameState();
@@ -2161,29 +1587,20 @@ async function joinGame() {
     });
 
     loadMarks();
-
     saveSession();
-
     show("playerPanel");
 
     await refreshGame();
 
     if (game) {
-
       subscribeToGame();
-
       startRefreshing();
-
     }
 
   } catch (error) {
-
     getError(error);
-
   } finally {
-
     setBusy("joinGameBtn", false);
-
   }
 }
 
@@ -2192,18 +1609,13 @@ async function joinGame() {
 // =====================================
 
 async function restoreSession() {
-
-  const saved =
-    localStorage.getItem(SESSION_KEY);
-
+  const saved = localStorage.getItem(SESSION_KEY);
   if (!saved) return;
 
   try {
-
     const session = JSON.parse(saved);
 
     if (session.hostToken && session.gameId) {
-
       hostToken = session.hostToken;
 
       const { data, error } = await db
@@ -2215,19 +1627,14 @@ async function restoreSession() {
       if (error) throw error;
 
       game = normalizeGame(data);
-
       show("adminPanel");
 
     } else if (session.playerToken) {
-
       playerToken = session.playerToken;
 
-      const { data, error } = await db.rpc(
-        "get_my_state",
-        {
-          p_player_token: playerToken
-        }
-      );
+      const { data, error } = await db.rpc("get_my_state", {
+        p_player_token: playerToken
+      });
 
       if (error) throw error;
 
@@ -2247,37 +1654,23 @@ async function restoreSession() {
       });
 
       loadMarks();
-
       show("playerPanel");
-
     }
 
     if (game) {
-
       await refreshGame();
 
       if (game) {
-
         subscribeToGame();
-
         startRefreshing();
-
       }
-
     }
 
   } catch (error) {
-
     console.error(error);
-
-    localStorage.removeItem(
-      SESSION_KEY
-    );
-
+    localStorage.removeItem(SESSION_KEY);
     await resetGameState();
-
     show("home");
-
   }
 }
 
@@ -2286,22 +1679,17 @@ async function restoreSession() {
 // =====================================
 
 async function refreshGame() {
-
   if (!game || switchingGame) return;
 
   if (refreshing) {
-
     refreshAgain = true;
-
     return;
   }
 
   refreshing = true;
-
   const gameId = game.id;
 
   try {
-
     const { data, error } = await db
       .from("games")
       .select("*")
@@ -2309,10 +1697,7 @@ async function refreshGame() {
       .single();
 
     if (error) throw error;
-
-    if (!game || game.id !== gameId) {
-      return;
-    }
+    if (!game || game.id !== gameId) return;
 
     game = normalizeGame(data);
 
@@ -2320,29 +1705,21 @@ async function refreshGame() {
       game.status === "ended" &&
       currentView === "playerPanel"
     ) {
-
       switchingGame = true;
-
-      localStorage.removeItem(
-        SESSION_KEY
-      );
+      localStorage.removeItem(SESSION_KEY);
 
       await stopLiveUpdates();
 
       game = null;
       player = null;
       playerToken = null;
-
       tickets = [];
       winners = [];
       marked = {};
-
       numberCallHistory = [];
 
       resetNotifications();
-
       show("home");
-
       switchingGame = false;
 
       alert(
@@ -2353,13 +1730,8 @@ async function refreshGame() {
       return;
     }
 
-    // Fetch number-call timestamps.
-
     await loadNumberCallHistory(gameId);
-
-    if (!game || game.id !== gameId) {
-      return;
-    }
+    if (!game || game.id !== gameId) return;
 
     const {
       data: winnerData,
@@ -2368,20 +1740,14 @@ async function refreshGame() {
       .from("winners")
       .select("*")
       .eq("game_id", gameId)
-      .order("won_at", {
-        ascending: true
-      });
+      .order("won_at", { ascending: true });
 
     if (winnerError) throw winnerError;
-
-    if (!game || game.id !== gameId) {
-      return;
-    }
+    if (!game || game.id !== gameId) return;
 
     winners = winnerData || [];
 
     if (currentView === "adminPanel") {
-
       const {
         data: playerData,
         error: playerError
@@ -2391,55 +1757,33 @@ async function refreshGame() {
         .eq("game_id", gameId);
 
       if (playerError) {
-
         console.error(playerError);
-
       } else {
-
         players = playerData || [];
-
       }
 
       renderAdmin();
-
     }
 
     if (currentView === "playerPanel") {
-
       renderPlayer();
-
     }
 
     checkNewWinners();
-
     updateCountdowns();
 
   } catch (error) {
-
-    console.error(
-      "Refresh error:",
-      error
-    );
-
+    console.error("Refresh error:", error);
   } finally {
-
     refreshing = false;
 
     if (refreshAgain) {
-
       refreshAgain = false;
 
       if (game && !switchingGame) {
-
-        setTimeout(
-          refreshGame,
-          0
-        );
-
+        setTimeout(refreshGame, 0);
       }
-
     }
-
   }
 }
 
@@ -2448,17 +1792,13 @@ async function refreshGame() {
 // =====================================
 
 function subscribeToGame() {
-
   if (!game) return;
 
   const gameId = game.id;
 
   if (realtimeChannel) {
-
     db.removeChannel(realtimeChannel);
-
     realtimeChannel = null;
-
   }
 
   const channel = db.channel(
@@ -2500,37 +1840,18 @@ function subscribeToGame() {
       refreshGame
     )
     .subscribe(status => {
-
       if (status === "CHANNEL_ERROR") {
-
-        console.warn(
-          "Realtime unavailable. Polling active."
-        );
-
+        console.warn("Realtime unavailable. Polling active.");
       }
-
     });
 
   realtimeChannel = channel;
 }
 
 function startRefreshing() {
+  if (refreshTimer) clearInterval(refreshTimer);
 
-  if (refreshTimer) {
-
-    clearInterval(refreshTimer);
-
-  }
-
-  // Polling backup.
-  // Realtime remains the primary
-  // update mechanism.
-
-  refreshTimer = setInterval(
-    refreshGame,
-    3000
-  );
-
+  refreshTimer = setInterval(refreshGame, 3000);
   startCountdownTimer();
 }
 
@@ -2539,139 +1860,90 @@ function startRefreshing() {
 // =====================================
 
 async function callNextNumber() {
-
-  if (!game || !hostToken || callingNumber) {
-    return;
-  }
+  if (!game || !hostToken || callingNumber) return;
 
   if (
     game.status === "ended" ||
     game.status === "paused" ||
     calledNumbers().length >= 90
-  ) {
-    return;
-  }
+  ) return;
 
   callingNumber = true;
-
   element("callNextBtn").disabled = true;
 
   try {
-
-    const { data, error } = await db.rpc(
-      "call_number",
-      {
-        p_game_id: game.id,
-        p_host_token: hostToken
-      }
-    );
+    const { data, error } = await db.rpc("call_number", {
+      p_game_id: game.id,
+      p_host_token: hostToken
+    });
 
     if (error) throw error;
 
     if (data?.number != null) {
-
       announceNumber(data.number);
-
     }
 
     await refreshGame();
 
   } catch (error) {
-
     getError(error);
-
   } finally {
-
     callingNumber = false;
-
-    if (game) {
-      updateAdminControls();
-    }
-
+    if (game) updateAdminControls();
   }
 }
 
 function announceNumber(number) {
-
-  if (!("speechSynthesis" in window)) {
-    return;
-  }
+  if (!("speechSynthesis" in window)) return;
 
   try {
-
     speechSynthesis.cancel();
 
-    const speech =
-      new SpeechSynthesisUtterance(
-        "Number " + number
-      );
+    const speech = new SpeechSynthesisUtterance(
+      "Number " + number
+    );
 
     speech.rate = 0.85;
-
     speechSynthesis.speak(speech);
 
   } catch (error) {
-
     console.warn(error);
-
   }
 }
 
 async function setStatus(status) {
-
-  if (!game || !hostToken) {
-    return false;
-  }
+  if (!game || !hostToken) return false;
 
   try {
-
-    const { error } = await db.rpc(
-      "set_game_state",
-      {
-        p_game_id: game.id,
-        p_host_token: hostToken,
-        p_status: status
-      }
-    );
+    const { error } = await db.rpc("set_game_state", {
+      p_game_id: game.id,
+      p_host_token: hostToken,
+      p_status: status
+    });
 
     if (error) throw error;
 
     await refreshGame();
-
     return true;
 
   } catch (error) {
-
     getError(error);
-
     return false;
-
   }
 }
 
 async function togglePause() {
-
-  if (!game || game.status === "ended") {
-    return;
-  }
-
+  if (!game || game.status === "ended") return;
   await setStatus("paused");
 }
 
 async function resumeGame() {
-
-  if (!game || game.status === "ended") {
-    return;
-  }
-
+  if (!game || game.status === "ended") return;
   await setStatus("active");
 }
 
 async function endGame() {
-
-  if (!game || game.status === "ended") {
-    return;
-  }
+  if (!game || game.status === "ended") return;
 
   const confirmed = confirm(
     "Are you sure you want to END this game?"
@@ -2681,38 +1953,25 @@ async function endGame() {
 
   const success = await setStatus("ended");
 
-  if (success) {
-
-    alert("Game ended successfully.");
-
-  }
+  if (success) alert("Game ended successfully.");
 }
 
 async function toggleLock() {
-
   if (!game || !hostToken) return;
-
   if (game.status === "ended") return;
 
   try {
-
-    const { error } = await db.rpc(
-      "set_game_state",
-      {
-        p_game_id: game.id,
-        p_host_token: hostToken,
-        p_locked: !game.locked
-      }
-    );
+    const { error } = await db.rpc("set_game_state", {
+      p_game_id: game.id,
+      p_host_token: hostToken,
+      p_locked: !game.locked
+    });
 
     if (error) throw error;
-
     await refreshGame();
 
   } catch (error) {
-
     getError(error);
-
   }
 }
 
@@ -2721,62 +1980,34 @@ async function toggleLock() {
 // =====================================
 
 async function shareGame() {
-
   if (!game) return;
 
-  const url = new URL(
-    window.location.href
-  );
-
+  const url = new URL(window.location.href);
   url.search = "";
   url.hash = "";
-
-  url.searchParams.set(
-    "room",
-    game.code
-  );
+  url.searchParams.set("room", game.code);
 
   const shareUrl = url.toString();
 
   if (navigator.share) {
-
     try {
-
       await navigator.share({
         title: "Tambola Party",
-        text:
-          "Join my Tambola game! Room: " +
-          game.code,
+        text: "Join my Tambola game! Room: " + game.code,
         url: shareUrl
       });
 
       return;
-
     } catch (error) {
-
-      if (error.name === "AbortError") {
-        return;
-      }
-
+      if (error.name === "AbortError") return;
     }
-
   }
 
   try {
-
-    await navigator.clipboard.writeText(
-      shareUrl
-    );
-
+    await navigator.clipboard.writeText(shareUrl);
     alert("Invitation link copied!");
-
   } catch (error) {
-
-    window.prompt(
-      "Copy this invitation link:",
-      shareUrl
-    );
-
+    window.prompt("Copy this invitation link:", shareUrl);
   }
 }
 
@@ -2785,33 +2016,22 @@ async function shareGame() {
 // =====================================
 
 function updateAdminControls() {
-
   if (!game) return;
 
-  const ended =
-    game.status === "ended";
+  const ended = game.status === "ended";
+  const paused = game.status === "paused";
 
-  const paused =
-    game.status === "paused";
+  element("pauseBtn").classList.toggle(
+    "hidden", paused || ended
+  );
 
-  element("pauseBtn")
-    .classList.toggle(
-      "hidden",
-      paused || ended
-    );
-
-  element("resumeBtn")
-    .classList.toggle(
-      "hidden",
-      !paused || ended
-    );
+  element("resumeBtn").classList.toggle(
+    "hidden", !paused || ended
+  );
 
   element("pauseBtn").disabled = ended;
-
   element("resumeBtn").disabled = ended;
-
   element("endBtn").disabled = ended;
-
   element("lockBtn").disabled = ended;
 
   element("lockBtn").textContent =
@@ -2827,11 +2047,9 @@ function updateAdminControls() {
 }
 
 function renderAdmin() {
-
   if (!game) return;
 
   const called = calledNumbers();
-
   const calledLookup = new Set(called);
 
   element("adminRoomCode").textContent =
@@ -2841,16 +2059,13 @@ function renderAdmin() {
     game.last_number ?? "--";
 
   element("calledCount").textContent =
-    "Numbers Called: " +
-    called.length +
-    "/90";
+    "Numbers Called: " + called.length + "/90";
 
   element("gameStatus").textContent =
     "Status: " + game.status;
 
   element("entryStatus").textContent =
-    "Entries: " +
-    (game.locked ? "Locked" : "Open");
+    "Entries: " + (game.locked ? "Locked" : "Open");
 
   element("adminActivePrizes").textContent =
     activePrizes().join(" • ");
@@ -2858,62 +2073,41 @@ function renderAdmin() {
   updateAdminControls();
 
   const board = element("numberBoard");
-
   board.innerHTML = "";
 
   for (let n = 1; n <= 90; n++) {
-
     const cell = document.createElement("div");
-
     cell.className = "board-cell";
 
     if (calledLookup.has(n)) {
-
       cell.classList.add("called");
-
     }
 
     cell.textContent = n;
-
     board.appendChild(cell);
-
   }
 
   element("playerList").textContent =
-    "Total Players: " +
-    players.length;
+    "Total Players: " + players.length;
 
-  const container =
-    element("adminPlayersList");
-
+  const container = element("adminPlayersList");
   container.innerHTML = "";
 
   players.forEach((p, index) => {
-
     const row = document.createElement("div");
-
     row.className = "player-row";
 
     row.textContent =
-      (index + 1) +
-      ". 🎟️ " +
-      p.name;
+      (index + 1) + ". 🎟️ " + p.name;
 
     container.appendChild(row);
-
   });
 
   renderPendingClaims();
-
   renderWinners();
 }
 
-// =====================================
-// PENDING CLAIMS
-// =====================================
-
 function renderPendingClaims() {
-
   element("pendingClaims").textContent =
     "Claims are processed by the game server. " +
     "No pending-claim review API is configured.";
@@ -2924,14 +2118,11 @@ function renderPendingClaims() {
 // =====================================
 
 function loadMarks() {
-
   if (!player) return;
 
-  const key =
-    "tambola_marks_" + player.id;
+  const key = "tambola_marks_" + player.id;
 
   try {
-
     const stored = JSON.parse(
       localStorage.getItem(key) || "{}"
     );
@@ -2944,14 +2135,11 @@ function loadMarks() {
         : {};
 
   } catch (error) {
-
     marked = {};
-
   }
 }
 
 function saveMarks() {
-
   if (!player) return;
 
   localStorage.setItem(
@@ -2961,41 +2149,28 @@ function saveMarks() {
 }
 
 function toggleMark(ticketId, number) {
-
   if (!game || !player) return;
 
   const numericNumber = Number(number);
-
-  if (!calledSet().has(numericNumber)) {
-    return;
-  }
+  if (!calledSet().has(numericNumber)) return;
 
   if (!Array.isArray(marked[ticketId])) {
-
     marked[ticketId] = [];
-
   }
 
-  marked[ticketId] =
-    marked[ticketId].map(Number);
+  marked[ticketId] = marked[ticketId].map(Number);
 
   const values = marked[ticketId];
 
   if (values.includes(numericNumber)) {
-
-    marked[ticketId] =
-      values.filter(
-        n => n !== numericNumber
-      );
-
+    marked[ticketId] = values.filter(
+      n => n !== numericNumber
+    );
   } else {
-
     values.push(numericNumber);
-
   }
 
   saveMarks();
-
   renderPlayer();
 }
 
@@ -3004,15 +2179,12 @@ function toggleMark(ticketId, number) {
 // =====================================
 
 function renderPlayer() {
-
   if (!player || !game) return;
 
   const called = calledSet();
 
   element("welcomePlayer").textContent =
-    "Welcome, " +
-    player.name +
-    "! 🎉";
+    "Welcome, " + player.name + "! 🎉";
 
   element("playerRoom").textContent =
     "Room: " + game.code;
@@ -3021,9 +2193,7 @@ function renderPlayer() {
     game.last_number ?? "--";
 
   element("playerCalledCount").textContent =
-    "Numbers Called: " +
-    called.size +
-    "/90";
+    "Numbers Called: " + called.size + "/90";
 
   element("playerGameStatus").textContent =
     "Game Status: " + game.status;
@@ -3035,42 +2205,30 @@ function renderPlayer() {
       ? "Unlimited"
       : duration + " seconds";
 
-  const container =
-    element("ticketsContainer");
-
+  const container = element("ticketsContainer");
   container.innerHTML = "";
 
   tickets.forEach(ticket => {
-
     const heading = document.createElement("h3");
-
     heading.textContent =
       "🎟️ Ticket #" + ticket.ticket_no;
 
     container.appendChild(heading);
 
     const grid = document.createElement("div");
-
     grid.className = "ticket";
 
     if (!Array.isArray(ticket.numbers)) {
-
       const error = document.createElement("p");
-
-      error.textContent =
-        "Ticket data is unavailable.";
-
+      error.textContent = "Ticket data is unavailable.";
       container.appendChild(error);
-
       return;
     }
 
     ticket.numbers.forEach(row => {
-
       if (!Array.isArray(row)) return;
 
       row.forEach(number => {
-
         const cell = document.createElement(
           number === null ? "div" : "button"
         );
@@ -3078,16 +2236,10 @@ function renderPlayer() {
         cell.className = "ticket-cell";
 
         if (number === null) {
-
           cell.classList.add("empty");
-
         } else {
-
-          const numericNumber =
-            Number(number);
-
-          const wasCalled =
-            called.has(numericNumber);
+          const numericNumber = Number(number);
+          const wasCalled = called.has(numericNumber);
 
           const isMarked =
             wasCalled &&
@@ -3096,52 +2248,32 @@ function renderPlayer() {
               .map(Number)
               .includes(numericNumber);
 
-          cell.textContent =
-            numericNumber;
-
+          cell.textContent = numericNumber;
           cell.type = "button";
 
           if (isMarked) {
-
             cell.classList.add("marked");
-
           } else if (wasCalled) {
-
             cell.classList.add("called");
-
           } else {
-
             cell.classList.add("uncalled");
-
             cell.disabled = true;
-
           }
 
           cell.onclick = () => {
-
-            toggleMark(
-              ticket.id,
-              numericNumber
-            );
-
+            toggleMark(ticket.id, numericNumber);
           };
-
         }
 
         grid.appendChild(cell);
-
       });
-
     });
 
     container.appendChild(grid);
-
   });
 
   renderClaims();
-
   renderWinners();
-
   updateCountdowns();
 }
 
@@ -3150,13 +2282,10 @@ function renderPlayer() {
 // =====================================
 
 function rowNumbers(ticket, row) {
-
   if (
     !Array.isArray(ticket.numbers) ||
     !Array.isArray(ticket.numbers[row])
-  ) {
-    return [];
-  }
+  ) return [];
 
   return ticket.numbers[row]
     .filter(n => n !== null)
@@ -3164,36 +2293,18 @@ function rowNumbers(ticket, row) {
 }
 
 function patternNumbers(ticket, prize) {
-
   const top = rowNumbers(ticket, 0);
-
   const middle = rowNumbers(ticket, 1);
-
   const bottom = rowNumbers(ticket, 2);
 
-  const all = [
-    ...top,
-    ...middle,
-    ...bottom
-  ];
+  const all = [...top, ...middle, ...bottom];
 
-  if (prize === "Top Line") {
-    return top;
-  }
-
-  if (prize === "Middle Line") {
-    return middle;
-  }
-
-  if (prize === "Bottom Line") {
-    return bottom;
-  }
+  if (prize === "Top Line") return top;
+  if (prize === "Middle Line") return middle;
+  if (prize === "Bottom Line") return bottom;
 
   if (prize === "Four Corners") {
-
-    if (!top.length || !bottom.length) {
-      return [];
-    }
+    if (!top.length || !bottom.length) return [];
 
     return [
       top[0],
@@ -3201,46 +2312,29 @@ function patternNumbers(ticket, prize) {
       bottom[0],
       bottom[bottom.length - 1]
     ];
-
   }
 
   if (
     prize === "Early 5" ||
     prize === "Early 7" ||
     prize === "Full House"
-  ) {
-    return all;
-  }
+  ) return all;
 
   return [];
 }
 
 function qualifies(ticket, prize) {
+  if (!game || !activePrizes().includes(prize)) return false;
 
-  if (!game) return false;
-
-  if (!activePrizes().includes(prize)) {
-    return false;
-  }
-
-  const numbers =
-    patternNumbers(ticket, prize);
-
+  const numbers = patternNumbers(ticket, prize);
   if (!numbers.length) return false;
 
   const called = calledSet();
 
-  const hits = numbers.filter(
-    n => called.has(n)
-  ).length;
+  const hits = numbers.filter(n => called.has(n)).length;
 
-  if (prize === "Early 5") {
-    return hits >= 5;
-  }
-
-  if (prize === "Early 7") {
-    return hits >= 7;
-  }
+  if (prize === "Early 5") return hits >= 5;
+  if (prize === "Early 7") return hits >= 7;
 
   return hits === numbers.length;
 }
@@ -3250,81 +2344,57 @@ function qualifies(ticket, prize) {
 // =====================================
 
 function renderClaims() {
-
   if (!game || !player) return;
 
-  const container =
-    element("claimContainer");
-
+  const container = element("claimContainer");
   container.innerHTML = "";
 
   const gamePrizes = activePrizes();
 
   tickets.forEach(ticket => {
-
     const heading = document.createElement("h3");
-
     heading.textContent =
       "🎟️ Ticket #" + ticket.ticket_no;
 
     container.appendChild(heading);
 
-    const buttonRow =
-      document.createElement("div");
-
+    const buttonRow = document.createElement("div");
     buttonRow.className = "claim-buttons";
 
     gamePrizes.forEach(prize => {
-
       const alreadyWon = winners.some(
-        w =>
-          w.ticket_id === ticket.id &&
-          w.prize === prize
+        w => w.ticket_id === ticket.id && w.prize === prize
       );
 
       if (alreadyWon) {
-
-        const badge =
-          document.createElement("span");
-
+        const badge = document.createElement("span");
         badge.className = "winner";
-
-        badge.textContent =
-          "🏆 " + prize + " WON!";
-
+        badge.textContent = "🏆 " + prize + " WON!";
         buttonRow.appendChild(badge);
-
         return;
       }
 
-      const eligible =
-        qualifies(ticket, prize);
+      const eligible = qualifies(ticket, prize);
 
-      const winnerCount =
-        winners.filter(
-          w => w.prize === prize
-        ).length;
+      const winnerCount = winners.filter(
+        w => w.prize === prize
+      ).length;
 
       const maxWinners =
         Number(game.winners_per_prize ?? 1);
 
-      const prizeFull =
-        winnerCount >= maxWinners;
+      const prizeFull = winnerCount >= maxWinners;
 
-      const claimKey =
-        ticket.id + "_" + prize;
-
-      const claimInProgress =
-        claimingPrizes.has(claimKey);
+      const claimKey = ticket.id + "_" + prize;
+      const claimInProgress = claimingPrizes.has(claimKey);
 
       const gameAllowsClaims =
         game.status !== "ended" &&
         game.status !== "paused";
 
-      const deadline =
-        eligible
-          ? getPrizeDeadline(ticket, prize)
-          : null;
+      const deadline = eligible
+        ? getPrizeDeadline(ticket, prize)
+        : null;
 
       const expired =
         eligible &&
@@ -3332,16 +2402,11 @@ function renderClaims() {
         deadline !== Infinity &&
         currentTime() >= deadline;
 
-      const button =
-        document.createElement("button");
-
+      const button = document.createElement("button");
       button.className = "prize-button";
 
-      button.dataset.claimTicket =
-        String(ticket.id);
-
-      button.dataset.claimPrize =
-        prize;
+      button.dataset.claimTicket = String(ticket.id);
+      button.dataset.claimPrize = prize;
 
       button.disabled =
         !eligible ||
@@ -3356,19 +2421,14 @@ function renderClaims() {
         !expired &&
         gameAllowsClaims
       ) {
-
         button.classList.add("ready");
-
       }
 
       if (expired) {
-
         button.classList.add("expired");
-
       }
 
-      const label =
-        document.createElement("span");
+      const label = document.createElement("span");
 
       label.textContent =
         claimInProgress
@@ -3383,59 +2443,34 @@ function renderClaims() {
 
       button.appendChild(label);
 
-      if (
-        eligible &&
-        !prizeFull &&
-        !claimInProgress
-      ) {
-
-        const time =
-          document.createElement("span");
-
+      if (eligible && !prizeFull && !claimInProgress) {
+        const time = document.createElement("span");
         time.className = "claim-time";
 
         if (expired) {
-
           time.textContent = "Expired";
-
         } else if (deadline === Infinity) {
-
           time.textContent = "Unlimited";
-
         } else if (deadline === null) {
-
           time.textContent = "Checking time";
-
         } else {
-
-          time.textContent =
-            formatSeconds(
-              deadline - currentTime()
-            );
-
+          time.textContent = formatSeconds(
+            deadline - currentTime()
+          );
         }
 
         button.appendChild(time);
-
       }
 
       button.onclick = () => {
-
-        claimPrize(
-          ticket.id,
-          prize
-        );
-
+        claimPrize(ticket.id, prize);
       };
 
       buttonRow.appendChild(button);
-
     });
 
     container.appendChild(buttonRow);
-
   });
-
 }
 
 // =====================================
@@ -3443,75 +2478,49 @@ function renderClaims() {
 // =====================================
 
 async function claimPrize(ticketId, prize) {
-
   if (!playerToken || !game) return;
+  if (!activePrizes().includes(prize)) return;
 
-  if (!activePrizes().includes(prize)) {
-    return;
-  }
-
-  const claimKey =
-    ticketId + "_" + prize;
-
-  if (claimingPrizes.has(claimKey)) {
-    return;
-  }
+  const claimKey = ticketId + "_" + prize;
+  if (claimingPrizes.has(claimKey)) return;
 
   claimingPrizes.add(claimKey);
-
   renderClaims();
 
   try {
-
-    const { data, error } = await db.rpc(
-      "claim_prize",
-      {
-        p_player_token: playerToken,
-        p_ticket_id: ticketId,
-        p_prize: prize
-      }
-    );
+    const { data, error } = await db.rpc("claim_prize", {
+      p_player_token: playerToken,
+      p_ticket_id: ticketId,
+      p_prize: prize
+    });
 
     if (error) throw error;
 
     if (data?.ok === true) {
-
       alert(
         "🏆 Congratulations!\n" +
         "You won " + prize + "!"
       );
-
     } else {
-
       alert(
         data?.message ||
         data?.reason ||
         "Your claim was not accepted."
       );
-
     }
 
     await refreshGame();
 
   } catch (error) {
-
     getError(error);
-
     await refreshGame();
 
   } finally {
-
     claimingPrizes.delete(claimKey);
 
-    if (
-      game &&
-      currentView === "playerPanel"
-    ) {
-
+    if (game && currentView === "playerPanel") {
       renderClaims();
-
     }
-
   }
 }
 
@@ -3520,17 +2529,9 @@ async function claimPrize(ticketId, prize) {
 // =====================================
 
 function checkNewWinners() {
-
   if (!initialWinnersLoaded) {
-
-    winners.forEach(w => {
-
-      lastWinnerIds.add(w.id);
-
-    });
-
+    winners.forEach(w => lastWinnerIds.add(w.id));
     initialWinnersLoaded = true;
-
     return;
   }
 
@@ -3538,30 +2539,19 @@ function checkNewWinners() {
     w => !lastWinnerIds.has(w.id)
   );
 
-  winners.forEach(w => {
-
-    lastWinnerIds.add(w.id);
-
-  });
+  winners.forEach(w => lastWinnerIds.add(w.id));
 
   newWinners.forEach(winner => {
-
     winnerPopupQueue.push(winner);
-
   });
 
   showNextWinnerPopup();
 }
 
 function showNextWinnerPopup() {
+  if (winnerPopupActive || !winnerPopupQueue.length) return;
 
-  if (winnerPopupActive) return;
-
-  if (!winnerPopupQueue.length) return;
-
-  const winner =
-    winnerPopupQueue.shift();
-
+  const winner = winnerPopupQueue.shift();
   winnerPopupActive = true;
 
   element("winnerName").textContent =
@@ -3573,42 +2563,26 @@ function showNextWinnerPopup() {
   element("winnerTicket").textContent =
     "Ticket #" + winner.ticket_no;
 
-  element("winnerPopup")
-    .classList.remove("hidden");
+  element("winnerPopup").classList.remove("hidden");
 
-  winnerPopupTimer = setTimeout(
-    closePopup,
-    5000
-  );
+  winnerPopupTimer = setTimeout(closePopup, 5000);
 }
 
 function closePopup() {
-
   if (winnerPopupTimer) {
-
     clearTimeout(winnerPopupTimer);
-
     winnerPopupTimer = null;
-
   }
 
-  element("winnerPopup")
-    .classList.add("hidden");
-
+  element("winnerPopup").classList.add("hidden");
   winnerPopupActive = false;
 
   if (winnerPopupQueue.length) {
-
-    setTimeout(
-      showNextWinnerPopup,
-      300
-    );
-
+    setTimeout(showNextWinnerPopup, 300);
   }
 }
 
 function renderWinners() {
-
   const html = winners.length
     ? winners.map(w => `
         <div class="winner">
@@ -3620,11 +2594,8 @@ function renderWinners() {
       `).join("")
     : "<p>No winners yet.</p>";
 
-  element("adminWinners").innerHTML =
-    html;
-
-  element("playerWinners").innerHTML =
-    html;
+  element("adminWinners").innerHTML = html;
+  element("playerWinners").innerHTML = html;
 }
 
 // =====================================
@@ -3632,36 +2603,24 @@ function renderWinners() {
 // =====================================
 
 async function initialise() {
-
   renderPrizeSelection();
-
   updateWinningMode();
 
-  const params =
-    new URLSearchParams(
-      window.location.search
-    );
-
+  const params = new URLSearchParams(window.location.search);
   const room = params.get("room");
 
   if (room) {
-
-    element("roomCode").value =
-      room.toUpperCase();
-
+    element("roomCode").value = room.toUpperCase();
   }
 
   await restoreSession();
 
   if (!game && room) {
-
     show("joinSetup");
-
   }
 }
 
 initialise();
-
 </script>
 
 </body>
