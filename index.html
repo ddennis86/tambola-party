@@ -460,7 +460,7 @@ Join Game 🎉
             🎲 Number Caller
           </h2>
           <div class="text-center">
-            <div id="currentNumber" class="font-extrabold text-purple-700">--</div>
+            <div id="adminNumber" class="font-extrabold text-purple-700">--</div>
             <button id="callNextBtn" onclick="callNextNumber()" class="btn btn-primary mt-2 px-6 py-2 text-base">
               🎲 CALL NEXT NUMBER
             </button>
@@ -1947,7 +1947,16 @@ restoreSession().then(() => {
   }
 
 });
+// Ensure buttons can call these functions from HTML onclick
+window.endGame = typeof endGame !== 'undefined' ? endGame : function() {
+    console.log("End Game clicked");
+    if (typeof stopGame === 'function') stopGame();
+};
 
+window.callNextNumber = typeof callNextNumber !== 'undefined' ? callNextNumber : function() {
+    console.log("Call Next Number clicked");
+    if (typeof drawNumber === 'function') drawNumber();
+};
 </script>
 
 </body>
