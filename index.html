@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Tambola Party 🎉</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -350,6 +351,8 @@ select {
   font-weight: bold;
 }
 
+/* CLAIM NOTE */
+
 .claim-note {
   background: #e8f4ff;
   color: #174b78;
@@ -485,7 +488,7 @@ button.ticket-cell:disabled {
 
 .co-admin-link {
   width: 100%;
-  background: #fff;
+  background: white;
   font-size: 13px;
 }
 
@@ -514,6 +517,17 @@ button.ticket-cell:disabled {
   font-size: 13px;
   font-weight: bold;
   color: #613399;
+}
+
+/* WHATSAPP BUTTON */
+
+.btn-whatsapp {
+  background: #25D366;
+  color: white;
+}
+
+.btn-whatsapp:hover:not(:disabled) {
+  background: #128C7E;
 }
 
 /* POPUP */
@@ -645,7 +659,9 @@ button.ticket-cell:disabled {
 <!-- HOME -->
 
 <section id="home" class="card center">
+
   <h2>Welcome to Tambola Party!</h2>
+
   <p>Create a game or join your friends.</p>
 
   <button onclick="show('adminSetup')">
@@ -655,6 +671,7 @@ button.ticket-cell:disabled {
   <button onclick="show('joinSetup')">
     🎟️ Join Game
   </button>
+
 </section>
 
 <!-- ADMIN SETUP -->
@@ -687,6 +704,7 @@ button.ticket-cell:disabled {
   <hr>
 
   <h3>🏆 Select Prizes for This Game</h3>
+
   <p>Choose which prizes players can win.</p>
 
   <div class="prize-select-actions">
@@ -727,6 +745,7 @@ button.ticket-cell:disabled {
     id="winningMode"
     onchange="updateWinningMode()"
   >
+
     <option value="first_claim">
       ⚡ First to Claim
     </option>
@@ -738,6 +757,7 @@ button.ticket-cell:disabled {
     <option value="custom">
       🎛️ Custom Prize Rules
     </option>
+
   </select>
 
   <h3>⏱️ Claim Timer</h3>
@@ -754,8 +774,11 @@ button.ticket-cell:disabled {
     id="customPrizeSettings"
     class="hidden"
   >
+
     <h3>🎛️ Custom Winning Rules</h3>
+
     <div id="customPrizeList"></div>
+
   </div>
 
   <br>
@@ -844,7 +867,16 @@ button.ticket-cell:disabled {
         🔗 Share Game
       </button>
 
-      <!-- NEW CO-ADMIN BUTTON -->
+      <!-- NEW PLAYER WHATSAPP INVITATION -->
+
+      <button
+        onclick="sharePlayerWhatsApp()"
+        class="btn-whatsapp"
+      >
+        📲 Invite Players via WhatsApp
+      </button>
+
+      <!-- CO-ADMIN INVITATION -->
 
       <button
         id="manageCoAdminsBtn"
@@ -1079,7 +1111,7 @@ button.ticket-cell:disabled {
 
       <button
         onclick="shareCoAdminWhatsApp()"
-        class="btn-success"
+        class="btn-whatsapp"
       >
         📲 Share via WhatsApp
       </button>
@@ -1087,8 +1119,8 @@ button.ticket-cell:disabled {
     </div>
 
     <p style="font-size:12px;color:#b02a37">
-      🔐 Keep this link private. Anyone possessing
-      it can use the Co-Admin invitation.
+      🔐 Keep this link private.
+      Anyone possessing it can use the Co-Admin invitation.
     </p>
 
   </div>
@@ -1197,8 +1229,8 @@ button.ticket-cell:disabled {
     <p>
       The countdown begins when the number
       completing your winning combination
-      is called. Claim your prize before
-      the timer expires.
+      is called.
+      Claim your prize before the timer expires.
     </p>
 
   </div>
@@ -1243,7 +1275,7 @@ button.ticket-cell:disabled {
 </div>
 
 <script>
-"use strict";
+  "use strict";
 
 // =====================================
 // SUPABASE CONFIGURATION
@@ -2043,8 +2075,6 @@ async function createGame() {
 
     await resetGameState();
 
-    // A newly created game becomes the active
-    // Main Admin session.
     localStorage.removeItem(
       CO_ADMIN_SESSION_KEY
     );
@@ -2265,6 +2295,111 @@ async function restoreSession() {
     await resetGameState();
 
     show("home");
+  }
+}
+
+// =====================================
+// PLAYER WHATSAPP INVITATION
+// =====================================
+
+function getPlayerInvitationLink() {
+  if (!game) return null;
+
+  const url = new URL(
+    window.location.href
+  );
+
+  // Remove any previous room or admin credentials.
+  url.search = "";
+  url.hash = "";
+
+  url.searchParams.set(
+    "room",
+    game.code
+  );
+
+  return url.toString();
+}
+
+function sharePlayerWhatsApp() {
+  if (!game) {
+    alert(
+      "Please create a game first."
+    );
+
+    return;
+  }
+
+  const shareUrl =
+    getPlayerInvitationLink();
+
+  const message =
+    "🎉 *TAMBOLA PARTY INVITATION* 🎉\n\n" +
+    "You're invited to play Tambola with us! 🎟️\n\n" +
+    "🎮 *Room Code:* " + game.code + "\n\n" +
+    "👇 *Click here to join the game:*\n" +
+    shareUrl + "\n\n" +
+    "✅ Enter your name\n" +
+    "✅ Select your tickets\n" +
+    "✅ Join the fun!\n\n" +
+    "🏆 Good luck and happy playing! 🎉";
+
+  const whatsappUrl =
+    "https://wa.me/?text=" +
+    encodeURIComponent(message);
+
+  window.open(
+    whatsappUrl,
+    "_blank",
+    "noopener,noreferrer"
+  );
+}
+
+// =====================================
+// SHARE GAME
+// =====================================
+
+async function shareGame() {
+  if (!game) return;
+
+  const shareUrl =
+    getPlayerInvitationLink();
+
+  if (navigator.share) {
+    try {
+      await navigator.share({
+        title: "Tambola Party",
+        text:
+          "Join my Tambola game! Room: " +
+          game.code,
+        url: shareUrl
+      });
+
+      return;
+
+    } catch (error) {
+      if (
+        error.name === "AbortError"
+      ) {
+        return;
+      }
+    }
+  }
+
+  try {
+    await navigator.clipboard.writeText(
+      shareUrl
+    );
+
+    alert(
+      "Player invitation link copied!"
+    );
+
+  } catch (error) {
+    window.prompt(
+      "Copy this invitation link:",
+      shareUrl
+    );
   }
 }
 
@@ -2596,9 +2731,6 @@ async function validateCoAdminAccess(
       error
     );
 
-    // Only known authorization errors should
-    // revoke the local session. Network errors
-    // should not permanently discard credentials.
     const message = String(
       error?.message || ""
     );
@@ -2608,7 +2740,6 @@ async function validateCoAdminAccess(
         .test(message)
     ) {
       await handleCoAdminRevoked();
-
     }
 
     return false;
@@ -2623,8 +2754,6 @@ async function handleCoAdminRevoked() {
     CO_ADMIN_SESSION_KEY
   );
 
-  // Prevent restoration into the previous
-  // Main Admin or Player session.
   localStorage.removeItem(
     SESSION_KEY
   );
@@ -2669,8 +2798,6 @@ async function joinAsCoAdmin(token) {
     coAdminToken = token;
     coAdminName = data.admin_name;
 
-    // Do not copy the Co-Admin credential into
-    // the Main Admin's hostToken variable.
     hostToken = null;
 
     game = normalizeGame({
@@ -2732,7 +2859,6 @@ async function handleCoAdminInvitation() {
 
   if (!token) return false;
 
-  // Remove the token from the address bar.
   history.replaceState(
     null,
     "",
@@ -3230,66 +3356,6 @@ async function toggleLock() {
 
   } catch (error) {
     getError(error);
-  }
-}
-
-// =====================================
-// SHARE GAME
-// =====================================
-
-async function shareGame() {
-  if (!game) return;
-
-  const url = new URL(
-    window.location.href
-  );
-
-  url.search = "";
-  url.hash = "";
-
-  url.searchParams.set(
-    "room",
-    game.code
-  );
-
-  const shareUrl =
-    url.toString();
-
-  if (navigator.share) {
-    try {
-      await navigator.share({
-        title: "Tambola Party",
-        text:
-          "Join my Tambola game! Room: " +
-          game.code,
-        url: shareUrl
-      });
-
-      return;
-
-    } catch (error) {
-      if (
-        error.name === "AbortError"
-      ) {
-        return;
-      }
-    }
-  }
-
-  try {
-    await navigator.clipboard.writeText(
-      shareUrl
-    );
-
-    alert(
-      "Invitation link copied!"
-    );
-
-  } catch (error) {
-    window.prompt(
-      "Copy this invitation link:",
-      shareUrl
-    );
   }
 }
 
@@ -4259,7 +4325,6 @@ async function initialise() {
       room.toUpperCase();
   }
 
-  // Invitation links take priority.
   const hashParams =
     new URLSearchParams(
       window.location.hash.replace(
@@ -4277,13 +4342,11 @@ async function initialise() {
     if (joined) return;
   }
 
-  // Restore existing Co-Admin session.
   const restoredCoAdmin =
     await restoreCoAdminSession();
 
   if (restoredCoAdmin) return;
 
-  // Restore Main Admin / Player session.
   await restoreSession();
 
   if (
