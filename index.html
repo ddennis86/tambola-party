@@ -1954,9 +1954,33 @@ restoreSession().then(() => {
 
 });
 // Ensure buttons can call these functions from HTML onclick
-window.endGame = typeof endGame !== 'undefined' ? endGame : function() {
+window.endGame = async function() {
     console.log("End Game clicked");
-    if (typeof stopGame === 'function') stopGame();
+    
+    const confirmEnd = confirm("Are you sure you want to END this game? This will close the room for all players.");
+    if (!confirmEnd) return;
+
+    try {
+        // Try to get active room code from possible global variables
+        const activeRoom = (typeof room !== 'undefined' && room) || 
+                           (typeof roomCode !== 'undefined' && roomCode) || 
+                           (typeof currentRoomCode !== 'undefined' && currentRoomCode);
+
+        if (activeRoom && typeof supabase !== 'undefined') {
+            // Update game status to 'ended' in Supabase
+            await supabase
+                .from('games')
+                .update({ status: 'ended' })
+                .eq('room_code', activeRoom);
+        }
+    } catch (err) {
+        console.error("Error ending game in Supabase:", err);
+    }
+
+    // Clear session storage and reload main screen
+    localStorage.clear();
+    sessionStorage.clear();
+    window.location.reload();
 };
 
 window.callNextNumber = typeof callNextNumber !== 'undefined' ? callNextNumber : function() {
