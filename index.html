@@ -3,11 +3,17 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Tambola Party 🎉</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
+
+/* ======================================
+   GENERAL STYLING
+====================================== */
+
 * {
   box-sizing: border-box;
 }
@@ -29,31 +35,39 @@ body {
 
 .header {
   text-align: center;
-  padding: 24px 10px;
+  padding: 20px 10px;
 }
 
 .header h1 {
-  font-size: clamp(28px, 5vw, 42px);
+  font-size: clamp(26px, 5vw, 40px);
   margin: 0;
 }
 
 .header p {
-  font-size: 17px;
+  font-size: 15px;
 }
+
+/* ======================================
+   CARDS
+====================================== */
 
 .card {
   min-width: 0;
   background: white;
   color: #333;
-  padding: 22px;
+  padding: 20px;
   margin: 15px 0;
   border-radius: 18px;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, .15);
+  box-shadow: 0 8px 25px rgba(0,0,0,.15);
 }
 
 .card h2 {
   margin-top: 0;
 }
+
+/* ======================================
+   BUTTONS
+====================================== */
 
 button {
   background: #762ac2;
@@ -71,7 +85,7 @@ button:hover:not(:disabled) {
 }
 
 button:disabled {
-  background: #aaa !important;
+  background: #aaa;
   cursor: not-allowed;
 }
 
@@ -82,6 +96,10 @@ select:focus-visible,
   outline: 3px solid #ffbf47;
   outline-offset: 2px;
 }
+
+/* ======================================
+   INPUTS
+====================================== */
 
 input,
 select {
@@ -113,6 +131,10 @@ select {
   margin: 10px 0;
 }
 
+/* ======================================
+   ADMIN LAYOUT
+====================================== */
+
 .admin-actions {
   display: flex;
   flex-wrap: wrap;
@@ -121,7 +143,7 @@ select {
 
 .admin-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1fr);
+  grid-template-columns: minmax(0,1fr);
   gap: 16px;
   align-items: start;
 }
@@ -137,13 +159,17 @@ select {
 @media (min-width: 1024px) {
   .admin-grid {
     grid-template-columns:
-      minmax(0, 1.05fr)
-      minmax(0, .95fr);
+      minmax(0,1.05fr)
+      minmax(0,.95fr);
   }
 }
 
+/* ======================================
+   ADMIN NUMBER DISPLAY
+====================================== */
+
 .number {
-  font-size: clamp(3rem, 9vw, 5rem);
+  font-size: clamp(3rem,9vw,5rem);
   line-height: 1.1;
   color: #762ac2;
   text-align: center;
@@ -151,9 +177,57 @@ select {
   padding: 12px;
 }
 
+/* ======================================
+   SMALLER PLAYER NUMBER DISPLAY
+====================================== */
+
+.player-number-card {
+  padding: 12px 15px;
+  margin: 8px 0;
+  border-radius: 14px;
+}
+
+.player-number-card h2 {
+  font-size: 18px;
+  margin: 4px 0 6px;
+}
+
+.player-number-card h3 {
+  font-size: 14px;
+  margin: 8px 0 2px;
+}
+
+.player-number-card p {
+  font-size: 13px;
+  margin: 5px 0;
+}
+
+/* Compact called number */
+
+.player-number {
+  font-size: 38px;
+  line-height: 1;
+  font-weight: bold;
+  color: #762ac2;
+  padding: 5px;
+  margin: 3px auto;
+}
+
+/* Smaller game status */
+
+.player-number-card .status {
+  font-size: 12px;
+  padding: 7px;
+  margin: 6px 0;
+}
+
+/* ======================================
+   NUMBER BOARD
+====================================== */
+
 .board {
   display: grid;
-  grid-template-columns: repeat(10, minmax(0, 1fr));
+  grid-template-columns: repeat(10,minmax(0,1fr));
   gap: 5px;
 }
 
@@ -166,7 +240,7 @@ select {
   background: #eee;
   color: #333;
   border-radius: 7px;
-  font-size: clamp(10px, 2vw, 15px);
+  font-size: clamp(10px,2vw,15px);
   font-weight: bold;
 }
 
@@ -174,9 +248,13 @@ select {
   background: #ffd43b;
 }
 
+/* ======================================
+   TAMBOLA TICKETS
+====================================== */
+
 .ticket {
   display: grid;
-  grid-template-columns: repeat(9, minmax(0, 1fr));
+  grid-template-columns: repeat(9,minmax(0,1fr));
   gap: 3px;
   margin: 15px 0;
 }
@@ -200,23 +278,52 @@ button.ticket-cell {
   padding: 0;
 }
 
+/* Empty cells */
+
 .ticket-cell.empty {
   background: #ddd;
 }
 
-.ticket-cell.called {
+/* ======================================
+   YELLOW = CALLED BY ADMIN
+====================================== */
+
+.ticket-cell.called,
+.ticket-cell.called:hover:not(:disabled),
+.ticket-cell.called:active {
   background: #ffd43b;
   color: #333;
 }
 
-.ticket-cell.marked {
+/* ======================================
+   GREEN = SELECTED BY PLAYER
+====================================== */
+
+.ticket-cell.marked,
+.ticket-cell.marked:hover:not(:disabled),
+.ticket-cell.marked:active,
+.ticket-cell.marked:focus {
   background: #21b573;
   color: white;
 }
 
+/* Uncalled numbers */
+
 .ticket-cell.uncalled {
   cursor: not-allowed;
 }
+
+/* Prevent disabled ticket cells from
+   receiving the generic grey button style */
+
+button.ticket-cell:disabled {
+  background: #f2f2f2;
+  color: #333;
+}
+
+/* ======================================
+   PRIZE BUTTONS
+====================================== */
 
 .prize-button {
   display: inline-block;
@@ -226,6 +333,10 @@ button.ticket-cell {
   background: #20b573;
 }
 
+/* ======================================
+   WINNERS
+====================================== */
+
 .winner {
   background: #fff3c4;
   color: #613399;
@@ -233,6 +344,10 @@ button.ticket-cell {
   margin: 8px 0;
   border-radius: 10px;
 }
+
+/* ======================================
+   PLAYER LIST
+====================================== */
 
 .player-row {
   padding: 10px;
@@ -242,10 +357,14 @@ button.ticket-cell {
   overflow-wrap: anywhere;
 }
 
+/* ======================================
+   POPUP
+====================================== */
+
 .popup {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, .65);
+  background: rgba(0,0,0,.65);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -261,12 +380,16 @@ button.ticket-cell {
   text-align: center;
   max-width: 450px;
   width: 100%;
-  box-shadow: 0 15px 50px rgba(0, 0, 0, .3);
+  box-shadow: 0 15px 50px rgba(0,0,0,.3);
 }
 
 .popup-box h1 {
-  font-size: clamp(24px, 6vw, 32px);
+  font-size: clamp(24px,6vw,32px);
 }
+
+/* ======================================
+   SPECIAL BUTTONS
+====================================== */
 
 .btn-success {
   background: #20a86b;
@@ -284,9 +407,32 @@ button.ticket-cell {
   background: #626b78;
 }
 
+/* ======================================
+   MOBILE RESPONSIVE
+====================================== */
+
 @media (max-width: 600px) {
+
+  .container {
+    padding: 8px;
+  }
+
+  .header {
+    padding: 12px 5px;
+  }
+
+  .header h1 {
+    font-size: 25px;
+  }
+
+  .header p {
+    font-size: 13px;
+    margin: 5px 0;
+  }
+
   .card {
-    padding: 14px;
+    padding: 12px;
+    margin: 8px 0;
   }
 
   .ticket-cell {
@@ -301,7 +447,34 @@ button.ticket-cell {
   .admin-actions button {
     flex: 1 1 140px;
   }
+
+  /* Extra compact player display */
+
+  .player-number-card {
+    padding: 10px;
+    margin: 6px 0;
+  }
+
+  .player-number-card h2 {
+    font-size: 16px;
+  }
+
+  .player-number-card h3 {
+    font-size: 13px;
+  }
+
+  .player-number {
+    font-size: 32px;
+    padding: 3px;
+  }
+
+  .player-number-card .status {
+    padding: 6px;
+    font-size: 11px;
+  }
+
 }
+
 </style>
 </head>
 
@@ -314,10 +487,14 @@ button.ticket-cell {
   <p>Play Housie With Friends!</p>
 </header>
 
-<!-- HOME -->
+<!-- ======================================
+     HOME
+====================================== -->
 
 <section id="home" class="card center">
+
   <h2>Welcome to Tambola Party!</h2>
+
   <p>Create a game or join your friends.</p>
 
   <button onclick="show('adminSetup')">
@@ -327,9 +504,12 @@ button.ticket-cell {
   <button onclick="show('joinSetup')">
     🎟️ Join Game
   </button>
+
 </section>
 
-<!-- ADMIN SETUP -->
+<!-- ======================================
+     ADMIN SETUP
+====================================== -->
 
 <section id="adminSetup" class="card hidden">
 
@@ -363,30 +543,55 @@ button.ticket-cell {
   <p>Choose how winners will be selected.</p>
 
   <select id="winningMode" onchange="updateWinningMode()">
+
     <option value="first_claim">
       ⚡ Option A - First to Claim
     </option>
+
     <option value="same_number">
       🎊 Option B - Same Number Winners
     </option>
+
     <option value="custom">
       🎛️ Option C - Custom Prize Rules
     </option>
+
   </select>
 
   <h3>⏱️ Claim Timer</h3>
 
   <select id="claimWindow">
-    <option value="15">15 Seconds</option>
-    <option value="30" selected>30 Seconds</option>
-    <option value="60">60 Seconds</option>
-    <option value="0">Unlimited</option>
+
+    <option value="10" selected>
+      10 Seconds
+    </option>
+
+    <option value="15">
+      15 Seconds
+    </option>
+
+    <option value="30">
+      30 Seconds
+    </option>
+
+    <option value="60">
+      60 Seconds
+    </option>
+
+    <option value="0">
+      Unlimited
+    </option>
+
   </select>
 
   <div id="customPrizeSettings" class="hidden">
+
     <h3>🎛️ Custom Winning Rules</h3>
+
     <p>Choose the winning rule for each prize.</p>
+
     <div id="customPrizeList"></div>
+
   </div>
 
   <br>
@@ -397,7 +602,9 @@ button.ticket-cell {
 
 </section>
 
-<!-- JOIN SETUP -->
+<!-- ======================================
+     JOIN GAME
+====================================== -->
 
 <section id="joinSetup" class="card hidden">
 
@@ -422,12 +629,14 @@ button.ticket-cell {
   <p>Number of Tickets</p>
 
   <select id="ticketCount">
+
     <option value="1">1 Ticket</option>
     <option value="2">2 Tickets</option>
     <option value="3">3 Tickets</option>
     <option value="4">4 Tickets</option>
     <option value="5">5 Tickets</option>
     <option value="6">6 Tickets</option>
+
   </select>
 
   <br>
@@ -438,7 +647,9 @@ button.ticket-cell {
 
 </section>
 
-<!-- ADMIN PANEL -->
+<!-- ======================================
+     ADMIN PANEL
+====================================== -->
 
 <section id="adminPanel" class="hidden">
 
@@ -491,11 +702,17 @@ button.ticket-cell {
     </div>
 
     <div class="status">
+
       <strong id="adminRoomCode"></strong>
+
       <br>
+
       <span id="gameStatus"></span>
+
       <br>
+
       <span id="entryStatus"></span>
+
     </div>
 
   </div>
@@ -577,11 +794,15 @@ button.ticket-cell {
 
 </section>
 
-<!-- PLAYER PANEL -->
+<!-- ======================================
+     PLAYER PANEL
+====================================== -->
 
 <section id="playerPanel" class="hidden">
 
-  <div class="card center">
+  <!-- COMPACT PLAYER HEADER -->
+
+  <div class="card center player-number-card">
 
     <h2 id="welcomePlayer"></h2>
 
@@ -589,7 +810,7 @@ button.ticket-cell {
 
     <h3>🎯 Latest Number</h3>
 
-    <div id="playerNumber" class="number">
+    <div id="playerNumber" class="player-number">
       --
     </div>
 
@@ -599,18 +820,22 @@ button.ticket-cell {
 
   </div>
 
+  <!-- PLAYER TICKETS -->
+
   <div class="card">
 
     <h2>🎟️ My Tambola Tickets</h2>
 
     <p>
-      🟡 Yellow = Called<br>
-      🟢 Green = Marked by You
+      🟡 Yellow = Called by Admin<br>
+      🟢 Green = Selected by You
     </p>
 
     <div id="ticketsContainer"></div>
 
   </div>
+
+  <!-- CLAIM PRIZES -->
 
   <div class="card">
 
@@ -624,6 +849,8 @@ button.ticket-cell {
 
   </div>
 
+  <!-- WINNERS -->
+
   <div class="card">
 
     <h2>🎊 Winners</h2>
@@ -636,7 +863,9 @@ button.ticket-cell {
 
 </div>
 
-<!-- WINNER POPUP -->
+<!-- ======================================
+     WINNER POPUP
+====================================== -->
 
 <div id="winnerPopup" class="popup hidden">
 
@@ -661,6 +890,7 @@ button.ticket-cell {
 </div>
 
 <script>
+
 "use strict";
 
 // ======================================
@@ -976,6 +1206,8 @@ async function createGame() {
     const winningMode =
       element("winningMode").value;
 
+    // Claim timer defaults to 10 seconds.
+
     const claimWindow =
       Number(element("claimWindow").value);
 
@@ -1193,14 +1425,13 @@ async function restoreSession() {
 
     if (game) {
 
-    await refreshGame();
+      await refreshGame();
 
-    // Only restart updates if game still exists
-    if (game) {
+      if (game) {
         subscribeToGame();
         startRefreshing();
+      }
     }
-}
 
   } catch (error) {
 
@@ -1244,79 +1475,39 @@ async function refreshGame() {
     if (!game || game.id !== gameId) return;
 
     game = normalizeGame(data);
-    // ======================================
-// AUTO RETURN HOME WHEN GAME ENDS
-// ======================================
 
-if (
-    game.status === "ended" &&
-    currentView === "playerPanel"
-) {
+    // Return players home when game ends.
 
-    // Stop further game updates
-    switchingGame = true;
+    if (
+      game.status === "ended" &&
+      currentView === "playerPanel"
+    ) {
 
-    // Remove saved player session
-    localStorage.removeItem(SESSION_KEY);
+      switchingGame = true;
 
-    // Clear player information
-    player = null;
-    playerToken = null;
-    tickets = [];
-    winners = [];
-    marked = {};
-    game = null;
+      localStorage.removeItem(SESSION_KEY);
 
-    // Return to home page
-    show("home");
+      player = null;
+      playerToken = null;
+      tickets = [];
+      winners = [];
+      marked = {};
+      game = null;
 
-    // Stop live updates
-    await stopLiveUpdates();
+      show("home");
 
-    switchingGame = false;
+      await stopLiveUpdates();
 
-    // Notify player
-    alert(
+      switchingGame = false;
+
+      alert(
         "🏁 The Tambola Game Has Ended!\n\n" +
         "Thank you for playing! 🎉"
-    );
+      );
 
-    return;
-}
-// ======================================
-// AUTO RETURN TO HOME WHEN GAME ENDS
-// ======================================
+      return;
+    }
 
-if (
-  game.status === "ended" &&
-  currentView === "playerPanel"
-) {
-
-  alert(
-    "🏁 The Tambola Game Has Ended!\n\n" +
-    "Thank you for playing! 🎉"
-  );
-
-  // Remove saved player session
-  localStorage.removeItem("tambola_session");
-
-  // Stop realtime updates
-  await stopLiveUpdates();
-
-  // Clear player information
-  player = null;
-  playerToken = null;
-  tickets = [];
-  winners = [];
-  marked = {};
-
-  game = null;
-
-  // Return to home page
-  show("home");
-
-  return;
-}
     const {
       data: winnerData,
       error: winnerError
@@ -1788,24 +1979,6 @@ function renderPendingClaims() {
 
   if (!container) return;
 
-  /*
-    IMPORTANT:
-
-    The supplied backend interface does not
-    define a pending-claims RPC or table schema.
-
-    The claim_prize RPC is currently treated
-    as an immediate server-side claim decision.
-
-    Do not invent a direct database query here:
-    claim records could contain sensitive data,
-    and their schema is unknown.
-
-    To support pending claims, add an authorized
-    Supabase RPC that returns pending claims
-    for the host and then render its result here.
-  */
-
   container.textContent =
     "Claims are processed by the game server. " +
     "No pending-claim review API is configured.";
@@ -1851,26 +2024,43 @@ function saveMarks() {
   );
 }
 
+// ======================================
+// GREEN / YELLOW NUMBER LOGIC
+// ======================================
+
 function toggleMark(ticketId, number) {
 
   if (!game || !player) return;
 
-  if (!calledSet().has(Number(number))) return;
+  const numericNumber = Number(number);
+
+  // Players can only mark called numbers.
+
+  if (!calledSet().has(numericNumber)) return;
 
   if (!Array.isArray(marked[ticketId])) {
     marked[ticketId] = [];
   }
 
+  // Normalize saved values to numbers.
+
+  marked[ticketId] =
+    marked[ticketId].map(Number);
+
   const values = marked[ticketId];
 
-  if (values.includes(number)) {
+  if (values.includes(numericNumber)) {
+
+    // Deselect: return to yellow.
 
     marked[ticketId] =
-      values.filter(n => n !== number);
+      values.filter(n => n !== numericNumber);
 
   } else {
 
-    values.push(number);
+    // Select: turn green.
+
+    values.push(numericNumber);
   }
 
   saveMarks();
@@ -1957,11 +2147,30 @@ function renderPlayer() {
           const wasCalled =
             called.has(numericNumber);
 
+          const isMarked =
+            wasCalled &&
+            Array.isArray(marked[ticket.id]) &&
+            marked[ticket.id]
+              .map(Number)
+              .includes(numericNumber);
+
           cell.textContent = numericNumber;
 
           cell.type = "button";
 
-          if (wasCalled) {
+          // ==================================
+          // SIMPLE COLOR PRIORITY
+          //
+          // Green: Player selected
+          // Yellow: Admin called
+          // Grey: Not called
+          // ==================================
+
+          if (isMarked) {
+
+            cell.classList.add("marked");
+
+          } else if (wasCalled) {
 
             cell.classList.add("called");
 
@@ -1971,25 +2180,20 @@ function renderPlayer() {
             cell.disabled = true;
           }
 
-          if (
-            Array.isArray(marked[ticket.id]) &&
-            marked[ticket.id].includes(number) &&
-            wasCalled
-          ) {
-
-            cell.classList.add("marked");
-          }
-
           cell.onclick = () => {
-            toggleMark(ticket.id, number);
+            toggleMark(ticket.id, numericNumber);
           };
+
         }
 
         grid.appendChild(cell);
+
       });
+
     });
 
     container.appendChild(grid);
+
   });
 
   renderClaims();
@@ -2215,7 +2419,9 @@ function renderClaims() {
 
         }, 300);
       }
+
     });
+
   });
 }
 
