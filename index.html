@@ -1,64 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
 <meta charset="UTF-8">
-
-<meta name="viewport"
-content="width=device-width, initial-scale=1.0">
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Tambola Party 🎉</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
-#currentNumber {
-  font-size: clamp(2.75rem, 6vw, 4rem) !important;
-  line-height: 1.05 !important;
-  margin: 0.25rem 0 0.5rem 0 !important;
-}
-.admin-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 1rem;
-  align-items: start;
-}
-
-@media (min-width: 1024px) {
-  .admin-grid {
-    grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
-  }
-}
-  * {
+* {
   box-sizing: border-box;
 }
 
 body {
   margin: 0;
-  font-family: Arial, sans-serif;
-  background: linear-gradient(
-    135deg,
-    #6026a6,
-    #e83e96
-  );
   min-height: 100vh;
+  font-family: Arial, sans-serif;
   color: white;
+  background: linear-gradient(135deg, #6026a6, #e83e96);
 }
 
 .container {
-  max-width: 1100px;
+  width: 100%;
+  max-width: 1200px;
   margin: auto;
   padding: 15px;
 }
 
 .header {
   text-align: center;
-  padding: 25px 10px;
+  padding: 24px 10px;
 }
 
 .header h1 {
-  font-size: 42px;
+  font-size: clamp(28px, 5vw, 42px);
   margin: 0;
 }
 
@@ -67,12 +42,17 @@ body {
 }
 
 .card {
+  min-width: 0;
   background: white;
   color: #333;
   padding: 22px;
   margin: 15px 0;
   border-radius: 18px;
-  box-shadow: 0 8px 25px rgba(0,0,0,.15);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, .15);
+}
+
+.card h2 {
+  margin-top: 0;
 }
 
 button {
@@ -86,16 +66,25 @@ button {
   cursor: pointer;
 }
 
-button:hover {
+button:hover:not(:disabled) {
   background: #51158f;
 }
 
 button:disabled {
-  background: #aaa;
+  background: #aaa !important;
   cursor: not-allowed;
 }
 
-input, select {
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+.ticket-cell:focus-visible {
+  outline: 3px solid #ffbf47;
+  outline-offset: 2px;
+}
+
+input,
+select {
   padding: 12px;
   border: 1px solid #ddd;
   border-radius: 8px;
@@ -112,42 +101,88 @@ input, select {
   text-align: center;
 }
 
+.small {
+  font-size: 13px;
+  color: #777;
+}
+
+.status {
+  background: #f1e8ff;
+  padding: 12px;
+  border-radius: 9px;
+  margin: 10px 0;
+}
+
+.admin-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.admin-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 16px;
+  align-items: start;
+}
+
+.admin-grid > div {
+  min-width: 0;
+}
+
+.admin-grid .card {
+  margin: 0 0 16px;
+}
+
+@media (min-width: 1024px) {
+  .admin-grid {
+    grid-template-columns:
+      minmax(0, 1.05fr)
+      minmax(0, .95fr);
+  }
+}
+
 .number {
-  font-size: 75px;
+  font-size: clamp(3rem, 9vw, 5rem);
+  line-height: 1.1;
   color: #762ac2;
   text-align: center;
   font-weight: bold;
-  padding: 15px;
+  padding: 12px;
 }
 
 .board {
   display: grid;
-  grid-template-columns: repeat(10,1fr);
+  grid-template-columns: repeat(10, minmax(0, 1fr));
   gap: 5px;
 }
 
 .board-cell {
-  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  aspect-ratio: 1;
   background: #eee;
   color: #333;
-  padding: 12px 0;
   border-radius: 7px;
+  font-size: clamp(10px, 2vw, 15px);
   font-weight: bold;
 }
 
 .board-cell.called {
   background: #ffd43b;
-  color: #333;
 }
 
 .ticket {
   display: grid;
-  grid-template-columns: repeat(9,1fr);
+  grid-template-columns: repeat(9, minmax(0, 1fr));
   gap: 3px;
   margin: 15px 0;
 }
 
 .ticket-cell {
+  min-width: 0;
   min-height: 43px;
   border-radius: 5px;
   background: #f2f2f2;
@@ -157,16 +192,21 @@ input, select {
   justify-content: center;
   font-weight: bold;
   color: #333;
-  cursor: pointer;
+  font-size: 14px;
+}
+
+button.ticket-cell {
+  margin: 0;
+  padding: 0;
 }
 
 .ticket-cell.empty {
   background: #ddd;
-  cursor: default;
 }
 
 .ticket-cell.called {
   background: #ffd43b;
+  color: #333;
 }
 
 .ticket-cell.marked {
@@ -180,18 +220,10 @@ input, select {
 
 .prize-button {
   display: inline-block;
-  margin: 5px;
 }
 
 .prize-button.ready {
   background: #20b573;
-}
-
-.status {
-  background: #f1e8ff;
-  padding: 12px;
-  border-radius: 9px;
-  margin: 10px 0;
 }
 
 .winner {
@@ -202,10 +234,18 @@ input, select {
   border-radius: 10px;
 }
 
+.player-row {
+  padding: 10px;
+  margin: 6px 0;
+  background: #f5f0fc;
+  border-radius: 8px;
+  overflow-wrap: anywhere;
+}
+
 .popup {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,.65);
+  background: rgba(0, 0, 0, .65);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -216,47 +256,53 @@ input, select {
 .popup-box {
   background: white;
   color: #54218c;
-  padding: 35px;
+  padding: 30px;
   border-radius: 20px;
   text-align: center;
   max-width: 450px;
   width: 100%;
-  box-shadow: 0 15px 50px rgba(0,0,0,.3);
+  box-shadow: 0 15px 50px rgba(0, 0, 0, .3);
 }
 
 .popup-box h1 {
-  font-size: 32px;
+  font-size: clamp(24px, 6vw, 32px);
 }
 
-.small {
-  font-size: 13px;
-  color: #777;
+.btn-success {
+  background: #20a86b;
 }
 
-@media(max-width:600px) {
+.btn-danger {
+  background: #dc3545;
+}
 
-  .header h1 {
-    font-size: 31px;
-  }
+.btn-warning {
+  background: #c78300;
+}
 
+.btn-secondary {
+  background: #626b78;
+}
+
+@media (max-width: 600px) {
   .card {
     padding: 14px;
   }
 
   .ticket-cell {
-    min-height: 36px;
+    min-height: 35px;
     font-size: 12px;
   }
 
-  .board-cell {
-    padding: 8px 0;
-    font-size: 12px;
+  .board {
+    gap: 3px;
   }
 
+  .admin-actions button {
+    flex: 1 1 140px;
+  }
 }
-
 </style>
-
 </head>
 
 <body>
@@ -264,405 +310,410 @@ input, select {
 <div class="container">
 
 <header class="header">
-
-<h1>🎉 TAMBOLA PARTY 🎉</h1>
-
-<p>Play Housie With Friends!</p>
-
+  <h1>🎉 TAMBOLA PARTY 🎉</h1>
+  <p>Play Housie With Friends!</p>
 </header>
-
 
 <!-- HOME -->
 
 <section id="home" class="card center">
+  <h2>Welcome to Tambola Party!</h2>
+  <p>Create a game or join your friends.</p>
 
-<h2>Welcome to Tambola Party!</h2>
+  <button onclick="show('adminSetup')">
+    👑 Create Game
+  </button>
 
-<p>Create a game or join your friends.</p>
-
-<button onclick="show('adminSetup')">
-👑 Create Game
-</button>
-
-<button onclick="show('joinSetup')">
-🎟️ Join Game
-</button>
-
+  <button onclick="show('joinSetup')">
+    🎟️ Join Game
+  </button>
 </section>
-
 
 <!-- ADMIN SETUP -->
 
 <section id="adminSetup" class="card hidden">
 
-<h2>👑 Create Tambola Game</h2>
+  <h2>👑 Create Tambola Game</h2>
 
-<p>Maximum tickets per player</p>
+  <p>Maximum tickets per player</p>
 
-<select id="maxTickets">
+  <select id="maxTickets">
+    <option value="1">1 Ticket</option>
+    <option value="2">2 Tickets</option>
+    <option value="3">3 Tickets</option>
+    <option value="4">4 Tickets</option>
+    <option value="5">5 Tickets</option>
+    <option value="6" selected>6 Tickets</option>
+  </select>
 
-<option value="1">1 Ticket</option>
-<option value="2">2 Tickets</option>
-<option value="3">3 Tickets</option>
-<option value="4">4 Tickets</option>
-<option value="5">5 Tickets</option>
-<option value="6" selected>6 Tickets</option>
+  <p>Winners allowed per prize</p>
 
-</select>
+  <select id="winnersPerPrize">
+    <option value="1">1 Winner</option>
+    <option value="2">2 Winners</option>
+    <option value="3">3 Winners</option>
+    <option value="4">4 Winners</option>
+    <option value="5">5 Winners</option>
+  </select>
 
-<p>Winners allowed per prize</p>
+  <hr>
 
-<select id="winnersPerPrize">
+  <h3>🏆 Winning Rules</h3>
 
-<option value="1">1 Winner</option>
-<option value="2">2 Winners</option>
-<option value="3">3 Winners</option>
-<option value="4">4 Winners</option>
-<option value="5">5 Winners</option>
+  <p>Choose how winners will be selected.</p>
 
-</select>
+  <select id="winningMode" onchange="updateWinningMode()">
+    <option value="first_claim">
+      ⚡ Option A - First to Claim
+    </option>
+    <option value="same_number">
+      🎊 Option B - Same Number Winners
+    </option>
+    <option value="custom">
+      🎛️ Option C - Custom Prize Rules
+    </option>
+  </select>
 
-<br>
-<hr>
+  <h3>⏱️ Claim Timer</h3>
 
-<h3>🏆 Winning Rules</h3>
+  <select id="claimWindow">
+    <option value="15">15 Seconds</option>
+    <option value="30" selected>30 Seconds</option>
+    <option value="60">60 Seconds</option>
+    <option value="0">Unlimited</option>
+  </select>
 
-<p>Choose how winners will be selected.</p>
+  <div id="customPrizeSettings" class="hidden">
+    <h3>🎛️ Custom Winning Rules</h3>
+    <p>Choose the winning rule for each prize.</p>
+    <div id="customPrizeList"></div>
+  </div>
 
-<select id="winningMode" onchange="updateWinningMode()">
+  <br>
 
-  <option value="first_claim">
-    ⚡ Option A - First to Claim
-  </option>
-
-  <option value="same_number">
-    🎊 Option B - Same Number Winners
-  </option>
-
-  <option value="custom">
-    🎛️ Option C - Custom Prize Rules
-  </option>
-
-</select>
-
-<h3>⏱️ Claim Timer</h3>
-
-<select id="claimWindow">
-
-  <option value="15">15 Seconds</option>
-
-  <option value="30" selected>
-    30 Seconds
-  </option>
-
-  <option value="60">60 Seconds</option>
-
-  <option value="0">Unlimited</option>
-
-</select>
-
-<div id="customPrizeSettings" class="hidden">
-
-  <h3>🎛️ Custom Winning Rules</h3>
-
-  <p>
-    Choose the winning rule for each prize.
-  </p>
-
-  <div id="customPrizeList"></div>
-
-</div>
-<button onclick="createGame()">
-🎮 Create Room
-</button>
+  <button id="createGameBtn" onclick="createGame()">
+    🎮 Create Room
+  </button>
 
 </section>
-
 
 <!-- JOIN SETUP -->
 
 <section id="joinSetup" class="card hidden">
 
-<h2>🎟️ Join Tambola Game</h2>
+  <h2>🎟️ Join Tambola Game</h2>
 
-<input
-id="playerName"
-placeholder="Your Name"
-maxlength="30"
->
+  <input
+    id="playerName"
+    placeholder="Your Name"
+    maxlength="30"
+    autocomplete="name"
+  >
 
-<br>
+  <br>
 
-<input
-id="roomCode"
-placeholder="Room Code"
-maxlength="6"
->
+  <input
+    id="roomCode"
+    placeholder="Room Code"
+    maxlength="6"
+    autocapitalize="characters"
+  >
 
-<br>
+  <p>Number of Tickets</p>
 
-<p>Number of Tickets</p>
+  <select id="ticketCount">
+    <option value="1">1 Ticket</option>
+    <option value="2">2 Tickets</option>
+    <option value="3">3 Tickets</option>
+    <option value="4">4 Tickets</option>
+    <option value="5">5 Tickets</option>
+    <option value="6">6 Tickets</option>
+  </select>
 
-<select id="ticketCount">
+  <br>
 
-<option value="1">1 Ticket</option>
-<option value="2">2 Tickets</option>
-<option value="3">3 Tickets</option>
-<option value="4">4 Tickets</option>
-<option value="5">5 Tickets</option>
-<option value="6">6 Tickets</option>
-
-</select>
-
-<br>
-
-<button onclick="joinGame()">
-Join Game 🎉
-</button>
+  <button id="joinGameBtn" onclick="joinGame()">
+    Join Game 🎉
+  </button>
 
 </section>
-
 
 <!-- ADMIN PANEL -->
 
 <section id="adminPanel" class="hidden">
-  <div <div class="max-w-7xl mx-auto space-y-4">
 
-  <!-- Admin Dashboard (Full Width) -->
   <div class="card">
-    <h2 class="text-xl font-bold mb-3 flex items-center gap-2">
-      👑 Admin Dashboard
-    </h2>
-    <div class="flex flex-wrap gap-2 mb-3">
-      <button onclick="prepareNewGame()" class="btn btn-primary">➕ Create New Game</button>
-      <button onclick="shareGame()" class="btn btn-secondary">🔗 Share Game</button>
-      <button onclick="togglePause()" class="btn btn-warning" id="pauseBtn">⏸ Pause</button>
-      <button onclick="resumeGame()" class="btn btn-success hidden" id="resumeBtn">▶ Resume</button>
-      <button onclick="endGame()" class="btn btn-danger">🏁 End Game</button>
-      <button onclick="toggleLock()" class="btn btn-secondary" id="lockBtn">🔒 Lock / Unlock Entries</button>
+
+    <h2>👑 Admin Dashboard</h2>
+
+    <div class="admin-actions">
+
+      <button onclick="prepareNewGame()">
+        ➕ Create New Game
+      </button>
+
+      <button onclick="shareGame()" class="btn-secondary">
+        🔗 Share Game
+      </button>
+
+      <button
+        onclick="togglePause()"
+        class="btn-warning"
+        id="pauseBtn"
+      >
+        ⏸ Pause
+      </button>
+
+      <button
+        onclick="resumeGame()"
+        class="btn-success hidden"
+        id="resumeBtn"
+      >
+        ▶ Resume
+      </button>
+
+      <button
+        onclick="endGame()"
+        class="btn-danger"
+        id="endBtn"
+      >
+        🏁 End Game
+      </button>
+
+      <button
+        onclick="toggleLock()"
+        class="btn-secondary"
+        id="lockBtn"
+      >
+        🔒 Lock Entries
+      </button>
+
     </div>
-    <div class="text-sm mt-2 text-gray-600">
-  <span id="adminRoomCode"></span> | 
-  <span id="gameStatus"></span> | 
-  <span id="entryStatus"></span>
-</div>
-      
+
+    <div class="status">
+      <strong id="adminRoomCode"></strong>
+      <br>
+      <span id="gameStatus"></span>
+      <br>
+      <span id="entryStatus"></span>
     </div>
+
   </div>
 
-    <!-- Two Column Layout: Caller + Claims/Winners -->
-    <div class="admin-grid">
+  <div class="admin-grid">
 
-      <!-- LEFT COLUMN: Number Caller + Number Board -->
-      <div class="space-y-4">
+    <!-- LEFT COLUMN -->
 
-        <!-- Number Caller -->
-        <div class="card">
-          <h2 class="text-xl font-bold mb-2 flex items-center gap-2">
-            🎲 Number Caller
-          </h2>
-          <div class="text-center">
-            <div id="adminNumber" class="font-extrabold text-purple-700">--</div>
-            <button id="callNextBtn" onclick="callNextNumber()" class="btn btn-primary mt-2 px-6 py-2 text-base">
-              🎲 CALL NEXT NUMBER
-            </button>
-            <p id="calledCount" class="mt-2 text-sm text-gray-600"></p>
-          </div>
+    <div>
+
+      <div class="card center">
+
+        <h2>🎲 Number Caller</h2>
+
+        <div id="adminNumber" class="number">
+          --
         </div>
 
-        <!-- Number Board -->
-        <div class="card">
-          <h2 class="text-xl font-bold mb-3 flex items-center gap-2">
-            🔢 Number Board
-          </h2>
-          <div id="numberBoard" class="grid grid-cols-10 gap-1 text-center"></div>
+        <button
+          id="callNextBtn"
+          onclick="callNextNumber()"
+        >
+          🎲 CALL NEXT NUMBER
+        </button>
+
+        <p id="calledCount"></p>
+
+      </div>
+
+      <div class="card">
+
+        <h2>🔢 Number Board</h2>
+
+        <div id="numberBoard" class="board"></div>
+
+      </div>
+
+    </div>
+
+    <!-- RIGHT COLUMN -->
+
+    <div>
+
+      <div class="card">
+
+        <h2>👥 Players</h2>
+
+        <div id="playerList">
+          <p>Total Players: 0</p>
+        </div>
+
+        <div id="adminPlayersList"></div>
+
+      </div>
+
+      <div class="card">
+
+        <h2>🏆 Pending Claims</h2>
+
+        <div id="pendingClaims">
+          <p>No pending claims yet.</p>
         </div>
 
       </div>
 
-      <!-- RIGHT COLUMN: Players + Claims + Winners -->
-      <div class="space-y-4">
+      <div class="card">
 
-        <!-- Players Section -->
-<div class="card">
-  <h2 class="text-xl font-bold mb-3 flex items-center gap-2">
-    👥 Players
-  </h2>
-  <div id="playerList">
-    <p class="text-sm text-gray-600 mb-2">Total Players: 0</p>
-  </div>
-  <div id="adminPlayersList" class="space-y-2 max-h-64 overflow-y-auto"></div>
-</div>
-      <div id="adminPlayersList" class="space-y-2 max-h-64 overflow-y-auto"></div>
-    </div>
-      </div>
-      <!-- This ID is what the JavaScript is missing -->
-      <div id="adminPlayersList" class="space-y-2 max-h-64 overflow-y-auto"></div>
-    </div>
+        <h2>🏆 Winners</h2>
 
-        <!-- Claims (Pending) -->
-        <div class="card">
-          <h2 class="text-xl font-bold mb-3 flex items-center gap-2">
-            🏆 Pending Claims
-          </h2>
-          <div id="pendingClaims" class="space-y-2 max-h-72 overflow-y-auto">
-            <p class="text-sm text-gray-500">No pending claims yet.</p>
-          </div>
+        <div id="adminWinners">
+          <p>No winners yet.</p>
         </div>
 
-        <!-- Winners -->
-<div class="card">
-  <h2 class="text-xl font-bold mb-3 flex items-center gap-2">
-    🏆 Winners
-  </h2>
-  <div id="adminWinners" class="space-y-2">
-    <p class="text-sm text-gray-500">No winners yet.</p>
-  </div>
-</div>
-
       </div>
 
     </div>
 
   </div>
+
 </section>
-
 
 <!-- PLAYER PANEL -->
 
 <section id="playerPanel" class="hidden">
 
-<div class="card center">
+  <div class="card center">
 
-<h2 id="welcomePlayer"></h2>
+    <h2 id="welcomePlayer"></h2>
 
-<p id="playerRoom"></p>
+    <p id="playerRoom"></p>
 
-<h3>🎯 Latest Number</h3>
+    <h3>🎯 Latest Number</h3>
 
-<div id="playerNumber" class="number">
---
-</div>
+    <div id="playerNumber" class="number">
+      --
+    </div>
 
-<p id="playerCalledCount"></p>
+    <p id="playerCalledCount"></p>
 
-</div>
+    <p id="playerGameStatus" class="status"></p>
 
+  </div>
 
-<div class="card">
+  <div class="card">
 
-<h2>🎟️ My Tambola Tickets</h2>
+    <h2>🎟️ My Tambola Tickets</h2>
 
-<p>
-🟡 Yellow = Called<br>
-🟢 Green = Marked by You
-</p>
+    <p>
+      🟡 Yellow = Called<br>
+      🟢 Green = Marked by You
+    </p>
 
-<div id="ticketsContainer"></div>
+    <div id="ticketsContainer"></div>
 
-</div>
+  </div>
 
+  <div class="card">
 
-<div class="card">
+    <h2>🏆 Claim Prizes</h2>
 
-<h2>🏆 Claim Prizes</h2>
+    <p>
+      Eligible prizes will become available automatically.
+    </p>
 
-<p>
-Eligible prizes will become available automatically.
-</p>
+    <div id="claimContainer"></div>
 
-<div id="claimContainer"></div>
+  </div>
 
-</div>
+  <div class="card">
 
+    <h2>🎊 Winners</h2>
 
-<div class="card">
+    <div id="playerWinners"></div>
 
-<h2>🎊 Winners</h2>
-
-<div id="playerWinners"></div>
-
-</div>
+  </div>
 
 </section>
 
 </div>
 
-
-<!-- CELEBRATION POPUP -->
+<!-- WINNER POPUP -->
 
 <div id="winnerPopup" class="popup hidden">
 
-<div class="popup-box">
+  <div class="popup-box">
 
-<h1>🎊 WE HAVE A WINNER! 🎊</h1>
+    <h1>🎊 WE HAVE A WINNER! 🎊</h1>
 
-<h2 id="winnerName"></h2>
+    <h2 id="winnerName"></h2>
 
-<h2 id="winnerPrize"></h2>
+    <h2 id="winnerPrize"></h2>
 
-<p id="winnerTicket"></p>
+    <p id="winnerTicket"></p>
 
-<p>🏆 Congratulations! 🏆</p>
+    <p>🏆 Congratulations! 🏆</p>
 
-<button onclick="closePopup()">
-Continue Playing
-</button>
+    <button onclick="closePopup()">
+      Continue Playing
+    </button>
+
+  </div>
 
 </div>
-
-</div>
-
 
 <script>
+"use strict";
 
 // ======================================
 // SUPABASE CONFIGURATION
 // ======================================
 
 const SUPABASE_URL =
-"https://prdgeodluuiylzrywdxm.supabase.co";
+  "https://prdgeodluuiylzrywdxm.supabase.co";
 
 const SUPABASE_KEY =
-"sb_publishable_W0xi00YmUDEpF8j38xs7kw_PVRCgRjy";
+  "sb_publishable_W0xi00YmUDEpF8j38xs7kw_PVRCgRjy";
 
 const db = window.supabase.createClient(
   SUPABASE_URL,
   SUPABASE_KEY
 );
 
-
 // ======================================
 // GLOBAL VARIABLES
 // ======================================
 
 let game = null;
-
 let player = null;
-
 let tickets = [];
 
 let hostToken = null;
-
 let playerToken = null;
 
 let winners = [];
-
 let players = [];
 
 let marked = {};
 
-let notifiedClaims = new Set();
-
-let lastWinnerIds = new Set();
-
-let initialWinnersLoaded = false;
-
 let realtimeChannel = null;
-
 let refreshTimer = null;
 
 let currentView = "home";
+
+let initialWinnersLoaded = false;
+let lastWinnerIds = new Set();
+let notifiedClaims = new Set();
+
+let refreshing = false;
+let refreshAgain = false;
+let switchingGame = false;
+let callingNumber = false;
+let claimingPrizes = new Set();
+
+let winnerPopupTimer = null;
+let winnerPopupQueue = [];
+let winnerPopupActive = false;
+
+const SESSION_KEY = "tambola_session";
 
 const prizes = [
   "Early 5",
@@ -673,36 +724,138 @@ const prizes = [
   "Four Corners",
   "Full House"
 ];
+
+// ======================================
+// HELPERS
+// ======================================
+
+function element(id) {
+  return document.getElementById(id);
+}
+
+function show(id) {
+
+  [
+    "home",
+    "adminSetup",
+    "joinSetup",
+    "adminPanel",
+    "playerPanel"
+  ].forEach(section => {
+    element(section).classList.add("hidden");
+  });
+
+  element(id).classList.remove("hidden");
+
+  currentView = id;
+}
+
+function escapeHtml(value) {
+
+  return String(value ?? "").replace(
+    /[&<>"']/g,
+    character => ({
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#39;"
+    }[character])
+  );
+}
+
+function getError(error) {
+  alert(error?.message || String(error));
+}
+
+function calledNumbers() {
+
+  return Array.isArray(game?.called)
+    ? game.called.map(Number)
+    : [];
+}
+
+function calledSet() {
+  return new Set(calledNumbers());
+}
+
+function normalizeGame(data) {
+
+  return {
+    ...data,
+    called: Array.isArray(data.called)
+      ? data.called.map(Number)
+      : [],
+    prizes: Array.isArray(data.prizes)
+      ? data.prizes
+      : prizes
+  };
+}
+
+function resetNotifications() {
+
+  initialWinnersLoaded = false;
+
+  lastWinnerIds.clear();
+  notifiedClaims.clear();
+
+  winnerPopupQueue = [];
+  winnerPopupActive = false;
+
+  if (winnerPopupTimer) {
+    clearTimeout(winnerPopupTimer);
+    winnerPopupTimer = null;
+  }
+
+  element("winnerPopup").classList.add("hidden");
+}
+
+function saveSession() {
+
+  if (!game) return;
+
+  localStorage.setItem(
+    SESSION_KEY,
+    JSON.stringify({
+      gameId: game.id,
+      hostToken,
+      playerToken,
+      playerId: player?.id ?? null
+    })
+  );
+}
+
+function setBusy(buttonId, busy) {
+
+  const button = element(buttonId);
+
+  if (button) {
+    button.disabled = busy;
+  }
+}
+
+// ======================================
+// CUSTOM WINNING RULES
+// ======================================
+
 function updateWinningMode() {
 
-  const mode = document.getElementById(
-    "winningMode"
-  ).value;
+  const custom =
+    element("winningMode").value === "custom";
 
-  const customSettings = document.getElementById(
-    "customPrizeSettings"
-  );
-
-  customSettings.classList.toggle(
-    "hidden",
-    mode !== "custom"
-  );
-
+  element("customPrizeSettings")
+    .classList.toggle("hidden", !custom);
 }
 
 function renderCustomPrizeSettings() {
 
-  const container = document.getElementById(
-    "customPrizeList"
-  );
+  const container = element("customPrizeList");
 
   container.innerHTML = "";
 
-  prizes.forEach((prize,index) => {
+  prizes.forEach((prize, index) => {
 
     const row = document.createElement("div");
-
-    row.className = "prize";
 
     row.style.marginBottom = "12px";
 
@@ -718,45 +871,82 @@ function renderCustomPrizeSettings() {
       <option value="first_claim">
         ⚡ First to Claim
       </option>
-
       <option value="same_number">
         🎊 Same Number Winners
       </option>
     `;
 
     row.appendChild(label);
-
     row.appendChild(select);
 
     container.appendChild(row);
-
   });
-
 }
 
 function getCustomPrizeRules() {
 
   const rules = {};
 
-  prizes.forEach((prize,index) => {
+  prizes.forEach((prize, index) => {
 
-    const select = document.getElementById(
-      "customPrize_" + index
-    );
-
-    rules[prize] = select.value;
-
+    rules[prize] =
+      element("customPrize_" + index).value;
   });
 
   return rules;
-
 }
 
 // ======================================
-// HELPERS
+// CONNECTION CLEANUP
 // ======================================
 
-function prepareNewGame() {
+async function stopLiveUpdates() {
+
+  if (refreshTimer) {
+    clearInterval(refreshTimer);
+    refreshTimer = null;
+  }
+
+  if (realtimeChannel) {
+
+    const oldChannel = realtimeChannel;
+
+    realtimeChannel = null;
+
+    await db.removeChannel(oldChannel);
+  }
+}
+
+async function resetGameState() {
+
+  switchingGame = true;
+
+  await stopLiveUpdates();
+
+  game = null;
+  player = null;
+
+  tickets = [];
+  winners = [];
+  players = [];
+
+  marked = {};
+
+  hostToken = null;
+  playerToken = null;
+
+  claimingPrizes.clear();
+
+  resetNotifications();
+
+  switchingGame = false;
+}
+
+// ======================================
+// CREATE NEW GAME
+// ======================================
+
+async function prepareNewGame() {
 
   const confirmed = confirm(
     "Create another game?\n\n" +
@@ -764,88 +954,30 @@ function prepareNewGame() {
     "but this browser will switch to the new game."
   );
 
-  if(!confirmed) return;
+  if (!confirmed) return;
 
   show("adminSetup");
-
-}function show(id) {
-
-  [
-    "home",
-    "adminSetup",
-    "joinSetup",
-    "adminPanel",
-    "playerPanel"
-  ].forEach(section => {
-
-    document.getElementById(section)
-      .classList.add("hidden");
-
-  });
-
-  document.getElementById(id)
-    .classList.remove("hidden");
-
-  currentView = id;
-
 }
-
-function escapeHtml(value) {
-
-  return String(value).replace(
-    /[&<>"']/g,
-    character => ({
-      "&":"&amp;",
-      "<":"&lt;",
-      ">":"&gt;",
-      '"':"&quot;",
-      "'":"&#39;"
-    }[character])
-  );
-
-}
-
-function saveSession() {
-
-  localStorage.setItem(
-    "tambola_session",
-    JSON.stringify({
-      gameId: game?.id,
-      hostToken,
-      playerToken,
-      playerId: player?.id
-    })
-  );
-
-}
-
-function getError(error) {
-
-  alert(error.message || String(error));
-
-}
-
-
-// ======================================
-// CREATE GAME
-// ======================================
 
 async function createGame() {
-  try {
-    const maxTickets = Number(
-      document.getElementById("maxTickets").value
-    );
 
-    const winnersPerPrize = Number(
-      document.getElementById("winnersPerPrize").value
-    );
+  if (element("createGameBtn").disabled) return;
+
+  setBusy("createGameBtn", true);
+
+  try {
+
+    const maxTickets =
+      Number(element("maxTickets").value);
+
+    const winnersPerPrize =
+      Number(element("winnersPerPrize").value);
 
     const winningMode =
-      document.getElementById("winningMode").value;
+      element("winningMode").value;
 
-    const claimWindow = Number(
-      document.getElementById("claimWindow").value
-    );
+    const claimWindow =
+      Number(element("claimWindow").value);
 
     const customRules =
       winningMode === "custom"
@@ -865,37 +997,28 @@ async function createGame() {
 
     if (error) throw error;
 
-    if (realtimeChannel) {
-      await db.removeChannel(realtimeChannel);
-      realtimeChannel = null;
+    if (!data?.game_id || !data?.host_token) {
+      throw new Error(
+        "Supabase returned an invalid game response."
+      );
     }
 
-    if (refreshTimer) {
-      clearInterval(refreshTimer);
-      refreshTimer = null;
-    }
-
-    initialWinnersLoaded = false;
-    lastWinnerIds.clear();
-    notifiedClaims.clear();
-
-    winners = [];
-    players = [];
-    tickets = [];
+    await resetGameState();
 
     hostToken = data.host_token;
-    playerToken = null;
-    player = null;
 
-    game = {
+    game = normalizeGame({
       id: data.game_id,
       code: data.code,
       called: [],
+      last_number: null,
       status: "lobby",
       locked: false,
+      winners_per_prize: winnersPerPrize,
       winning_mode: winningMode,
-      claim_window_seconds: claimWindow
-    };
+      claim_window_seconds: claimWindow,
+      prizes
+    });
 
     saveSession();
 
@@ -904,54 +1027,51 @@ async function createGame() {
     await refreshGame();
 
     subscribeToGame();
-
     startRefreshing();
 
     alert(
       "🎉 Game Created Successfully!\n\n" +
-      "Room Code: " + game.code + "\n" +
-      "Winning Mode: " + winningMode + "\n" +
-      "Claim Timer: " +
-      (claimWindow === 0
-        ? "Unlimited"
-        : claimWindow + " seconds")
+      "Room Code: " + game.code
     );
 
   } catch (error) {
+
     getError(error);
+
+  } finally {
+
+    setBusy("createGameBtn", false);
   }
 }
 
-  // ======================================
+// ======================================
 // JOIN GAME
 // ======================================
 
-  
 async function joinGame() {
 
-  const name = document
-    .getElementById("playerName")
-    .value.trim();
+  if (element("joinGameBtn").disabled) return;
 
-  const code = document
-    .getElementById("roomCode")
-    .value.trim().toUpperCase();
+  const name =
+    element("playerName").value.trim();
 
-  const count = Number(
-    document.getElementById("ticketCount").value
-  );
+  const code =
+    element("roomCode").value.trim().toUpperCase();
 
-  if(!name || !code) {
+  const count =
+    Number(element("ticketCount").value);
+
+  if (!name || !code) {
 
     alert("Enter your name and room code.");
-
     return;
-
   }
+
+  setBusy("joinGameBtn", true);
 
   try {
 
-    const {data,error} = await db.rpc(
+    const { data, error } = await db.rpc(
       "join_game",
       {
         p_code: code,
@@ -960,26 +1080,32 @@ async function joinGame() {
       }
     );
 
-    if(error) throw error;
+    if (error) throw error;
+
+    if (!data?.player_token || !data?.game_id) {
+      throw new Error(
+        "Supabase returned an invalid player response."
+      );
+    }
+
+    await resetGameState();
 
     playerToken = data.player_token;
-
-    hostToken = null;
 
     player = {
       id: data.player_id,
       name: data.player_name
     };
 
-    tickets = data.tickets;
+    tickets = data.tickets || [];
 
-    game = {
+    game = normalizeGame({
       id: data.game_id,
       code: data.code,
       called: data.called,
       status: data.status,
       prizes: data.prizes
-    };
+    });
 
     loadMarks();
 
@@ -987,20 +1113,20 @@ async function joinGame() {
 
     show("playerPanel");
 
-    subscribeToGame();
-
     await refreshGame();
 
+    subscribeToGame();
     startRefreshing();
 
-  } catch(error) {
+  } catch (error) {
 
     getError(error);
 
+  } finally {
+
+    setBusy("joinGameBtn", false);
   }
-
 }
-
 
 // ======================================
 // RESTORE SESSION
@@ -1008,151 +1134,171 @@ async function joinGame() {
 
 async function restoreSession() {
 
-  const saved = localStorage.getItem(
-    "tambola_session"
-  );
+  const saved = localStorage.getItem(SESSION_KEY);
 
-  if(!saved) return;
+  if (!saved) return;
 
   try {
 
     const session = JSON.parse(saved);
 
-    if(session.hostToken && session.gameId) {
+    if (session.hostToken && session.gameId) {
 
       hostToken = session.hostToken;
 
-      const {data,error} = await db
+      const { data, error } = await db
         .from("games")
         .select("*")
-        .eq("id",session.gameId)
+        .eq("id", session.gameId)
         .single();
 
-      if(error) throw error;
+      if (error) throw error;
 
-      game = data;
+      game = normalizeGame(data);
 
       show("adminPanel");
 
-    } else if(session.playerToken) {
+    } else if (session.playerToken) {
 
       playerToken = session.playerToken;
 
-      const {data,error} = await db.rpc(
+      const { data, error } = await db.rpc(
         "get_my_state",
         {
           p_player_token: playerToken
         }
       );
 
-      if(error) throw error;
+      if (error) throw error;
 
       player = {
         id: data.player_id,
         name: data.player_name
       };
 
-      tickets = data.tickets;
+      tickets = data.tickets || [];
 
-      game = {
+      game = normalizeGame({
         id: data.game_id,
         code: data.code,
         called: data.called,
         status: data.status,
         prizes: data.prizes
-      };
+      });
 
       loadMarks();
 
       show("playerPanel");
-
     }
 
-    if(game) {
-
-      subscribeToGame();
+    if (game) {
 
       await refreshGame();
 
+      subscribeToGame();
       startRefreshing();
-
     }
 
-  } catch(error) {
+  } catch (error) {
 
-    console.error("Session restore:",error);
+    console.error("Session restore:", error);
 
-    localStorage.removeItem("tambola_session");
+    localStorage.removeItem(SESSION_KEY);
+
+    await resetGameState();
 
     show("home");
-
   }
-
 }
 
-
 // ======================================
-// REFRESH LIVE GAME
+// REFRESH GAME
 // ======================================
 
 async function refreshGame() {
 
-  if(!game) return;
+  if (!game || switchingGame) return;
+
+  if (refreshing) {
+    refreshAgain = true;
+    return;
+  }
+
+  refreshing = true;
 
   const gameId = game.id;
 
   try {
 
-    const {data,error} = await db
+    const { data, error } = await db
       .from("games")
       .select("*")
-      .eq("id",gameId)
+      .eq("id", gameId)
       .single();
 
-    if(error) throw error;
+    if (error) throw error;
 
-    game = data;
+    if (!game || game.id !== gameId) return;
 
-    const {data:winnerData,error:winnerError} =
-      await db
-        .from("winners")
-        .select("*")
-        .eq("game_id",gameId)
-        .order("won_at",{ascending:true});
+    game = normalizeGame(data);
 
-    if(winnerError) throw winnerError;
+    const {
+      data: winnerData,
+      error: winnerError
+    } = await db
+      .from("winners")
+      .select("*")
+      .eq("game_id", gameId)
+      .order("won_at", { ascending: true });
+
+    if (winnerError) throw winnerError;
+
+    if (!game || game.id !== gameId) return;
 
     winners = winnerData || [];
 
-    if(currentView === "adminPanel") {
+    if (currentView === "adminPanel") {
 
-      const {data:playerData} = await db
+      const {
+        data: playerData,
+        error: playerError
+      } = await db
         .from("players")
-        .select("*")
-        .eq("game_id",gameId);
+        .select("id,name")
+        .eq("game_id", gameId);
 
-      players = playerData || [];
+      if (playerError) {
+        console.error("Players query:", playerError);
+      } else {
+        players = playerData || [];
+      }
 
       renderAdmin();
-
     }
 
-    if(currentView === "playerPanel") {
-
+    if (currentView === "playerPanel") {
       renderPlayer();
-
     }
 
     checkNewWinners();
 
-  } catch(error) {
+  } catch (error) {
 
-    console.error("Refresh error:",error);
+    console.error("Refresh error:", error);
 
+  } finally {
+
+    refreshing = false;
+
+    if (refreshAgain) {
+      refreshAgain = false;
+
+      if (game && !switchingGame) {
+        setTimeout(refreshGame, 0);
+      }
+    }
   }
-
 }
-
 
 // ======================================
 // REALTIME
@@ -1160,285 +1306,435 @@ async function refreshGame() {
 
 function subscribeToGame() {
 
-  if(!game) return;
+  if (!game) return;
 
-  if(realtimeChannel) {
+  const gameId = game.id;
 
-    db.removeChannel(realtimeChannel);
+  if (realtimeChannel) {
 
+    const oldChannel = realtimeChannel;
+
+    db.removeChannel(oldChannel);
+
+    realtimeChannel = null;
   }
 
-  realtimeChannel = db.channel(
-    "tambola-" + game.id
+  const channel = db.channel(
+    "tambola-" + gameId + "-" +
+    Math.random().toString(36).slice(2)
   );
 
-  realtimeChannel
+  channel
     .on(
       "postgres_changes",
       {
-        event:"*",
-        schema:"public",
-        table:"games",
-        filter:"id=eq." + game.id
+        event: "*",
+        schema: "public",
+        table: "games",
+        filter: "id=eq." + gameId
       },
       refreshGame
     )
     .on(
       "postgres_changes",
       {
-        event:"*",
-        schema:"public",
-        table:"winners",
-        filter:"game_id=eq." + game.id
+        event: "*",
+        schema: "public",
+        table: "winners",
+        filter: "game_id=eq." + gameId
       },
       refreshGame
     )
     .on(
       "postgres_changes",
       {
-        event:"*",
-        schema:"public",
-        table:"players",
-        filter:"game_id=eq." + game.id
+        event: "*",
+        schema: "public",
+        table: "players",
+        filter: "game_id=eq." + gameId
       },
       refreshGame
     )
-    .subscribe();
+    .subscribe(status => {
 
+      if (status === "CHANNEL_ERROR") {
+        console.warn(
+          "Realtime channel error. Polling remains active."
+        );
+      }
+    });
+
+  realtimeChannel = channel;
 }
 
 function startRefreshing() {
 
-  if(refreshTimer) {
-
+  if (refreshTimer) {
     clearInterval(refreshTimer);
-
   }
 
-  // Fallback if realtime events are delayed.
   refreshTimer = setInterval(
     refreshGame,
     5000
   );
-
 }
 
-
 // ======================================
-// ADMIN CONTROLS
+// ADMIN GAME CONTROLS
 // ======================================
 
-async function callNumber() {
+async function callNextNumber() {
 
-  if(!game || !hostToken) return;
+  if (!game || !hostToken || callingNumber) return;
+
+  if (
+    game.status === "ended" ||
+    game.status === "paused" ||
+    calledNumbers().length >= 90
+  ) {
+    return;
+  }
+
+  callingNumber = true;
+
+  element("callNextBtn").disabled = true;
 
   try {
 
-    const {data,error} = await db.rpc(
+    const { data, error } = await db.rpc(
       "call_number",
       {
-        p_game_id:game.id,
-        p_host_token:hostToken
+        p_game_id: game.id,
+        p_host_token: hostToken
       }
     );
 
-    if(error) throw error;
+    if (error) throw error;
 
-    announceNumber(data.number);
+    if (data?.number != null) {
+      announceNumber(data.number);
+    }
 
     await refreshGame();
 
-  } catch(error) {
+  } catch (error) {
 
     getError(error);
 
-  }
+  } finally {
 
+    callingNumber = false;
+
+    if (game) {
+      updateAdminControls();
+    }
+  }
 }
 
 function announceNumber(number) {
 
-  if(!("speechSynthesis" in window)) return;
+  if (!("speechSynthesis" in window)) return;
 
-  speechSynthesis.cancel();
+  try {
 
-  const speech =
-    new SpeechSynthesisUtterance(
-      "Number " + number
-    );
+    speechSynthesis.cancel();
 
-  speech.rate = 0.85;
+    const speech =
+      new SpeechSynthesisUtterance(
+        "Number " + number
+      );
 
-  speechSynthesis.speak(speech);
+    speech.rate = 0.85;
 
+    speechSynthesis.speak(speech);
+
+  } catch (error) {
+
+    console.warn("Speech unavailable:", error);
+  }
 }
 
 async function setStatus(status) {
 
-  if(!game || !hostToken) return;
-
-  if(
-    status === "ended" &&
-    !confirm("End this game?")
-  ) return;
+  if (!game || !hostToken) return false;
 
   try {
 
-    const {error} = await db.rpc(
+    const { error } = await db.rpc(
       "set_game_state",
       {
-        p_game_id:game.id,
-        p_host_token:hostToken,
-        p_status:status
+        p_game_id: game.id,
+        p_host_token: hostToken,
+        p_status: status
       }
     );
 
-    if(error) throw error;
+    if (error) throw error;
 
     await refreshGame();
 
-  } catch(error) {
+    return true;
+
+  } catch (error) {
 
     getError(error);
-
+    return false;
   }
+}
 
+async function togglePause() {
+
+  if (!game || game.status === "ended") return;
+
+  await setStatus("paused");
+}
+
+async function resumeGame() {
+
+  if (!game || game.status === "ended") return;
+
+  await setStatus("active");
+}
+
+async function endGame() {
+
+  if (!game || game.status === "ended") return;
+
+  const confirmed = confirm(
+    "Are you sure you want to END this game?\n\n" +
+    "Players will no longer be able to claim prizes."
+  );
+
+  if (!confirmed) return;
+
+  const success = await setStatus("ended");
+
+  if (success) {
+    alert("Game ended successfully.");
+  }
 }
 
 async function toggleLock() {
 
-  if(!game || !hostToken) return;
+  if (!game || !hostToken) return;
+
+  if (game.status === "ended") return;
 
   try {
 
-    const {error} = await db.rpc(
+    const { error } = await db.rpc(
       "set_game_state",
       {
-        p_game_id:game.id,
-        p_host_token:hostToken,
-        p_locked:!game.locked
+        p_game_id: game.id,
+        p_host_token: hostToken,
+        p_locked: !game.locked
       }
     );
 
-    if(error) throw error;
+    if (error) throw error;
 
     await refreshGame();
 
-  } catch(error) {
+  } catch (error) {
 
     getError(error);
-
   }
-
 }
+
+// ======================================
+// SHARE GAME
+// ======================================
 
 async function shareGame() {
 
-  if(!game) return;
+  if (!game) return;
 
-  const url =
-    window.location.origin +
-    window.location.pathname +
-    "?room=" + encodeURIComponent(game.code);
+  const url = new URL(window.location.href);
 
-  if(navigator.share) {
+  url.search = "";
+  url.hash = "";
+
+  url.searchParams.set("room", game.code);
+
+  const shareUrl = url.toString();
+
+  if (navigator.share) {
 
     try {
 
       await navigator.share({
-        title:"Tambola Party",
-        text:"Join my Tambola game! Room: " +
+        title: "Tambola Party",
+        text:
+          "Join my Tambola game! Room: " +
           game.code,
-        url
+        url: shareUrl
       });
 
-    } catch(error) {
+      return;
 
-      console.log(error);
+    } catch (error) {
 
+      if (error.name === "AbortError") return;
+
+      console.warn("Share failed:", error);
     }
+  }
 
-  } else {
+  try {
 
-    await navigator.clipboard.writeText(url);
+    await navigator.clipboard.writeText(shareUrl);
 
     alert("Invitation link copied!");
 
+  } catch (error) {
+
+    window.prompt(
+      "Copy this invitation link:",
+      shareUrl
+    );
   }
-
 }
-
 
 // ======================================
 // ADMIN DISPLAY
 // ======================================
 
+function updateAdminControls() {
+
+  if (!game) return;
+
+  const ended = game.status === "ended";
+  const paused = game.status === "paused";
+
+  element("pauseBtn")
+    .classList.toggle("hidden", paused || ended);
+
+  element("resumeBtn")
+    .classList.toggle("hidden", !paused || ended);
+
+  element("pauseBtn").disabled = ended;
+  element("resumeBtn").disabled = ended;
+
+  element("endBtn").disabled = ended;
+  element("lockBtn").disabled = ended;
+
+  element("lockBtn").textContent =
+    game.locked
+      ? "🔓 Unlock Entries"
+      : "🔒 Lock Entries";
+
+  element("callNextBtn").disabled =
+    ended ||
+    paused ||
+    callingNumber ||
+    calledNumbers().length >= 90;
+}
+
 function renderAdmin() {
 
-  if(!game) return;
+  if (!game) return;
 
-  document.getElementById("adminRoomCode")
-    .textContent = "Room Code: " + game.code;
+  const called = calledNumbers();
+  const calledLookup = new Set(called);
 
-  document.getElementById("adminNumber")
-    .textContent = game.last_number ?? "--";
+  element("adminRoomCode").textContent =
+    "Room Code: " + game.code;
 
-  document.getElementById("calledCount")
-    .textContent =
-      "Numbers Called: " +
-      game.called.length + "/90";
+  element("adminNumber").textContent =
+    game.last_number ?? "--";
 
-  document.getElementById("gameStatus")
-    .textContent =
-      "Status: " + game.status +
-      " | Entries: " +
-      (game.locked ? "Locked" : "Open");
+  element("calledCount").textContent =
+    "Numbers Called: " +
+    called.length + "/90";
 
-  const board = document.getElementById(
-    "numberBoard"
-  );
+  element("gameStatus").textContent =
+    "Status: " + game.status;
+
+  element("entryStatus").textContent =
+    "Entries: " +
+    (game.locked ? "Locked" : "Open");
+
+  updateAdminControls();
+
+  // NUMBER BOARD
+
+  const board = element("numberBoard");
 
   board.innerHTML = "";
 
-  for(let n=1;n<=90;n++) {
+  for (let n = 1; n <= 90; n++) {
 
     const cell = document.createElement("div");
 
     cell.className = "board-cell";
 
-    if(game.called.includes(n)) {
-
+    if (calledLookup.has(n)) {
       cell.classList.add("called");
-
     }
 
     cell.textContent = n;
 
     board.appendChild(cell);
-
   }
 
-  const list = document.getElementById(
-    "playerList"
-  );
+  // PLAYERS
 
-  list.innerHTML =
-    "<p>Total Players: " + players.length + "</p>";
+  element("playerList").textContent =
+    "Total Players: " + players.length;
 
-  players.forEach(p => {
+  const playerContainer =
+    element("adminPlayersList");
 
-    const row = document.createElement("p");
+  playerContainer.innerHTML = "";
 
-    row.textContent = "🎟️ " + p.name;
+  players.forEach((p, index) => {
 
-    list.appendChild(row);
+    const row = document.createElement("div");
 
+    row.className = "player-row";
+
+    row.textContent =
+      (index + 1) + ". 🎟️ " + p.name;
+
+    playerContainer.appendChild(row);
   });
 
+  renderPendingClaims();
   renderWinners();
-
 }
 
+// ======================================
+// PENDING CLAIMS
+// ======================================
+
+function renderPendingClaims() {
+
+  const container = element("pendingClaims");
+
+  if (!container) return;
+
+  /*
+    IMPORTANT:
+
+    The supplied backend interface does not
+    define a pending-claims RPC or table schema.
+
+    The claim_prize RPC is currently treated
+    as an immediate server-side claim decision.
+
+    Do not invent a direct database query here:
+    claim records could contain sensitive data,
+    and their schema is unknown.
+
+    To support pending claims, add an authorized
+    Supabase RPC that returns pending claims
+    for the host and then render its result here.
+  */
+
+  container.textContent =
+    "Claims are processed by the game server. " +
+    "No pending-claim review API is configured.";
+}
 
 // ======================================
 // PRIVATE TICKET MARKING
@@ -1446,64 +1742,66 @@ function renderAdmin() {
 
 function loadMarks() {
 
+  if (!player) return;
+
   const key =
     "tambola_marks_" + player.id;
 
   try {
 
-    marked = JSON.parse(
+    const stored = JSON.parse(
       localStorage.getItem(key) || "{}"
     );
 
-  } catch(error) {
+    marked =
+      stored &&
+      typeof stored === "object" &&
+      !Array.isArray(stored)
+        ? stored
+        : {};
+
+  } catch (error) {
 
     marked = {};
-
   }
-
 }
 
 function saveMarks() {
 
-  if(!player) return;
+  if (!player) return;
 
   localStorage.setItem(
     "tambola_marks_" + player.id,
     JSON.stringify(marked)
   );
-
 }
 
-function toggleMark(ticketId,number) {
+function toggleMark(ticketId, number) {
 
-  if(!game.called.includes(number)) return;
+  if (!game || !player) return;
 
-  if(!marked[ticketId]) {
+  if (!calledSet().has(Number(number))) return;
 
+  if (!Array.isArray(marked[ticketId])) {
     marked[ticketId] = [];
-
   }
 
   const values = marked[ticketId];
 
-  if(values.includes(number)) {
+  if (values.includes(number)) {
 
-    marked[ticketId] = values.filter(
-      n => n !== number
-    );
+    marked[ticketId] =
+      values.filter(n => n !== number);
 
   } else {
 
     values.push(number);
-
   }
 
   saveMarks();
 
   renderPlayer();
-
 }
-
 
 // ======================================
 // PLAYER DISPLAY
@@ -1511,28 +1809,28 @@ function toggleMark(ticketId,number) {
 
 function renderPlayer() {
 
-  if(!player || !game) return;
+  if (!player || !game) return;
 
-  document.getElementById("welcomePlayer")
-    .textContent =
-      "Welcome, " + player.name + "! 🎉";
+  const called = calledSet();
 
-  document.getElementById("playerRoom")
-    .textContent =
-      "Room: " + game.code;
+  element("welcomePlayer").textContent =
+    "Welcome, " + player.name + "! 🎉";
 
-  document.getElementById("playerNumber")
-    .textContent =
-      game.last_number ?? "--";
+  element("playerRoom").textContent =
+    "Room: " + game.code;
 
-  document.getElementById("playerCalledCount")
-    .textContent =
-      "Numbers Called: " +
-      game.called.length + "/90";
+  element("playerNumber").textContent =
+    game.last_number ?? "--";
 
-  const container = document.getElementById(
-    "ticketsContainer"
-  );
+  element("playerCalledCount").textContent =
+    "Numbers Called: " +
+    called.size + "/90";
+
+  element("playerGameStatus").textContent =
+    "Game Status: " + game.status;
+
+  const container =
+    element("ticketsContainer");
 
   container.innerHTML = "";
 
@@ -1549,85 +1847,103 @@ function renderPlayer() {
 
     grid.className = "ticket";
 
+    if (!Array.isArray(ticket.numbers)) {
+
+      const error = document.createElement("p");
+
+      error.textContent =
+        "Ticket data is unavailable.";
+
+      container.appendChild(error);
+
+      return;
+    }
+
     ticket.numbers.forEach(row => {
+
+      if (!Array.isArray(row)) return;
 
       row.forEach(number => {
 
-        const cell = document.createElement("div");
+        const cell = document.createElement(
+          number === null ? "div" : "button"
+        );
 
         cell.className = "ticket-cell";
 
-        if(number === null) {
+        if (number === null) {
 
           cell.classList.add("empty");
 
         } else {
 
-          cell.textContent = number;
+          const numericNumber = Number(number);
 
-          if(game.called.includes(number)) {
+          const wasCalled =
+            called.has(numericNumber);
+
+          cell.textContent = numericNumber;
+
+          cell.type = "button";
+
+          if (wasCalled) {
 
             cell.classList.add("called");
 
           } else {
 
             cell.classList.add("uncalled");
-
+            cell.disabled = true;
           }
 
-          if(
-            marked[ticket.id]?.includes(number) &&
-            game.called.includes(number)
+          if (
+            Array.isArray(marked[ticket.id]) &&
+            marked[ticket.id].includes(number) &&
+            wasCalled
           ) {
 
             cell.classList.add("marked");
-
           }
 
           cell.onclick = () => {
-
-            toggleMark(ticket.id,number);
-
+            toggleMark(ticket.id, number);
           };
-
         }
 
         grid.appendChild(cell);
-
       });
-
     });
 
     container.appendChild(grid);
-
   });
 
   renderClaims();
-
   renderWinners();
-
 }
-
 
 // ======================================
 // PRIZE CHECKING
 // ======================================
 
-function rowNumbers(ticket,row) {
+function rowNumbers(ticket, row) {
 
-  return ticket.numbers[row].filter(
-    n => n !== null
-  );
+  if (
+    !Array.isArray(ticket.numbers) ||
+    !Array.isArray(ticket.numbers[row])
+  ) {
+    return [];
+  }
 
+  return ticket.numbers[row]
+    .filter(n => n !== null)
+    .map(Number);
 }
 
-function patternNumbers(ticket,prize) {
+function patternNumbers(ticket, prize) {
 
-  const top = rowNumbers(ticket,0);
-
-  const middle = rowNumbers(ticket,1);
-
-  const bottom = rowNumbers(ticket,2);
+  const top = rowNumbers(ticket, 0);
+  const middle = rowNumbers(ticket, 1);
+  const bottom = rowNumbers(ticket, 2);
 
   const all = [
     ...top,
@@ -1635,46 +1951,62 @@ function patternNumbers(ticket,prize) {
     ...bottom
   ];
 
-  if(prize === "Top Line") return top;
+  if (prize === "Top Line") return top;
 
-  if(prize === "Middle Line") return middle;
+  if (prize === "Middle Line") return middle;
 
-  if(prize === "Bottom Line") return bottom;
+  if (prize === "Bottom Line") return bottom;
 
-  if(prize === "Four Corners") {
+  if (prize === "Four Corners") {
+
+    if (!top.length || !bottom.length) {
+      return [];
+    }
 
     return [
       top[0],
-      top[top.length-1],
+      top[top.length - 1],
       bottom[0],
-      bottom[bottom.length-1]
+      bottom[bottom.length - 1]
     ];
-
   }
 
-  return all;
+  if (
+    prize === "Early 5" ||
+    prize === "Early 7" ||
+    prize === "Full House"
+  ) {
+    return all;
+  }
 
+  return [];
 }
 
-function qualifies(ticket,prize) {
+function qualifies(ticket, prize) {
 
-  const numbers = patternNumbers(
-    ticket,
-    prize
-  );
+  if (!game) return false;
+
+  const numbers =
+    patternNumbers(ticket, prize);
+
+  if (!numbers.length) return false;
+
+  const called = calledSet();
 
   const hits = numbers.filter(
-    n => game.called.includes(n)
+    n => called.has(n)
   ).length;
 
-  if(prize === "Early 5") return hits >= 5;
+  if (prize === "Early 5") {
+    return hits >= 5;
+  }
 
-  if(prize === "Early 7") return hits >= 7;
+  if (prize === "Early 7") {
+    return hits >= 7;
+  }
 
   return hits === numbers.length;
-
 }
-
 
 // ======================================
 // CLAIM BUTTONS
@@ -1682,11 +2014,17 @@ function qualifies(ticket,prize) {
 
 function renderClaims() {
 
-  const container = document.getElementById(
-    "claimContainer"
-  );
+  if (!game || !player) return;
+
+  const container =
+    element("claimContainer");
 
   container.innerHTML = "";
+
+  const gamePrizes =
+    Array.isArray(game.prizes)
+      ? game.prizes
+      : prizes;
 
   tickets.forEach(ticket => {
 
@@ -1697,7 +2035,7 @@ function renderClaims() {
 
     container.appendChild(heading);
 
-    (game.prizes || prizes).forEach(prize => {
+    gamePrizes.forEach(prize => {
 
       const alreadyWon = winners.some(
         w =>
@@ -1705,7 +2043,7 @@ function renderClaims() {
           w.prize === prize
       );
 
-      if(alreadyWon) {
+      if (alreadyWon) {
 
         const badge = document.createElement("p");
 
@@ -1715,64 +2053,83 @@ function renderClaims() {
         container.appendChild(badge);
 
         return;
-
       }
 
-      const eligible = qualifies(
-        ticket,
-        prize
-      );
+      const eligible =
+        qualifies(ticket, prize);
 
-      const winnerCount = winners.filter(
-        w => w.prize === prize
-      ).length;
+      const winnerCount =
+        winners.filter(
+          w => w.prize === prize
+        ).length;
+
+      const maxWinners =
+        Number(game.winners_per_prize ?? 1);
 
       const prizeFull =
-        winnerCount >= (game.winners_per_prize || 1);
+        winnerCount >= maxWinners;
 
-      const button = document.createElement(
-        "button"
-      );
+      const claimKey =
+        ticket.id + "_" + prize;
+
+      const claimInProgress =
+        claimingPrizes.has(claimKey);
+
+      const gameAllowsClaims =
+        game.status !== "ended" &&
+        game.status !== "paused";
+
+      const button =
+        document.createElement("button");
 
       button.className = "prize-button";
 
-      button.textContent = eligible
-        ? "🏆 Claim " + prize
-        : "🔒 " + prize;
+      button.textContent =
+        claimInProgress
+          ? "⏳ Claiming..."
+          : prizeFull
+            ? "🏆 " + prize + " Closed"
+            : eligible
+              ? "🏆 Claim " + prize
+              : "🔒 " + prize;
 
       button.disabled =
         !eligible ||
         prizeFull ||
-        game.status === "ended";
+        !gameAllowsClaims ||
+        claimInProgress;
 
-      if(eligible && !prizeFull) {
-
+      if (
+        eligible &&
+        !prizeFull &&
+        gameAllowsClaims
+      ) {
         button.classList.add("ready");
-
       }
 
       button.onclick = () => {
-
-        claimPrize(ticket.id,prize);
-
+        claimPrize(ticket.id, prize);
       };
 
       container.appendChild(button);
 
-      // Automatically notify eligible player.
-      const claimKey =
-        ticket.id + "_" + prize;
-
-      if(
+      if (
         eligible &&
         !prizeFull &&
-        !notifiedClaims.has(claimKey) &&
-        game.status !== "ended"
+        gameAllowsClaims &&
+        !notifiedClaims.has(claimKey)
       ) {
 
         notifiedClaims.add(claimKey);
 
         setTimeout(() => {
+
+          if (
+            !game ||
+            game.status === "ended"
+          ) {
+            return;
+          }
 
           alert(
             "🎉 " + prize +
@@ -1781,57 +2138,75 @@ function renderClaims() {
             "!\nTap Claim to register your win."
           );
 
-        },300);
-
+        }, 300);
       }
-
     });
-
   });
-
 }
-
 
 // ======================================
 // SERVER-SIDE CLAIM
 // ======================================
 
-async function claimPrize(ticketId,prize) {
+async function claimPrize(ticketId, prize) {
+
+  if (!playerToken || !game) return;
+
+  const claimKey =
+    ticketId + "_" + prize;
+
+  if (claimingPrizes.has(claimKey)) return;
+
+  claimingPrizes.add(claimKey);
+
+  renderClaims();
 
   try {
 
-    const {data,error} = await db.rpc(
+    const { data, error } = await db.rpc(
       "claim_prize",
       {
-        p_player_token:playerToken,
-        p_ticket_id:ticketId,
-        p_prize:prize
+        p_player_token: playerToken,
+        p_ticket_id: ticketId,
+        p_prize: prize
       }
     );
 
-    if(error) throw error;
+    if (error) throw error;
 
-    if(data.ok) {
+    if (data?.ok === true) {
 
       alert(
         "🏆 Congratulations!\n" +
         "You won " + prize + "!"
       );
 
-      await refreshGame();
+    } else {
 
+      alert(
+        data?.message ||
+        data?.reason ||
+        "Your claim was not accepted."
+      );
     }
 
-  } catch(error) {
+    await refreshGame();
+
+  } catch (error) {
 
     getError(error);
 
     await refreshGame();
 
+  } finally {
+
+    claimingPrizes.delete(claimKey);
+
+    if (game && currentView === "playerPanel") {
+      renderClaims();
+    }
   }
-
 }
-
 
 // ======================================
 // WINNER ANNOUNCEMENTS
@@ -1839,18 +2214,15 @@ async function claimPrize(ticketId,prize) {
 
 function checkNewWinners() {
 
-  if(!initialWinnersLoaded) {
+  if (!initialWinnersLoaded) {
 
     winners.forEach(w => {
-
       lastWinnerIds.add(w.id);
-
     });
 
     initialWinnersLoaded = true;
 
     return;
-
   }
 
   const newWinners = winners.filter(
@@ -1858,135 +2230,116 @@ function checkNewWinners() {
   );
 
   winners.forEach(w => {
-
     lastWinnerIds.add(w.id);
-
   });
 
-  newWinners.forEach((winner,index) => {
-
-    setTimeout(() => {
-
-      announceWinner(winner);
-
-    },index * 5500);
-
+  newWinners.forEach(winner => {
+    winnerPopupQueue.push(winner);
   });
 
+  showNextWinnerPopup();
 }
 
-function announceWinner(winner) {
+function showNextWinnerPopup() {
 
-  document.getElementById("winnerName")
-    .textContent = winner.player_name;
+  if (winnerPopupActive) return;
 
-  document.getElementById("winnerPrize")
-    .textContent = "🏆 " + winner.prize;
+  if (!winnerPopupQueue.length) return;
 
-  document.getElementById("winnerTicket")
-    .textContent =
-      "Ticket #" + winner.ticket_no;
+  const winner = winnerPopupQueue.shift();
 
-  document.getElementById("winnerPopup")
+  winnerPopupActive = true;
+
+  element("winnerName").textContent =
+    winner.player_name || "Winner";
+
+  element("winnerPrize").textContent =
+    "🏆 " + winner.prize;
+
+  element("winnerTicket").textContent =
+    "Ticket #" + winner.ticket_no;
+
+  element("winnerPopup")
     .classList.remove("hidden");
 
-  setTimeout(closePopup,5000);
-
+  winnerPopupTimer = setTimeout(
+    closePopup,
+    5000
+  );
 }
 
 function closePopup() {
 
-  document.getElementById("winnerPopup")
+  if (winnerPopupTimer) {
+
+    clearTimeout(winnerPopupTimer);
+
+    winnerPopupTimer = null;
+  }
+
+  element("winnerPopup")
     .classList.add("hidden");
 
+  winnerPopupActive = false;
+
+  if (winnerPopupQueue.length) {
+
+    setTimeout(
+      showNextWinnerPopup,
+      300
+    );
+  }
 }
 
 function renderWinners() {
 
   const html = winners.length
-    ? winners.map(w => {
-
-        return `
-          <div class="winner">
-            🏆 ${escapeHtml(w.player_name)}
-            won
-            <strong>${escapeHtml(w.prize)}</strong>
-            — Ticket #${w.ticket_no}
-          </div>
-        `;
-
-      }).join("")
+    ? winners.map(w => `
+        <div class="winner">
+          🏆 ${escapeHtml(w.player_name)}
+          won
+          <strong>${escapeHtml(w.prize)}</strong>
+          — Ticket #${escapeHtml(w.ticket_no)}
+        </div>
+      `).join("")
     : "<p>No winners yet.</p>";
 
-  document.getElementById("adminWinners")
-    .innerHTML = html;
+  element("adminWinners").innerHTML = html;
 
-  document.getElementById("playerWinners")
-    .innerHTML = html;
-
+  element("playerWinners").innerHTML = html;
 }
-
 
 // ======================================
 // INITIALISE
 // ======================================
 
-const params = new URLSearchParams(
-  window.location.search
-);
+async function initialise() {
 
-const room = params.get("room");
+  renderCustomPrizeSettings();
 
-if(room) {
+  updateWinningMode();
 
-  document.getElementById("roomCode")
-    .value = room.toUpperCase();
+  const params = new URLSearchParams(
+    window.location.search
+  );
 
-}
-renderCustomPrizeSettings();
-restoreSession().then(() => {
+  const room = params.get("room");
 
-  if(!game && room) {
+  if (room) {
 
-    show("joinSetup");
-
+    element("roomCode").value =
+      room.toUpperCase();
   }
 
-});
-// Ensure buttons can call these functions from HTML onclick
-window.endGame = async function() {
-    console.log("End Game clicked");
-    
-    const confirmEnd = confirm("Are you sure you want to END this game? This will close the room for all players.");
-    if (!confirmEnd) return;
+  await restoreSession();
 
-    try {
-        // Try to get active room code from possible global variables
-        const activeRoom = (typeof room !== 'undefined' && room) || 
-                           (typeof roomCode !== 'undefined' && roomCode) || 
-                           (typeof currentRoomCode !== 'undefined' && currentRoomCode);
+  if (!game && room) {
+    show("joinSetup");
+  }
+}
 
-        if (activeRoom && typeof supabase !== 'undefined') {
-            // Update game status to 'ended' in Supabase
-            await supabase
-                .from('games')
-                .update({ status: 'ended' })
-                .eq('room_code', activeRoom);
-        }
-    } catch (err) {
-        console.error("Error ending game in Supabase:", err);
-    }
+initialise();
 
-    // Clear session storage and reload main screen
-    localStorage.clear();
-    sessionStorage.clear();
-    window.location.reload();
-};
-
-window.callNextNumber = typeof callNextNumber !== 'undefined' ? callNextNumber : function() {
-    console.log("Call Next Number clicked");
-    if (typeof drawNumber === 'function') drawNumber();
-};
 </script>
 
 </body>
