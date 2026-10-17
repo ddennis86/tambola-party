@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
 
 <title>Tambola Party 🎉</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
-
-/* ======================================
-   GENERAL STYLING
-====================================== */
 
 * {
   box-sizing: border-box;
@@ -23,60 +23,56 @@ body {
   min-height: 100vh;
   font-family: Arial, sans-serif;
   color: white;
-  background: linear-gradient(135deg, #6026a6, #e83e96);
+  background: linear-gradient(
+    135deg,
+    #6026a6,
+    #e83e96
+  );
 }
 
 .container {
   width: 100%;
   max-width: 1200px;
   margin: auto;
-  padding: 15px;
+  padding: 12px;
 }
 
 .header {
   text-align: center;
-  padding: 20px 10px;
+  padding: 15px 5px;
 }
 
 .header h1 {
-  font-size: clamp(26px, 5vw, 40px);
+  font-size: clamp(25px,5vw,40px);
   margin: 0;
 }
 
 .header p {
-  font-size: 15px;
+  font-size: 14px;
 }
 
-/* ======================================
-   CARDS
-====================================== */
-
 .card {
-  min-width: 0;
   background: white;
   color: #333;
-  padding: 20px;
-  margin: 15px 0;
-  border-radius: 18px;
+  padding: 18px;
+  margin: 12px 0;
+  border-radius: 15px;
   box-shadow: 0 8px 25px rgba(0,0,0,.15);
+  min-width: 0;
 }
 
 .card h2 {
   margin-top: 0;
 }
 
-/* ======================================
-   BUTTONS
-====================================== */
-
 button {
   background: #762ac2;
   color: white;
   border: none;
-  padding: 12px 18px;
-  margin: 5px;
-  border-radius: 10px;
-  font-size: 15px;
+  padding: 11px 16px;
+  margin: 4px;
+  border-radius: 9px;
+  font-size: 14px;
   cursor: pointer;
 }
 
@@ -89,25 +85,13 @@ button:disabled {
   cursor: not-allowed;
 }
 
-button:focus-visible,
-input:focus-visible,
-select:focus-visible,
-.ticket-cell:focus-visible {
-  outline: 3px solid #ffbf47;
-  outline-offset: 2px;
-}
-
-/* ======================================
-   INPUTS
-====================================== */
-
 input,
 select {
-  padding: 12px;
+  padding: 10px;
   border: 1px solid #ddd;
   border-radius: 8px;
   margin: 5px;
-  font-size: 16px;
+  font-size: 15px;
   max-width: 100%;
 }
 
@@ -119,21 +103,87 @@ select {
   text-align: center;
 }
 
-.small {
-  font-size: 13px;
-  color: #777;
-}
-
 .status {
   background: #f1e8ff;
-  padding: 12px;
-  border-radius: 9px;
-  margin: 10px 0;
+  padding: 10px;
+  border-radius: 8px;
+  margin: 8px 0;
 }
 
-/* ======================================
-   ADMIN LAYOUT
-====================================== */
+button:focus-visible,
+input:focus-visible,
+select:focus-visible {
+  outline: 3px solid #ffbf47;
+  outline-offset: 2px;
+}
+
+/* ==============================
+   ADMIN PRIZE SELECTION
+============================== */
+
+.prize-selection {
+  display: grid;
+  grid-template-columns: repeat(
+    2,
+    minmax(0,1fr)
+  );
+  gap: 8px;
+  margin: 12px 0;
+}
+
+.prize-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #f5efff;
+  padding: 12px;
+  border-radius: 9px;
+  cursor: pointer;
+  font-size: 14px;
+  border: 2px solid transparent;
+}
+
+.prize-option:has(input:checked) {
+  background: #e4fff0;
+  border-color: #21b573;
+}
+
+.prize-option input {
+  width: 18px;
+  height: 18px;
+  accent-color: #20a86b;
+  margin: 0;
+}
+
+.prize-select-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.prize-select-actions button {
+  font-size: 12px;
+  padding: 8px 12px;
+}
+
+/* ==============================
+   CUSTOM WINNING RULES
+============================== */
+
+.custom-prize-row {
+  padding: 8px;
+  margin: 6px 0;
+  background: #f5efff;
+  border-radius: 8px;
+}
+
+.custom-prize-row p {
+  margin: 4px 0;
+}
+
+/* ==============================
+   ADMIN PANEL
+============================== */
 
 .admin-actions {
   display: flex;
@@ -145,7 +195,6 @@ select {
   display: grid;
   grid-template-columns: minmax(0,1fr);
   gap: 16px;
-  align-items: start;
 }
 
 .admin-grid > div {
@@ -156,79 +205,35 @@ select {
   margin: 0 0 16px;
 }
 
-@media (min-width: 1024px) {
+@media(min-width:1024px) {
+
   .admin-grid {
     grid-template-columns:
       minmax(0,1.05fr)
       minmax(0,.95fr);
   }
-}
 
-/* ======================================
-   ADMIN NUMBER DISPLAY
-====================================== */
+}
 
 .number {
   font-size: clamp(3rem,9vw,5rem);
-  line-height: 1.1;
   color: #762ac2;
-  text-align: center;
   font-weight: bold;
+  text-align: center;
   padding: 12px;
 }
 
-/* ======================================
-   SMALLER PLAYER NUMBER DISPLAY
-====================================== */
-
-.player-number-card {
-  padding: 12px 15px;
-  margin: 8px 0;
-  border-radius: 14px;
-}
-
-.player-number-card h2 {
-  font-size: 18px;
-  margin: 4px 0 6px;
-}
-
-.player-number-card h3 {
-  font-size: 14px;
-  margin: 8px 0 2px;
-}
-
-.player-number-card p {
-  font-size: 13px;
-  margin: 5px 0;
-}
-
-/* Compact called number */
-
-.player-number {
-  font-size: 38px;
-  line-height: 1;
-  font-weight: bold;
-  color: #762ac2;
-  padding: 5px;
-  margin: 3px auto;
-}
-
-/* Smaller game status */
-
-.player-number-card .status {
-  font-size: 12px;
-  padding: 7px;
-  margin: 6px 0;
-}
-
-/* ======================================
+/* ==============================
    NUMBER BOARD
-====================================== */
+============================== */
 
 .board {
   display: grid;
-  grid-template-columns: repeat(10,minmax(0,1fr));
-  gap: 5px;
+  grid-template-columns: repeat(
+    10,
+    minmax(0,1fr)
+  );
+  gap: 4px;
 }
 
 .board-cell {
@@ -239,7 +244,7 @@ select {
   aspect-ratio: 1;
   background: #eee;
   color: #333;
-  border-radius: 7px;
+  border-radius: 6px;
   font-size: clamp(10px,2vw,15px);
   font-weight: bold;
 }
@@ -248,20 +253,102 @@ select {
   background: #ffd43b;
 }
 
-/* ======================================
+/* ==============================
+   COMPACT PLAYER HEADER
+============================== */
+
+.player-number-card {
+  padding: 10px;
+  margin: 6px 0;
+  border-radius: 12px;
+}
+
+.player-number-card h2 {
+  font-size: 17px;
+  margin: 3px 0;
+}
+
+.player-number-card h3 {
+  font-size: 13px;
+  margin: 5px 0;
+}
+
+.player-number-card p {
+  font-size: 12px;
+  margin: 4px 0;
+}
+
+.player-number {
+  font-size: 35px;
+  font-weight: bold;
+  color: #762ac2;
+  line-height: 1.1;
+  padding: 3px;
+}
+
+.player-number-card .status {
+  font-size: 11px;
+  padding: 6px;
+}
+
+/* ==============================
+   COMPACT CLAIM SECTION
+============================== */
+
+.player-claims-card {
+  padding: 10px;
+  margin: 6px 0;
+  border-radius: 12px;
+}
+
+.player-claims-card h2 {
+  font-size: 16px;
+  margin: 0 0 8px;
+}
+
+.player-claims-card h3 {
+  font-size: 12px;
+  color: #613399;
+  margin: 8px 0 4px;
+}
+
+.claim-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.prize-button {
+  font-size: 11px;
+  padding: 7px 9px;
+  margin: 0;
+  min-height: 30px;
+  border-radius: 6px;
+}
+
+.prize-button.ready,
+.prize-button.ready:hover:not(:disabled) {
+  background: #20b573;
+  color: white;
+}
+
+/* ==============================
    TAMBOLA TICKETS
-====================================== */
+============================== */
 
 .ticket {
   display: grid;
-  grid-template-columns: repeat(9,minmax(0,1fr));
+  grid-template-columns: repeat(
+    9,
+    minmax(0,1fr)
+  );
   gap: 3px;
-  margin: 15px 0;
+  margin: 12px 0;
 }
 
 .ticket-cell {
   min-width: 0;
-  min-height: 43px;
+  min-height: 42px;
   border-radius: 5px;
   background: #f2f2f2;
   border: 1px solid #ddd;
@@ -278,15 +365,11 @@ button.ticket-cell {
   padding: 0;
 }
 
-/* Empty cells */
-
 .ticket-cell.empty {
   background: #ddd;
 }
 
-/* ======================================
-   YELLOW = CALLED BY ADMIN
-====================================== */
+/* Yellow = called by admin */
 
 .ticket-cell.called,
 .ticket-cell.called:hover:not(:disabled),
@@ -295,9 +378,7 @@ button.ticket-cell {
   color: #333;
 }
 
-/* ======================================
-   GREEN = SELECTED BY PLAYER
-====================================== */
+/* Green = selected by player */
 
 .ticket-cell.marked,
 .ticket-cell.marked:hover:not(:disabled),
@@ -307,47 +388,31 @@ button.ticket-cell {
   color: white;
 }
 
-/* Uncalled numbers */
-
 .ticket-cell.uncalled {
   cursor: not-allowed;
 }
-
-/* Prevent disabled ticket cells from
-   receiving the generic grey button style */
 
 button.ticket-cell:disabled {
   background: #f2f2f2;
   color: #333;
 }
 
-/* ======================================
-   PRIZE BUTTONS
-====================================== */
-
-.prize-button {
-  display: inline-block;
+.ticket-legend {
+  font-size: 12px;
+  margin: 5px 0;
 }
 
-.prize-button.ready {
-  background: #20b573;
-}
-
-/* ======================================
+/* ==============================
    WINNERS
-====================================== */
+============================== */
 
 .winner {
   background: #fff3c4;
   color: #613399;
-  padding: 12px;
-  margin: 8px 0;
-  border-radius: 10px;
+  padding: 10px;
+  margin: 7px 0;
+  border-radius: 9px;
 }
-
-/* ======================================
-   PLAYER LIST
-====================================== */
 
 .player-row {
   padding: 10px;
@@ -357,9 +422,9 @@ button.ticket-cell:disabled {
   overflow-wrap: anywhere;
 }
 
-/* ======================================
+/* ==============================
    POPUP
-====================================== */
+============================== */
 
 .popup {
   position: fixed;
@@ -375,21 +440,16 @@ button.ticket-cell:disabled {
 .popup-box {
   background: white;
   color: #54218c;
-  padding: 30px;
-  border-radius: 20px;
+  padding: 25px;
+  border-radius: 18px;
   text-align: center;
   max-width: 450px;
   width: 100%;
-  box-shadow: 0 15px 50px rgba(0,0,0,.3);
 }
 
 .popup-box h1 {
   font-size: clamp(24px,6vw,32px);
 }
-
-/* ======================================
-   SPECIAL BUTTONS
-====================================== */
 
 .btn-success {
   background: #20a86b;
@@ -407,36 +467,45 @@ button.ticket-cell:disabled {
   background: #626b78;
 }
 
-/* ======================================
-   MOBILE RESPONSIVE
-====================================== */
+/* ==============================
+   MOBILE
+============================== */
 
-@media (max-width: 600px) {
+@media(max-width:600px) {
 
   .container {
-    padding: 8px;
+    padding: 7px;
   }
 
   .header {
-    padding: 12px 5px;
+    padding: 10px 5px;
   }
 
   .header h1 {
-    font-size: 25px;
+    font-size: 24px;
   }
 
   .header p {
-    font-size: 13px;
+    font-size: 12px;
     margin: 5px 0;
   }
 
   .card {
-    padding: 12px;
-    margin: 8px 0;
+    padding: 11px;
+    margin: 7px 0;
+  }
+
+  .prize-selection {
+    gap: 5px;
+  }
+
+  .prize-option {
+    padding: 9px;
+    font-size: 12px;
   }
 
   .ticket-cell {
-    min-height: 35px;
+    min-height: 34px;
     font-size: 12px;
   }
 
@@ -444,38 +513,32 @@ button.ticket-cell:disabled {
     gap: 3px;
   }
 
+  .player-number {
+    font-size: 31px;
+  }
+
+  .player-claims-card {
+    padding: 8px;
+  }
+
+  .player-claims-card h2 {
+    font-size: 15px;
+  }
+
+  .prize-button {
+    font-size: 10px;
+    padding: 6px 8px;
+    min-height: 29px;
+  }
+
   .admin-actions button {
     flex: 1 1 140px;
-  }
-
-  /* Extra compact player display */
-
-  .player-number-card {
-    padding: 10px;
-    margin: 6px 0;
-  }
-
-  .player-number-card h2 {
-    font-size: 16px;
-  }
-
-  .player-number-card h3 {
-    font-size: 13px;
-  }
-
-  .player-number {
-    font-size: 32px;
-    padding: 3px;
-  }
-
-  .player-number-card .status {
-    padding: 6px;
-    font-size: 11px;
   }
 
 }
 
 </style>
+
 </head>
 
 <body>
@@ -483,409 +546,459 @@ button.ticket-cell:disabled {
 <div class="container">
 
 <header class="header">
-  <h1>🎉 TAMBOLA PARTY 🎉</h1>
-  <p>Play Housie With Friends!</p>
+
+<h1>🎉 TAMBOLA PARTY 🎉</h1>
+
+<p>Play Housie With Friends!</p>
+
 </header>
 
-<!-- ======================================
+<!-- ==============================
      HOME
-====================================== -->
+============================== -->
 
 <section id="home" class="card center">
 
-  <h2>Welcome to Tambola Party!</h2>
+<h2>Welcome to Tambola Party!</h2>
 
-  <p>Create a game or join your friends.</p>
+<p>Create a game or join your friends.</p>
 
-  <button onclick="show('adminSetup')">
-    👑 Create Game
-  </button>
+<button onclick="show('adminSetup')">
+👑 Create Game
+</button>
 
-  <button onclick="show('joinSetup')">
-    🎟️ Join Game
-  </button>
+<button onclick="show('joinSetup')">
+🎟️ Join Game
+</button>
 
 </section>
 
-<!-- ======================================
+<!-- ==============================
      ADMIN SETUP
-====================================== -->
+============================== -->
 
 <section id="adminSetup" class="card hidden">
 
-  <h2>👑 Create Tambola Game</h2>
+<h2>👑 Create Tambola Game</h2>
 
-  <p>Maximum tickets per player</p>
+<p>Maximum tickets per player</p>
 
-  <select id="maxTickets">
-    <option value="1">1 Ticket</option>
-    <option value="2">2 Tickets</option>
-    <option value="3">3 Tickets</option>
-    <option value="4">4 Tickets</option>
-    <option value="5">5 Tickets</option>
-    <option value="6" selected>6 Tickets</option>
-  </select>
+<select id="maxTickets">
 
-  <p>Winners allowed per prize</p>
-
-  <select id="winnersPerPrize">
-    <option value="1">1 Winner</option>
-    <option value="2">2 Winners</option>
-    <option value="3">3 Winners</option>
-    <option value="4">4 Winners</option>
-    <option value="5">5 Winners</option>
-  </select>
-
-  <hr>
-
-  <h3>🏆 Winning Rules</h3>
-
-  <p>Choose how winners will be selected.</p>
-
-  <select id="winningMode" onchange="updateWinningMode()">
-
-    <option value="first_claim">
-      ⚡ Option A - First to Claim
-    </option>
-
-    <option value="same_number">
-      🎊 Option B - Same Number Winners
-    </option>
-
-    <option value="custom">
-      🎛️ Option C - Custom Prize Rules
-    </option>
-
-  </select>
-
-  <h3>⏱️ Claim Timer</h3>
-
-  <select id="claimWindow">
-
-  <option value="10">
-    10 Seconds
-  </option>
-
-  <option value="15" selected>
-    15 Seconds
-  </option>
-
-  <option value="30">
-    30 Seconds
-  </option>
-
-  <option value="60">
-    60 Seconds
-  </option>
-
-  <option value="0">
-    Unlimited
-  </option>
+<option value="1">1 Ticket</option>
+<option value="2">2 Tickets</option>
+<option value="3">3 Tickets</option>
+<option value="4">4 Tickets</option>
+<option value="5">5 Tickets</option>
+<option value="6" selected>6 Tickets</option>
 
 </select>
 
-  <div id="customPrizeSettings" class="hidden">
+<p>Winners allowed per prize</p>
 
-    <h3>🎛️ Custom Winning Rules</h3>
+<select id="winnersPerPrize">
 
-    <p>Choose the winning rule for each prize.</p>
+<option value="1">1 Winner</option>
+<option value="2">2 Winners</option>
+<option value="3">3 Winners</option>
+<option value="4">4 Winners</option>
+<option value="5">5 Winners</option>
 
-    <div id="customPrizeList"></div>
+</select>
 
-  </div>
+<hr>
 
-  <br>
+<!-- NEW PRIZE SELECTION -->
 
-  <button id="createGameBtn" onclick="createGame()">
-    🎮 Create Room
-  </button>
+<h3>🏆 Select Prizes for This Game</h3>
+
+<p>
+Choose which prizes players can win.
+Only selected prizes will appear in the game.
+</p>
+
+<div class="prize-select-actions">
+
+<button
+type="button"
+onclick="selectAllPrizes()"
+class="btn-success">
+✅ Select All
+</button>
+
+<button
+type="button"
+onclick="clearAllPrizes()"
+class="btn-secondary">
+Clear All
+</button>
+
+</div>
+
+<div id="prizeSelection" class="prize-selection"></div>
+
+<p id="selectedPrizeCount" class="status"></p>
+
+<hr>
+
+<h3>🏆 Winning Rules</h3>
+
+<p>Choose how winners will be selected.</p>
+
+<select
+id="winningMode"
+onchange="updateWinningMode()">
+
+<option value="first_claim">
+⚡ Option A - First to Claim
+</option>
+
+<option value="same_number">
+🎊 Option B - Same Number Winners
+</option>
+
+<option value="custom">
+🎛️ Option C - Custom Prize Rules
+</option>
+
+</select>
+
+<h3>⏱️ Claim Timer</h3>
+
+<select id="claimWindow">
+
+<option value="10" selected>
+10 Seconds
+</option>
+
+<option value="15">
+15 Seconds
+</option>
+
+<option value="30">
+30 Seconds
+</option>
+
+<option value="60">
+60 Seconds
+</option>
+
+<option value="0">
+Unlimited
+</option>
+
+</select>
+
+<div id="customPrizeSettings" class="hidden">
+
+<h3>🎛️ Custom Winning Rules</h3>
+
+<p>
+Choose the winning rule for each selected prize.
+</p>
+
+<div id="customPrizeList"></div>
+
+</div>
+
+<br>
+
+<button
+id="createGameBtn"
+onclick="createGame()">
+
+🎮 Create Room
+
+</button>
 
 </section>
 
-<!-- ======================================
+<!-- ==============================
      JOIN GAME
-====================================== -->
+============================== -->
 
 <section id="joinSetup" class="card hidden">
 
-  <h2>🎟️ Join Tambola Game</h2>
+<h2>🎟️ Join Tambola Game</h2>
 
-  <input
-    id="playerName"
-    placeholder="Your Name"
-    maxlength="30"
-    autocomplete="name"
-  >
+<input
+id="playerName"
+placeholder="Your Name"
+maxlength="30"
+autocomplete="name">
 
-  <br>
+<br>
 
-  <input
-    id="roomCode"
-    placeholder="Room Code"
-    maxlength="6"
-    autocapitalize="characters"
-  >
+<input
+id="roomCode"
+placeholder="Room Code"
+maxlength="6"
+autocapitalize="characters">
 
-  <p>Number of Tickets</p>
+<p>Number of Tickets</p>
 
-  <select id="ticketCount">
+<select id="ticketCount">
 
-    <option value="1">1 Ticket</option>
-    <option value="2">2 Tickets</option>
-    <option value="3">3 Tickets</option>
-    <option value="4">4 Tickets</option>
-    <option value="5">5 Tickets</option>
-    <option value="6">6 Tickets</option>
+<option value="1">1 Ticket</option>
+<option value="2">2 Tickets</option>
+<option value="3">3 Tickets</option>
+<option value="4">4 Tickets</option>
+<option value="5">5 Tickets</option>
+<option value="6">6 Tickets</option>
 
-  </select>
+</select>
 
-  <br>
+<br>
 
-  <button id="joinGameBtn" onclick="joinGame()">
-    Join Game 🎉
-  </button>
+<button
+id="joinGameBtn"
+onclick="joinGame()">
+
+Join Game 🎉
+
+</button>
 
 </section>
 
-<!-- ======================================
+<!-- ==============================
      ADMIN PANEL
-====================================== -->
+============================== -->
 
 <section id="adminPanel" class="hidden">
 
-  <div class="card">
+<div class="card">
 
-    <h2>👑 Admin Dashboard</h2>
+<h2>👑 Admin Dashboard</h2>
 
-    <div class="admin-actions">
+<div class="admin-actions">
 
-      <button onclick="prepareNewGame()">
-        ➕ Create New Game
-      </button>
+<button onclick="prepareNewGame()">
+➕ Create New Game
+</button>
 
-      <button onclick="shareGame()" class="btn-secondary">
-        🔗 Share Game
-      </button>
+<button
+onclick="shareGame()"
+class="btn-secondary">
+🔗 Share Game
+</button>
 
-      <button
-        onclick="togglePause()"
-        class="btn-warning"
-        id="pauseBtn"
-      >
-        ⏸ Pause
-      </button>
+<button
+onclick="togglePause()"
+class="btn-warning"
+id="pauseBtn">
+⏸ Pause
+</button>
 
-      <button
-        onclick="resumeGame()"
-        class="btn-success hidden"
-        id="resumeBtn"
-      >
-        ▶ Resume
-      </button>
+<button
+onclick="resumeGame()"
+class="btn-success hidden"
+id="resumeBtn">
+▶ Resume
+</button>
 
-      <button
-        onclick="endGame()"
-        class="btn-danger"
-        id="endBtn"
-      >
-        🏁 End Game
-      </button>
+<button
+onclick="endGame()"
+class="btn-danger"
+id="endBtn">
+🏁 End Game
+</button>
 
-      <button
-        onclick="toggleLock()"
-        class="btn-secondary"
-        id="lockBtn"
-      >
-        🔒 Lock Entries
-      </button>
+<button
+onclick="toggleLock()"
+class="btn-secondary"
+id="lockBtn">
+🔒 Lock Entries
+</button>
 
-    </div>
+</div>
 
-    <div class="status">
+<div class="status">
 
-      <strong id="adminRoomCode"></strong>
+<strong id="adminRoomCode"></strong>
 
-      <br>
+<br>
 
-      <span id="gameStatus"></span>
+<span id="gameStatus"></span>
 
-      <br>
+<br>
 
-      <span id="entryStatus"></span>
+<span id="entryStatus"></span>
 
-    </div>
+</div>
 
-  </div>
+<div class="status">
 
-  <div class="admin-grid">
+<strong>🏆 Active Prizes</strong>
 
-    <!-- LEFT COLUMN -->
+<div id="adminActivePrizes"></div>
 
-    <div>
+</div>
 
-      <div class="card center">
+</div>
 
-        <h2>🎲 Number Caller</h2>
+<div class="admin-grid">
 
-        <div id="adminNumber" class="number">
-          --
-        </div>
+<div>
 
-        <button
-          id="callNextBtn"
-          onclick="callNextNumber()"
-        >
-          🎲 CALL NEXT NUMBER
-        </button>
+<div class="card center">
 
-        <p id="calledCount"></p>
+<h2>🎲 Number Caller</h2>
 
-      </div>
+<div id="adminNumber" class="number">
+--
+</div>
 
-      <div class="card">
+<button
+id="callNextBtn"
+onclick="callNextNumber()">
 
-        <h2>🔢 Number Board</h2>
+🎲 CALL NEXT NUMBER
 
-        <div id="numberBoard" class="board"></div>
+</button>
 
-      </div>
+<p id="calledCount"></p>
 
-    </div>
+</div>
 
-    <!-- RIGHT COLUMN -->
+<div class="card">
 
-    <div>
+<h2>🔢 Number Board</h2>
 
-      <div class="card">
+<div id="numberBoard" class="board"></div>
 
-        <h2>👥 Players</h2>
+</div>
 
-        <div id="playerList">
-          <p>Total Players: 0</p>
-        </div>
+</div>
 
-        <div id="adminPlayersList"></div>
+<div>
 
-      </div>
+<div class="card">
 
-      <div class="card">
+<h2>👥 Players</h2>
 
-        <h2>🏆 Pending Claims</h2>
+<div id="playerList">
+Total Players: 0
+</div>
 
-        <div id="pendingClaims">
-          <p>No pending claims yet.</p>
-        </div>
+<div id="adminPlayersList"></div>
 
-      </div>
+</div>
 
-      <div class="card">
+<div class="card">
 
-        <h2>🏆 Winners</h2>
+<h2>🏆 Pending Claims</h2>
 
-        <div id="adminWinners">
-          <p>No winners yet.</p>
-        </div>
+<div id="pendingClaims"></div>
 
-      </div>
+</div>
 
-    </div>
+<div class="card">
 
-  </div>
+<h2>🏆 Winners</h2>
+
+<div id="adminWinners"></div>
+
+</div>
+
+</div>
+
+</div>
 
 </section>
 
-<!-- ======================================
+<!-- ==============================
      PLAYER PANEL
-====================================== -->
+============================== -->
 
 <section id="playerPanel" class="hidden">
 
-  <!-- COMPACT PLAYER HEADER -->
+<!-- COMPACT NUMBER DISPLAY -->
 
-  <div class="card center player-number-card">
+<div class="card center player-number-card">
 
-    <h2 id="welcomePlayer"></h2>
+<h2 id="welcomePlayer"></h2>
 
-    <p id="playerRoom"></p>
+<p id="playerRoom"></p>
 
-    <h3>🎯 Latest Number</h3>
+<h3>🎯 Latest Number</h3>
 
-    <div id="playerNumber" class="player-number">
-      --
-    </div>
+<div id="playerNumber" class="player-number">
+--
+</div>
 
-    <p id="playerCalledCount"></p>
+<p id="playerCalledCount"></p>
 
-    <p id="playerGameStatus" class="status"></p>
+<p id="playerGameStatus" class="status"></p>
 
-  </div>
+</div>
 
-  <!-- PLAYER TICKETS -->
+<!-- CLAIM PRIZES ABOVE TICKETS -->
 
-  <div class="card">
+<div class="card player-claims-card">
 
-    <h2>🎟️ My Tambola Tickets</h2>
+<h2>🏆 Claim Prizes</h2>
 
-    <p>
-      🟡 Yellow = Called by Admin<br>
-      🟢 Green = Selected by You
-    </p>
+<div id="claimContainer"></div>
 
-    <div id="ticketsContainer"></div>
+</div>
 
-  </div>
+<!-- TICKETS -->
 
-  <!-- CLAIM PRIZES -->
+<div class="card">
 
-  <div class="card">
+<h2>🎟️ My Tambola Tickets</h2>
 
-    <h2>🏆 Claim Prizes</h2>
+<p class="ticket-legend">
 
-    <p>
-      Eligible prizes will become available automatically.
-    </p>
+🟡 Yellow = Called
 
-    <div id="claimContainer"></div>
+&nbsp;&nbsp;
 
-  </div>
+🟢 Green = Selected
 
-  <!-- WINNERS -->
+</p>
 
-  <div class="card">
+<div id="ticketsContainer"></div>
 
-    <h2>🎊 Winners</h2>
+</div>
 
-    <div id="playerWinners"></div>
+<!-- WINNERS -->
 
-  </div>
+<div class="card">
+
+<h2>🎊 Winners</h2>
+
+<div id="playerWinners"></div>
+
+</div>
 
 </section>
 
 </div>
 
-<!-- ======================================
+<!-- ==============================
      WINNER POPUP
-====================================== -->
+============================== -->
 
 <div id="winnerPopup" class="popup hidden">
 
-  <div class="popup-box">
+<div class="popup-box">
 
-    <h1>🎊 WE HAVE A WINNER! 🎊</h1>
+<h1>🎊 WE HAVE A WINNER! 🎊</h1>
 
-    <h2 id="winnerName"></h2>
+<h2 id="winnerName"></h2>
 
-    <h2 id="winnerPrize"></h2>
+<h2 id="winnerPrize"></h2>
 
-    <p id="winnerTicket"></p>
+<p id="winnerTicket"></p>
 
-    <p>🏆 Congratulations! 🏆</p>
+<p>🏆 Congratulations! 🏆</p>
 
-    <button onclick="closePopup()">
-      Continue Playing
-    </button>
+<button onclick="closePopup()">
+Continue Playing
+</button>
 
-  </div>
+</div>
 
 </div>
 
@@ -893,24 +1006,24 @@ button.ticket-cell:disabled {
 
 "use strict";
 
-// ======================================
-// SUPABASE CONFIGURATION
-// ======================================
+// ==============================
+// SUPABASE
+// ==============================
 
 const SUPABASE_URL =
-  "https://prdgeodluuiylzrywdxm.supabase.co";
+"https://prdgeodluuiylzrywdxm.supabase.co";
 
 const SUPABASE_KEY =
-  "sb_publishable_W0xi00YmUDEpF8j38xs7kw_PVRCgRjy";
+"sb_publishable_W0xi00YmUDEpF8j38xs7kw_PVRCgRjy";
 
 const db = window.supabase.createClient(
   SUPABASE_URL,
   SUPABASE_KEY
 );
 
-// ======================================
+// ==============================
 // GLOBAL VARIABLES
-// ======================================
+// ==============================
 
 let game = null;
 let player = null;
@@ -931,12 +1044,12 @@ let currentView = "home";
 
 let initialWinnersLoaded = false;
 let lastWinnerIds = new Set();
-let notifiedClaims = new Set();
 
 let refreshing = false;
 let refreshAgain = false;
 let switchingGame = false;
 let callingNumber = false;
+
 let claimingPrizes = new Set();
 
 let winnerPopupTimer = null;
@@ -955,9 +1068,9 @@ const prizes = [
   "Full House"
 ];
 
-// ======================================
+// ==============================
 // HELPERS
-// ======================================
+// ==============================
 
 function element(id) {
   return document.getElementById(id);
@@ -972,7 +1085,9 @@ function show(id) {
     "adminPanel",
     "playerPanel"
   ].forEach(section => {
+
     element(section).classList.add("hidden");
+
   });
 
   element(id).classList.remove("hidden");
@@ -1013,31 +1128,23 @@ function normalizeGame(data) {
 
   return {
     ...data,
+
     called: Array.isArray(data.called)
       ? data.called.map(Number)
       : [],
+
     prizes: Array.isArray(data.prizes)
       ? data.prizes
       : prizes
+
   };
 }
 
-function resetNotifications() {
+function activePrizes() {
 
-  initialWinnersLoaded = false;
-
-  lastWinnerIds.clear();
-  notifiedClaims.clear();
-
-  winnerPopupQueue = [];
-  winnerPopupActive = false;
-
-  if (winnerPopupTimer) {
-    clearTimeout(winnerPopupTimer);
-    winnerPopupTimer = null;
-  }
-
-  element("winnerPopup").classList.add("hidden");
+  return Array.isArray(game?.prizes)
+    ? game.prizes
+    : prizes;
 }
 
 function saveSession() {
@@ -1055,18 +1162,107 @@ function saveSession() {
   );
 }
 
-function setBusy(buttonId, busy) {
+function setBusy(id,busy) {
 
-  const button = element(buttonId);
+  const button = element(id);
 
   if (button) {
     button.disabled = busy;
   }
 }
 
-// ======================================
+// ==============================
+// NEW PRIZE SELECTION
+// ==============================
+
+function renderPrizeSelection() {
+
+  const container = element("prizeSelection");
+
+  container.innerHTML = "";
+
+  prizes.forEach((prize,index) => {
+
+    const label = document.createElement("label");
+
+    label.className = "prize-option";
+
+    const checkbox = document.createElement("input");
+
+    checkbox.type = "checkbox";
+
+    checkbox.value = prize;
+
+    checkbox.id = "prize_" + index;
+
+    checkbox.checked = true;
+
+    checkbox.addEventListener(
+      "change",
+      updatePrizeSelection
+    );
+
+    const text = document.createElement("span");
+
+    text.textContent = "🏆 " + prize;
+
+    label.appendChild(checkbox);
+    label.appendChild(text);
+
+    container.appendChild(label);
+
+  });
+
+  updatePrizeSelection();
+}
+
+function getSelectedPrizes() {
+
+  return prizes.filter((prize,index) => {
+
+    return element("prize_" + index)?.checked;
+
+  });
+}
+
+function selectAllPrizes() {
+
+  prizes.forEach((prize,index) => {
+
+    element("prize_" + index).checked = true;
+
+  });
+
+  updatePrizeSelection();
+}
+
+function clearAllPrizes() {
+
+  prizes.forEach((prize,index) => {
+
+    element("prize_" + index).checked = false;
+
+  });
+
+  updatePrizeSelection();
+}
+
+function updatePrizeSelection() {
+
+  const selected = getSelectedPrizes();
+
+  element("selectedPrizeCount").textContent =
+    "Selected Prizes: " +
+    selected.length +
+    " of " +
+    prizes.length;
+
+  renderCustomPrizeSettings();
+}
+
+// ==============================
 // CUSTOM WINNING RULES
-// ======================================
+// ==============================
 
 function updateWinningMode() {
 
@@ -1074,20 +1270,39 @@ function updateWinningMode() {
     element("winningMode").value === "custom";
 
   element("customPrizeSettings")
-    .classList.toggle("hidden", !custom);
+    .classList.toggle("hidden",!custom);
+
+  renderCustomPrizeSettings();
 }
 
 function renderCustomPrizeSettings() {
 
   const container = element("customPrizeList");
 
+  const previousValues = {};
+
+  prizes.forEach((prize,index) => {
+
+    const oldSelect =
+      element("customPrize_" + index);
+
+    if (oldSelect) {
+      previousValues[prize] = oldSelect.value;
+    }
+
+  });
+
   container.innerHTML = "";
 
-  prizes.forEach((prize, index) => {
+  const selected = getSelectedPrizes();
+
+  selected.forEach(prize => {
+
+    const index = prizes.indexOf(prize);
 
     const row = document.createElement("div");
 
-    row.style.marginBottom = "12px";
+    row.className = "custom-prize-row";
 
     const label = document.createElement("p");
 
@@ -1101,15 +1316,20 @@ function renderCustomPrizeSettings() {
       <option value="first_claim">
         ⚡ First to Claim
       </option>
+
       <option value="same_number">
         🎊 Same Number Winners
       </option>
     `;
 
+    select.value =
+      previousValues[prize] || "first_claim";
+
     row.appendChild(label);
     row.appendChild(select);
 
     container.appendChild(row);
+
   });
 }
 
@@ -1117,24 +1337,30 @@ function getCustomPrizeRules() {
 
   const rules = {};
 
-  prizes.forEach((prize, index) => {
+  getSelectedPrizes().forEach(prize => {
+
+    const index = prizes.indexOf(prize);
 
     rules[prize] =
       element("customPrize_" + index).value;
+
   });
 
   return rules;
 }
 
-// ======================================
+// ==============================
 // CONNECTION CLEANUP
-// ======================================
+// ==============================
 
 async function stopLiveUpdates() {
 
   if (refreshTimer) {
+
     clearInterval(refreshTimer);
+
     refreshTimer = null;
+
   }
 
   if (realtimeChannel) {
@@ -1144,7 +1370,29 @@ async function stopLiveUpdates() {
     realtimeChannel = null;
 
     await db.removeChannel(oldChannel);
+
   }
+}
+
+function resetNotifications() {
+
+  initialWinnersLoaded = false;
+
+  lastWinnerIds.clear();
+
+  winnerPopupQueue = [];
+
+  winnerPopupActive = false;
+
+  if (winnerPopupTimer) {
+
+    clearTimeout(winnerPopupTimer);
+
+    winnerPopupTimer = null;
+
+  }
+
+  element("winnerPopup").classList.add("hidden");
 }
 
 async function resetGameState() {
@@ -1172,16 +1420,15 @@ async function resetGameState() {
   switchingGame = false;
 }
 
-// ======================================
-// CREATE NEW GAME
-// ======================================
+// ==============================
+// CREATE GAME
+// ==============================
 
 async function prepareNewGame() {
 
   const confirmed = confirm(
     "Create another game?\n\n" +
-    "Your current game will remain in Supabase, " +
-    "but this browser will switch to the new game."
+    "Your current game will remain in Supabase."
   );
 
   if (!confirmed) return;
@@ -1193,7 +1440,18 @@ async function createGame() {
 
   if (element("createGameBtn").disabled) return;
 
-  setBusy("createGameBtn", true);
+  const selectedPrizes = getSelectedPrizes();
+
+  if (selectedPrizes.length === 0) {
+
+    alert(
+      "Please select at least one winning prize."
+    );
+
+    return;
+  }
+
+  setBusy("createGameBtn",true);
 
   try {
 
@@ -1206,8 +1464,6 @@ async function createGame() {
     const winningMode =
       element("winningMode").value;
 
-    // Claim timer defaults to 10 seconds.
-
     const claimWindow =
       Number(element("claimWindow").value);
 
@@ -1216,23 +1472,26 @@ async function createGame() {
         ? getCustomPrizeRules()
         : {};
 
-    const { data, error } = await db.rpc(
-      "create_game_v2",
+    const {data,error} = await db.rpc(
+      "create_game_v3",
       {
         p_max_tickets: maxTickets,
         p_winners_per_prize: winnersPerPrize,
         p_winning_mode: winningMode,
         p_claim_window_seconds: claimWindow,
-        p_custom_prize_rules: customRules
+        p_custom_prize_rules: customRules,
+        p_prizes: selectedPrizes
       }
     );
 
     if (error) throw error;
 
     if (!data?.game_id || !data?.host_token) {
+
       throw new Error(
-        "Supabase returned an invalid game response."
+        "Invalid game response from Supabase."
       );
+
     }
 
     await resetGameState();
@@ -1249,7 +1508,7 @@ async function createGame() {
       winners_per_prize: winnersPerPrize,
       winning_mode: winningMode,
       claim_window_seconds: claimWindow,
-      prizes
+      prizes: selectedPrizes
     });
 
     saveSession();
@@ -1258,27 +1517,35 @@ async function createGame() {
 
     await refreshGame();
 
-    subscribeToGame();
-    startRefreshing();
+    if (game) {
+
+      subscribeToGame();
+
+      startRefreshing();
+
+    }
 
     alert(
       "🎉 Game Created Successfully!\n\n" +
-      "Room Code: " + game.code
+      "Room Code: " + data.code +
+      "\nActive Prizes: " +
+      selectedPrizes.join(", ")
     );
 
-  } catch (error) {
+  } catch(error) {
 
     getError(error);
 
   } finally {
 
-    setBusy("createGameBtn", false);
+    setBusy("createGameBtn",false);
+
   }
 }
 
-// ======================================
+// ==============================
 // JOIN GAME
-// ======================================
+// ==============================
 
 async function joinGame() {
 
@@ -1296,14 +1563,16 @@ async function joinGame() {
   if (!name || !code) {
 
     alert("Enter your name and room code.");
+
     return;
+
   }
 
-  setBusy("joinGameBtn", true);
+  setBusy("joinGameBtn",true);
 
   try {
 
-    const { data, error } = await db.rpc(
+    const {data,error} = await db.rpc(
       "join_game",
       {
         p_code: code,
@@ -1315,9 +1584,11 @@ async function joinGame() {
     if (error) throw error;
 
     if (!data?.player_token || !data?.game_id) {
+
       throw new Error(
-        "Supabase returned an invalid player response."
+        "Invalid player response."
       );
+
     }
 
     await resetGameState();
@@ -1347,26 +1618,34 @@ async function joinGame() {
 
     await refreshGame();
 
-    subscribeToGame();
-    startRefreshing();
+    if (game) {
 
-  } catch (error) {
+      subscribeToGame();
+
+      startRefreshing();
+
+    }
+
+  } catch(error) {
 
     getError(error);
 
   } finally {
 
-    setBusy("joinGameBtn", false);
+    setBusy("joinGameBtn",false);
+
   }
 }
 
-// ======================================
+// ==============================
 // RESTORE SESSION
-// ======================================
+// ==============================
 
 async function restoreSession() {
 
-  const saved = localStorage.getItem(SESSION_KEY);
+  const saved = localStorage.getItem(
+    SESSION_KEY
+  );
 
   if (!saved) return;
 
@@ -1378,10 +1657,10 @@ async function restoreSession() {
 
       hostToken = session.hostToken;
 
-      const { data, error } = await db
+      const {data,error} = await db
         .from("games")
         .select("*")
-        .eq("id", session.gameId)
+        .eq("id",session.gameId)
         .single();
 
       if (error) throw error;
@@ -1394,7 +1673,7 @@ async function restoreSession() {
 
       playerToken = session.playerToken;
 
-      const { data, error } = await db.rpc(
+      const {data,error} = await db.rpc(
         "get_my_state",
         {
           p_player_token: playerToken
@@ -1421,6 +1700,7 @@ async function restoreSession() {
       loadMarks();
 
       show("playerPanel");
+
     }
 
     if (game) {
@@ -1428,34 +1708,42 @@ async function restoreSession() {
       await refreshGame();
 
       if (game) {
+
         subscribeToGame();
+
         startRefreshing();
+
       }
+
     }
 
-  } catch (error) {
+  } catch(error) {
 
-    console.error("Session restore:", error);
+    console.error(error);
 
     localStorage.removeItem(SESSION_KEY);
 
     await resetGameState();
 
     show("home");
+
   }
 }
 
-// ======================================
+// ==============================
 // REFRESH GAME
-// ======================================
+// ==============================
 
 async function refreshGame() {
 
   if (!game || switchingGame) return;
 
   if (refreshing) {
+
     refreshAgain = true;
+
     return;
+
   }
 
   refreshing = true;
@@ -1464,10 +1752,10 @@ async function refreshGame() {
 
   try {
 
-    const { data, error } = await db
+    const {data,error} = await db
       .from("games")
       .select("*")
-      .eq("id", gameId)
+      .eq("id",gameId)
       .single();
 
     if (error) throw error;
@@ -1475,8 +1763,6 @@ async function refreshGame() {
     if (!game || game.id !== gameId) return;
 
     game = normalizeGame(data);
-
-    // Return players home when game ends.
 
     if (
       game.status === "ended" &&
@@ -1487,16 +1773,19 @@ async function refreshGame() {
 
       localStorage.removeItem(SESSION_KEY);
 
+      await stopLiveUpdates();
+
+      game = null;
       player = null;
       playerToken = null;
+
       tickets = [];
       winners = [];
       marked = {};
-      game = null;
+
+      resetNotifications();
 
       show("home");
-
-      await stopLiveUpdates();
 
       switchingGame = false;
 
@@ -1506,6 +1795,7 @@ async function refreshGame() {
       );
 
       return;
+
     }
 
     const {
@@ -1514,8 +1804,8 @@ async function refreshGame() {
     } = await db
       .from("winners")
       .select("*")
-      .eq("game_id", gameId)
-      .order("won_at", { ascending: true });
+      .eq("game_id",gameId)
+      .order("won_at",{ascending:true});
 
     if (winnerError) throw winnerError;
 
@@ -1531,44 +1821,56 @@ async function refreshGame() {
       } = await db
         .from("players")
         .select("id,name")
-        .eq("game_id", gameId);
+        .eq("game_id",gameId);
 
       if (playerError) {
-        console.error("Players query:", playerError);
+
+        console.error(playerError);
+
       } else {
+
         players = playerData || [];
+
       }
 
       renderAdmin();
+
     }
 
     if (currentView === "playerPanel") {
+
       renderPlayer();
+
     }
 
     checkNewWinners();
 
-  } catch (error) {
+  } catch(error) {
 
-    console.error("Refresh error:", error);
+    console.error("Refresh error:",error);
 
   } finally {
 
     refreshing = false;
 
     if (refreshAgain) {
+
       refreshAgain = false;
 
       if (game && !switchingGame) {
-        setTimeout(refreshGame, 0);
+
+        setTimeout(refreshGame,0);
+
       }
+
     }
+
   }
 }
 
-// ======================================
+// ==============================
 // REALTIME
-// ======================================
+// ==============================
 
 function subscribeToGame() {
 
@@ -1578,15 +1880,16 @@ function subscribeToGame() {
 
   if (realtimeChannel) {
 
-    const oldChannel = realtimeChannel;
-
-    db.removeChannel(oldChannel);
+    db.removeChannel(realtimeChannel);
 
     realtimeChannel = null;
+
   }
 
   const channel = db.channel(
-    "tambola-" + gameId + "-" +
+    "tambola-" +
+    gameId +
+    "-" +
     Math.random().toString(36).slice(2)
   );
 
@@ -1594,40 +1897,43 @@ function subscribeToGame() {
     .on(
       "postgres_changes",
       {
-        event: "*",
-        schema: "public",
-        table: "games",
-        filter: "id=eq." + gameId
+        event:"*",
+        schema:"public",
+        table:"games",
+        filter:"id=eq." + gameId
       },
       refreshGame
     )
     .on(
       "postgres_changes",
       {
-        event: "*",
-        schema: "public",
-        table: "winners",
-        filter: "game_id=eq." + gameId
+        event:"*",
+        schema:"public",
+        table:"winners",
+        filter:"game_id=eq." + gameId
       },
       refreshGame
     )
     .on(
       "postgres_changes",
       {
-        event: "*",
-        schema: "public",
-        table: "players",
-        filter: "game_id=eq." + gameId
+        event:"*",
+        schema:"public",
+        table:"players",
+        filter:"game_id=eq." + gameId
       },
       refreshGame
     )
     .subscribe(status => {
 
       if (status === "CHANNEL_ERROR") {
+
         console.warn(
-          "Realtime channel error. Polling remains active."
+          "Realtime unavailable. Polling remains active."
         );
+
       }
+
     });
 
   realtimeChannel = channel;
@@ -1636,7 +1942,9 @@ function subscribeToGame() {
 function startRefreshing() {
 
   if (refreshTimer) {
+
     clearInterval(refreshTimer);
+
   }
 
   refreshTimer = setInterval(
@@ -1645,9 +1953,9 @@ function startRefreshing() {
   );
 }
 
-// ======================================
-// ADMIN GAME CONTROLS
-// ======================================
+// ==============================
+// ADMIN CONTROLS
+// ==============================
 
 async function callNextNumber() {
 
@@ -1657,9 +1965,7 @@ async function callNextNumber() {
     game.status === "ended" ||
     game.status === "paused" ||
     calledNumbers().length >= 90
-  ) {
-    return;
-  }
+  ) return;
 
   callingNumber = true;
 
@@ -1667,7 +1973,7 @@ async function callNextNumber() {
 
   try {
 
-    const { data, error } = await db.rpc(
+    const {data,error} = await db.rpc(
       "call_number",
       {
         p_game_id: game.id,
@@ -1678,12 +1984,14 @@ async function callNextNumber() {
     if (error) throw error;
 
     if (data?.number != null) {
+
       announceNumber(data.number);
+
     }
 
     await refreshGame();
 
-  } catch (error) {
+  } catch(error) {
 
     getError(error);
 
@@ -1691,9 +1999,8 @@ async function callNextNumber() {
 
     callingNumber = false;
 
-    if (game) {
-      updateAdminControls();
-    }
+    if (game) updateAdminControls();
+
   }
 }
 
@@ -1714,9 +2021,10 @@ function announceNumber(number) {
 
     speechSynthesis.speak(speech);
 
-  } catch (error) {
+  } catch(error) {
 
-    console.warn("Speech unavailable:", error);
+    console.warn(error);
+
   }
 }
 
@@ -1726,7 +2034,7 @@ async function setStatus(status) {
 
   try {
 
-    const { error } = await db.rpc(
+    const {error} = await db.rpc(
       "set_game_state",
       {
         p_game_id: game.id,
@@ -1741,10 +2049,12 @@ async function setStatus(status) {
 
     return true;
 
-  } catch (error) {
+  } catch(error) {
 
     getError(error);
+
     return false;
+
   }
 }
 
@@ -1753,6 +2063,7 @@ async function togglePause() {
   if (!game || game.status === "ended") return;
 
   await setStatus("paused");
+
 }
 
 async function resumeGame() {
@@ -1760,6 +2071,7 @@ async function resumeGame() {
   if (!game || game.status === "ended") return;
 
   await setStatus("active");
+
 }
 
 async function endGame() {
@@ -1767,8 +2079,7 @@ async function endGame() {
   if (!game || game.status === "ended") return;
 
   const confirmed = confirm(
-    "Are you sure you want to END this game?\n\n" +
-    "Players will no longer be able to claim prizes."
+    "Are you sure you want to END this game?"
   );
 
   if (!confirmed) return;
@@ -1776,7 +2087,9 @@ async function endGame() {
   const success = await setStatus("ended");
 
   if (success) {
+
     alert("Game ended successfully.");
+
   }
 }
 
@@ -1788,7 +2101,7 @@ async function toggleLock() {
 
   try {
 
-    const { error } = await db.rpc(
+    const {error} = await db.rpc(
       "set_game_state",
       {
         p_game_id: game.id,
@@ -1801,15 +2114,16 @@ async function toggleLock() {
 
     await refreshGame();
 
-  } catch (error) {
+  } catch(error) {
 
     getError(error);
+
   }
 }
 
-// ======================================
+// ==============================
 // SHARE GAME
-// ======================================
+// ==============================
 
 async function shareGame() {
 
@@ -1820,7 +2134,7 @@ async function shareGame() {
   url.search = "";
   url.hash = "";
 
-  url.searchParams.set("room", game.code);
+  url.searchParams.set("room",game.code);
 
   const shareUrl = url.toString();
 
@@ -1829,21 +2143,19 @@ async function shareGame() {
     try {
 
       await navigator.share({
-        title: "Tambola Party",
-        text:
-          "Join my Tambola game! Room: " +
-          game.code,
-        url: shareUrl
+        title:"Tambola Party",
+        text:"Join my Tambola game! Room: " + game.code,
+        url:shareUrl
       });
 
       return;
 
-    } catch (error) {
+    } catch(error) {
 
       if (error.name === "AbortError") return;
 
-      console.warn("Share failed:", error);
     }
+
   }
 
   try {
@@ -1852,36 +2164,48 @@ async function shareGame() {
 
     alert("Invitation link copied!");
 
-  } catch (error) {
+  } catch(error) {
 
     window.prompt(
       "Copy this invitation link:",
       shareUrl
     );
+
   }
 }
 
-// ======================================
+// ==============================
 // ADMIN DISPLAY
-// ======================================
+// ==============================
 
 function updateAdminControls() {
 
   if (!game) return;
 
-  const ended = game.status === "ended";
-  const paused = game.status === "paused";
+  const ended =
+    game.status === "ended";
+
+  const paused =
+    game.status === "paused";
 
   element("pauseBtn")
-    .classList.toggle("hidden", paused || ended);
+    .classList.toggle(
+      "hidden",
+      paused || ended
+    );
 
   element("resumeBtn")
-    .classList.toggle("hidden", !paused || ended);
+    .classList.toggle(
+      "hidden",
+      !paused || ended
+    );
 
   element("pauseBtn").disabled = ended;
+
   element("resumeBtn").disabled = ended;
 
   element("endBtn").disabled = ended;
+
   element("lockBtn").disabled = ended;
 
   element("lockBtn").textContent =
@@ -1901,6 +2225,7 @@ function renderAdmin() {
   if (!game) return;
 
   const called = calledNumbers();
+
   const calledLookup = new Set(called);
 
   element("adminRoomCode").textContent =
@@ -1911,7 +2236,8 @@ function renderAdmin() {
 
   element("calledCount").textContent =
     "Numbers Called: " +
-    called.length + "/90";
+    called.length +
+    "/90";
 
   element("gameStatus").textContent =
     "Status: " + game.status;
@@ -1920,73 +2246,74 @@ function renderAdmin() {
     "Entries: " +
     (game.locked ? "Locked" : "Open");
 
-  updateAdminControls();
+  // Show only selected prizes.
 
-  // NUMBER BOARD
+  element("adminActivePrizes").textContent =
+    activePrizes().join(" • ");
+
+  updateAdminControls();
 
   const board = element("numberBoard");
 
   board.innerHTML = "";
 
-  for (let n = 1; n <= 90; n++) {
+  for (let n=1;n<=90;n++) {
 
     const cell = document.createElement("div");
 
     cell.className = "board-cell";
 
     if (calledLookup.has(n)) {
+
       cell.classList.add("called");
+
     }
 
     cell.textContent = n;
 
     board.appendChild(cell);
-  }
 
-  // PLAYERS
+  }
 
   element("playerList").textContent =
     "Total Players: " + players.length;
 
-  const playerContainer =
-    element("adminPlayersList");
+  const container = element("adminPlayersList");
 
-  playerContainer.innerHTML = "";
+  container.innerHTML = "";
 
-  players.forEach((p, index) => {
+  players.forEach((p,index) => {
 
     const row = document.createElement("div");
 
     row.className = "player-row";
 
     row.textContent =
-      (index + 1) + ". 🎟️ " + p.name;
+      (index+1) + ". 🎟️ " + p.name;
 
-    playerContainer.appendChild(row);
+    container.appendChild(row);
+
   });
 
   renderPendingClaims();
+
   renderWinners();
 }
 
-// ======================================
+// ==============================
 // PENDING CLAIMS
-// ======================================
+// ==============================
 
 function renderPendingClaims() {
 
-  const container = element("pendingClaims");
-
-  if (!container) return;
-
-  container.textContent =
+  element("pendingClaims").textContent =
     "Claims are processed by the game server. " +
     "No pending-claim review API is configured.";
 }
 
-// ======================================
-// PRIVATE TICKET MARKING
-// ======================================
+// ==============================
+// PLAYER MARKING
+// ==============================
 
 function loadMarks() {
 
@@ -2008,9 +2335,10 @@ function loadMarks() {
         ? stored
         : {};
 
-  } catch (error) {
+  } catch(error) {
 
     marked = {};
+
   }
 }
 
@@ -2024,25 +2352,19 @@ function saveMarks() {
   );
 }
 
-// ======================================
-// GREEN / YELLOW NUMBER LOGIC
-// ======================================
-
-function toggleMark(ticketId, number) {
+function toggleMark(ticketId,number) {
 
   if (!game || !player) return;
 
   const numericNumber = Number(number);
 
-  // Players can only mark called numbers.
-
   if (!calledSet().has(numericNumber)) return;
 
   if (!Array.isArray(marked[ticketId])) {
-    marked[ticketId] = [];
-  }
 
-  // Normalize saved values to numbers.
+    marked[ticketId] = [];
+
+  }
 
   marked[ticketId] =
     marked[ticketId].map(Number);
@@ -2051,16 +2373,15 @@ function toggleMark(ticketId, number) {
 
   if (values.includes(numericNumber)) {
 
-    // Deselect: return to yellow.
-
     marked[ticketId] =
-      values.filter(n => n !== numericNumber);
+      values.filter(
+        n => n !== numericNumber
+      );
 
   } else {
 
-    // Select: turn green.
-
     values.push(numericNumber);
+
   }
 
   saveMarks();
@@ -2068,9 +2389,9 @@ function toggleMark(ticketId, number) {
   renderPlayer();
 }
 
-// ======================================
+// ==============================
 // PLAYER DISPLAY
-// ======================================
+// ==============================
 
 function renderPlayer() {
 
@@ -2089,13 +2410,13 @@ function renderPlayer() {
 
   element("playerCalledCount").textContent =
     "Numbers Called: " +
-    called.size + "/90";
+    called.size +
+    "/90";
 
   element("playerGameStatus").textContent =
     "Game Status: " + game.status;
 
-  const container =
-    element("ticketsContainer");
+  const container = element("ticketsContainer");
 
   container.innerHTML = "";
 
@@ -2122,6 +2443,7 @@ function renderPlayer() {
       container.appendChild(error);
 
       return;
+
     }
 
     ticket.numbers.forEach(row => {
@@ -2158,14 +2480,6 @@ function renderPlayer() {
 
           cell.type = "button";
 
-          // ==================================
-          // SIMPLE COLOR PRIORITY
-          //
-          // Green: Player selected
-          // Yellow: Admin called
-          // Grey: Not called
-          // ==================================
-
           if (isMarked) {
 
             cell.classList.add("marked");
@@ -2177,11 +2491,18 @@ function renderPlayer() {
           } else {
 
             cell.classList.add("uncalled");
+
             cell.disabled = true;
+
           }
 
           cell.onclick = () => {
-            toggleMark(ticket.id, numericNumber);
+
+            toggleMark(
+              ticket.id,
+              numericNumber
+            );
+
           };
 
         }
@@ -2197,32 +2518,33 @@ function renderPlayer() {
   });
 
   renderClaims();
+
   renderWinners();
 }
 
-// ======================================
+// ==============================
 // PRIZE CHECKING
-// ======================================
+// ==============================
 
-function rowNumbers(ticket, row) {
+function rowNumbers(ticket,row) {
 
   if (
     !Array.isArray(ticket.numbers) ||
     !Array.isArray(ticket.numbers[row])
-  ) {
-    return [];
-  }
+  ) return [];
 
   return ticket.numbers[row]
     .filter(n => n !== null)
     .map(Number);
 }
 
-function patternNumbers(ticket, prize) {
+function patternNumbers(ticket,prize) {
 
-  const top = rowNumbers(ticket, 0);
-  const middle = rowNumbers(ticket, 1);
-  const bottom = rowNumbers(ticket, 2);
+  const top = rowNumbers(ticket,0);
+
+  const middle = rowNumbers(ticket,1);
+
+  const bottom = rowNumbers(ticket,2);
 
   const all = [
     ...top,
@@ -2239,15 +2561,18 @@ function patternNumbers(ticket, prize) {
   if (prize === "Four Corners") {
 
     if (!top.length || !bottom.length) {
+
       return [];
+
     }
 
     return [
       top[0],
-      top[top.length - 1],
+      top[top.length-1],
       bottom[0],
-      bottom[bottom.length - 1]
+      bottom[bottom.length-1]
     ];
+
   }
 
   if (
@@ -2255,18 +2580,28 @@ function patternNumbers(ticket, prize) {
     prize === "Early 7" ||
     prize === "Full House"
   ) {
+
     return all;
+
   }
 
   return [];
 }
 
-function qualifies(ticket, prize) {
+function qualifies(ticket,prize) {
 
   if (!game) return false;
 
+  // Prize must be active.
+
+  if (!activePrizes().includes(prize)) {
+
+    return false;
+
+  }
+
   const numbers =
-    patternNumbers(ticket, prize);
+    patternNumbers(ticket,prize);
 
   if (!numbers.length) return false;
 
@@ -2277,42 +2612,48 @@ function qualifies(ticket, prize) {
   ).length;
 
   if (prize === "Early 5") {
+
     return hits >= 5;
+
   }
 
   if (prize === "Early 7") {
+
     return hits >= 7;
+
   }
 
   return hits === numbers.length;
 }
 
-// ======================================
+// ==============================
 // CLAIM BUTTONS
-// ======================================
+// ==============================
 
 function renderClaims() {
 
   if (!game || !player) return;
 
-  const container =
-    element("claimContainer");
+  const container = element("claimContainer");
 
   container.innerHTML = "";
 
-  const gamePrizes =
-    Array.isArray(game.prizes)
-      ? game.prizes
-      : prizes;
+  // Only prizes selected by the admin.
+
+  const gamePrizes = activePrizes();
 
   tickets.forEach(ticket => {
 
     const heading = document.createElement("h3");
 
     heading.textContent =
-      "Ticket #" + ticket.ticket_no;
+      "🎟️ Ticket #" + ticket.ticket_no;
 
     container.appendChild(heading);
+
+    const buttonRow = document.createElement("div");
+
+    buttonRow.className = "claim-buttons";
 
     gamePrizes.forEach(prize => {
 
@@ -2324,18 +2665,21 @@ function renderClaims() {
 
       if (alreadyWon) {
 
-        const badge = document.createElement("p");
+        const badge = document.createElement("span");
+
+        badge.className = "winner";
 
         badge.textContent =
           "🏆 " + prize + " WON!";
 
-        container.appendChild(badge);
+        buttonRow.appendChild(badge);
 
         return;
+
       }
 
       const eligible =
-        qualifies(ticket, prize);
+        qualifies(ticket,prize);
 
       const winnerCount =
         winners.filter(
@@ -2383,55 +2727,41 @@ function renderClaims() {
         !prizeFull &&
         gameAllowsClaims
       ) {
+
         button.classList.add("ready");
+
       }
 
       button.onclick = () => {
-        claimPrize(ticket.id, prize);
+
+        claimPrize(ticket.id,prize);
+
       };
 
-      container.appendChild(button);
-
-      if (
-        eligible &&
-        !prizeFull &&
-        gameAllowsClaims &&
-        !notifiedClaims.has(claimKey)
-      ) {
-
-        notifiedClaims.add(claimKey);
-
-        setTimeout(() => {
-
-          if (
-            !game ||
-            game.status === "ended"
-          ) {
-            return;
-          }
-
-          alert(
-            "🎉 " + prize +
-            " completed on Ticket #" +
-            ticket.ticket_no +
-            "!\nTap Claim to register your win."
-          );
-
-        }, 300);
-      }
+      buttonRow.appendChild(button);
 
     });
+
+    container.appendChild(buttonRow);
 
   });
 }
 
-// ======================================
-// SERVER-SIDE CLAIM
-// ======================================
+// ==============================
+// SERVER CLAIM
+// ==============================
 
-async function claimPrize(ticketId, prize) {
+async function claimPrize(ticketId,prize) {
 
   if (!playerToken || !game) return;
+
+  // Prevent claims for inactive prizes.
+
+  if (!activePrizes().includes(prize)) {
+
+    return;
+
+  }
 
   const claimKey =
     ticketId + "_" + prize;
@@ -2444,7 +2774,7 @@ async function claimPrize(ticketId, prize) {
 
   try {
 
-    const { data, error } = await db.rpc(
+    const {data,error} = await db.rpc(
       "claim_prize",
       {
         p_player_token: playerToken,
@@ -2469,11 +2799,12 @@ async function claimPrize(ticketId, prize) {
         data?.reason ||
         "Your claim was not accepted."
       );
+
     }
 
     await refreshGame();
 
-  } catch (error) {
+  } catch(error) {
 
     getError(error);
 
@@ -2483,27 +2814,36 @@ async function claimPrize(ticketId, prize) {
 
     claimingPrizes.delete(claimKey);
 
-    if (game && currentView === "playerPanel") {
+    if (
+      game &&
+      currentView === "playerPanel"
+    ) {
+
       renderClaims();
+
     }
+
   }
 }
 
-// ======================================
+// ==============================
 // WINNER ANNOUNCEMENTS
-// ======================================
+// ==============================
 
 function checkNewWinners() {
 
   if (!initialWinnersLoaded) {
 
     winners.forEach(w => {
+
       lastWinnerIds.add(w.id);
+
     });
 
     initialWinnersLoaded = true;
 
     return;
+
   }
 
   const newWinners = winners.filter(
@@ -2511,11 +2851,15 @@ function checkNewWinners() {
   );
 
   winners.forEach(w => {
+
     lastWinnerIds.add(w.id);
+
   });
 
   newWinners.forEach(winner => {
+
     winnerPopupQueue.push(winner);
+
   });
 
   showNextWinnerPopup();
@@ -2556,6 +2900,7 @@ function closePopup() {
     clearTimeout(winnerPopupTimer);
 
     winnerPopupTimer = null;
+
   }
 
   element("winnerPopup")
@@ -2569,6 +2914,7 @@ function closePopup() {
       showNextWinnerPopup,
       300
     );
+
   }
 }
 
@@ -2590,13 +2936,13 @@ function renderWinners() {
   element("playerWinners").innerHTML = html;
 }
 
-// ======================================
+// ==============================
 // INITIALISE
-// ======================================
+// ==============================
 
 async function initialise() {
 
-  renderCustomPrizeSettings();
+  renderPrizeSelection();
 
   updateWinningMode();
 
@@ -2610,12 +2956,15 @@ async function initialise() {
 
     element("roomCode").value =
       room.toUpperCase();
+
   }
 
   await restoreSession();
 
   if (!game && room) {
+
     show("joinSetup");
+
   }
 }
 
@@ -2624,4 +2973,5 @@ initialise();
 </script>
 
 </body>
+
 </html>
