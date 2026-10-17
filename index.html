@@ -1193,11 +1193,14 @@ async function restoreSession() {
 
     if (game) {
 
-      await refreshGame();
+    await refreshGame();
 
-      subscribeToGame();
-      startRefreshing();
+    // Only restart updates if game still exists
+    if (game) {
+        subscribeToGame();
+        startRefreshing();
     }
+}
 
   } catch (error) {
 
@@ -1241,7 +1244,79 @@ async function refreshGame() {
     if (!game || game.id !== gameId) return;
 
     game = normalizeGame(data);
+    // ======================================
+// AUTO RETURN HOME WHEN GAME ENDS
+// ======================================
 
+if (
+    game.status === "ended" &&
+    currentView === "playerPanel"
+) {
+
+    // Stop further game updates
+    switchingGame = true;
+
+    // Remove saved player session
+    localStorage.removeItem(SESSION_KEY);
+
+    // Clear player information
+    player = null;
+    playerToken = null;
+    tickets = [];
+    winners = [];
+    marked = {};
+    game = null;
+
+    // Return to home page
+    show("home");
+
+    // Stop live updates
+    await stopLiveUpdates();
+
+    switchingGame = false;
+
+    // Notify player
+    alert(
+        "🏁 The Tambola Game Has Ended!\n\n" +
+        "Thank you for playing! 🎉"
+    );
+
+    return;
+}
+// ======================================
+// AUTO RETURN TO HOME WHEN GAME ENDS
+// ======================================
+
+if (
+  game.status === "ended" &&
+  currentView === "playerPanel"
+) {
+
+  alert(
+    "🏁 The Tambola Game Has Ended!\n\n" +
+    "Thank you for playing! 🎉"
+  );
+
+  // Remove saved player session
+  localStorage.removeItem("tambola_session");
+
+  // Stop realtime updates
+  await stopLiveUpdates();
+
+  // Clear player information
+  player = null;
+  playerToken = null;
+  tickets = [];
+  winners = [];
+  marked = {};
+
+  game = null;
+
+  // Return to home page
+  show("home");
+
+  return;
+}
     const {
       data: winnerData,
       error: winnerError
