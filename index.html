@@ -426,27 +426,27 @@ Join Game 🎉
 <!-- ADMIN PANEL -->
 
 <section id="adminPanel" class="hidden">
-  <div class="max-w-7xl mx-auto space-y-4">
+  <div <div class="max-w-7xl mx-auto space-y-4">
 
-    <!-- Admin Dashboard (Full Width) -->
-    <div class="card">
-      <h2 class="text-xl font-bold mb-3 flex items-center gap-2">
-        👑 Admin Dashboard
-      </h2>
-      <div class="flex flex-wrap gap-2 mb-3">
-        <button onclick="prepareNewGame()" class="btn btn-primary">➕ Create New Game</button>
-        <button onclick="shareGame()" class="btn btn-secondary">🔗 Share Game</button>
-        <button onclick="togglePause()" class="btn btn-warning" id="pauseBtn">⏸️ Pause</button>
-        <button onclick="resumeGame()" class="btn btn-success hidden" id="resumeBtn">▶️ Resume</button>
-        <button onclick="endGame()" class="btn btn-danger">🏁 End Game</button>
-        <button onclick="toggleLock()" class="btn btn-secondary" id="lockBtn">🔒 Lock / Unlock Entries</button>
-      </div>
-      <p class="text-sm text-gray-600">
-        Room Code: <span id="roomCodeDisplay" class="font-mono font-bold"></span> |
-        Status: <span id="gameStatus">waiting</span> |
-        Entries: <span id="entriesStatus">Open</span>
-      </p>
+  <!-- Admin Dashboard (Full Width) -->
+  <div class="card">
+    <h2 class="text-xl font-bold mb-3 flex items-center gap-2">
+      👑 Admin Dashboard
+    </h2>
+    <div class="flex flex-wrap gap-2 mb-3">
+      <button onclick="prepareNewGame()" class="btn btn-primary">➕ Create New Game</button>
+      <button onclick="shareGame()" class="btn btn-secondary">🔗 Share Game</button>
+      <button onclick="togglePause()" class="btn btn-warning" id="pauseBtn">⏸ Pause</button>
+      <button onclick="resumeGame()" class="btn btn-success hidden" id="resumeBtn">▶ Resume</button>
+      <button onclick="endGame()" class="btn btn-danger">🏁 End Game</button>
+      <button onclick="toggleLock()" class="btn btn-secondary" id="lockBtn">🔒 Lock / Unlock Entries</button>
     </div>
+    <div class="text-sm mt-2 text-gray-600">
+      <span id="adminRoomCode">Room Code: </span> | 
+      <span id="gameStatus">Status: waiting</span> | 
+      <span id="entryStatus">Entries: Open</span>
+    </div>
+  </div>
 
     <!-- Two Column Layout: Caller + Claims/Winners -->
     <div class="admin-grid">
@@ -461,7 +461,7 @@ Join Game 🎉
           </h2>
           <div class="text-center">
             <div id="currentNumber" class="font-extrabold text-purple-700">--</div>
-            <button onclick="callNextNumber()" class="btn btn-primary mt-2 px-6 py-2 text-base">
+            <button id="callNextBtn" onclick="callNextNumber()" class="btn btn-primary mt-2 px-6 py-2 text-base">
               🎲 CALL NEXT NUMBER
             </button>
             <p class="mt-2 text-sm text-gray-600">
