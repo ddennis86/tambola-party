@@ -1,18 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
 
 <meta charset="UTF-8">
-
-<meta name="viewport"
-content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Tambola Party 🎉</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
+
+/* =====================================
+   GENERAL
+===================================== */
 
 * {
   box-sizing: border-box;
@@ -39,11 +40,11 @@ body {
 
 .header {
   text-align: center;
-  padding: 15px 5px;
+  padding: 14px 5px;
 }
 
 .header h1 {
-  font-size: clamp(25px,5vw,40px);
+  font-size: clamp(25px, 5vw, 40px);
   margin: 0;
 }
 
@@ -51,11 +52,15 @@ body {
   font-size: 14px;
 }
 
+/* =====================================
+   CARDS
+===================================== */
+
 .card {
   background: white;
   color: #333;
-  padding: 18px;
-  margin: 12px 0;
+  padding: 16px;
+  margin: 10px 0;
   border-radius: 15px;
   box-shadow: 0 8px 25px rgba(0,0,0,.15);
   min-width: 0;
@@ -64,6 +69,25 @@ body {
 .card h2 {
   margin-top: 0;
 }
+
+.center {
+  text-align: center;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.status {
+  background: #f1e8ff;
+  padding: 9px;
+  border-radius: 8px;
+  margin: 8px 0;
+}
+
+/* =====================================
+   BUTTONS
+===================================== */
 
 button {
   background: #762ac2;
@@ -85,6 +109,13 @@ button:disabled {
   cursor: not-allowed;
 }
 
+button:focus-visible,
+input:focus-visible,
+select:focus-visible {
+  outline: 3px solid #ffbf47;
+  outline-offset: 2px;
+}
+
 input,
 select {
   padding: 10px;
@@ -95,31 +126,25 @@ select {
   max-width: 100%;
 }
 
-.hidden {
-  display: none !important;
+.btn-success {
+  background: #20a86b;
 }
 
-.center {
-  text-align: center;
+.btn-danger {
+  background: #dc3545;
 }
 
-.status {
-  background: #f1e8ff;
-  padding: 10px;
-  border-radius: 8px;
-  margin: 8px 0;
+.btn-warning {
+  background: #c78300;
 }
 
-button:focus-visible,
-input:focus-visible,
-select:focus-visible {
-  outline: 3px solid #ffbf47;
-  outline-offset: 2px;
+.btn-secondary {
+  background: #626b78;
 }
 
-/* ==============================
+/* =====================================
    ADMIN PRIZE SELECTION
-============================== */
+===================================== */
 
 .prize-selection {
   display: grid;
@@ -161,15 +186,6 @@ select:focus-visible {
   gap: 5px;
 }
 
-.prize-select-actions button {
-  font-size: 12px;
-  padding: 8px 12px;
-}
-
-/* ==============================
-   CUSTOM WINNING RULES
-============================== */
-
 .custom-prize-row {
   padding: 8px;
   margin: 6px 0;
@@ -177,13 +193,9 @@ select:focus-visible {
   border-radius: 8px;
 }
 
-.custom-prize-row p {
-  margin: 4px 0;
-}
-
-/* ==============================
-   ADMIN PANEL
-============================== */
+/* =====================================
+   ADMIN DASHBOARD
+===================================== */
 
 .admin-actions {
   display: flex;
@@ -205,7 +217,7 @@ select:focus-visible {
   margin: 0 0 16px;
 }
 
-@media(min-width:1024px) {
+@media (min-width:1024px) {
 
   .admin-grid {
     grid-template-columns:
@@ -223,39 +235,77 @@ select:focus-visible {
   padding: 12px;
 }
 
-/* ==============================
-   NUMBER BOARD
-============================== */
+/* =====================================
+   CLAIM TIMER DISPLAY
+===================================== */
 
-.board {
-  display: grid;
-  grid-template-columns: repeat(
-    10,
-    minmax(0,1fr)
-  );
-  gap: 4px;
+.timer-box {
+  background: #fff3cd;
+  color: #664d03;
+  border: 2px solid #ffda6a;
+  padding: 10px;
+  border-radius: 12px;
+  text-align: center;
+  margin: 10px 0;
 }
 
-.board-cell {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 0;
-  aspect-ratio: 1;
-  background: #eee;
-  color: #333;
-  border-radius: 6px;
-  font-size: clamp(10px,2vw,15px);
+.timer-title {
+  font-size: 13px;
   font-weight: bold;
+  margin-bottom: 4px;
 }
 
-.board-cell.called {
-  background: #ffd43b;
+.timer-value {
+  font-size: 32px;
+  font-weight: bold;
+  line-height: 1.2;
 }
 
-/* ==============================
-   COMPACT PLAYER HEADER
-============================== */
+.timer-subtitle {
+  font-size: 11px;
+  margin-top: 4px;
+}
+
+.timer-box.warning {
+  background: #fff0cc;
+  border-color: #ff9800;
+  color: #9a5600;
+}
+
+.timer-box.expired {
+  background: #ffe4e4;
+  border-color: #dc3545;
+  color: #b02a37;
+}
+
+.timer-box.unlimited {
+  background: #e4fff0;
+  border-color: #21b573;
+  color: #146c43;
+}
+
+/* =====================================
+   PLAYER CLAIM NOTE
+===================================== */
+
+.claim-note {
+  background: #e8f4ff;
+  color: #174b78;
+  border-left: 4px solid #2196f3;
+  border-radius: 8px;
+  padding: 9px;
+  font-size: 12px;
+  line-height: 1.5;
+  margin: 8px 0;
+}
+
+.claim-note strong {
+  color: #0b559b;
+}
+
+/* =====================================
+   PLAYER NUMBER DISPLAY
+===================================== */
 
 .player-number-card {
   padding: 10px;
@@ -286,14 +336,9 @@ select:focus-visible {
   padding: 3px;
 }
 
-.player-number-card .status {
-  font-size: 11px;
-  padding: 6px;
-}
-
-/* ==============================
-   COMPACT CLAIM SECTION
-============================== */
+/* =====================================
+   COMPACT CLAIM BUTTONS
+===================================== */
 
 .player-claims-card {
   padding: 10px;
@@ -332,9 +377,51 @@ select:focus-visible {
   color: white;
 }
 
-/* ==============================
+.prize-button.expired {
+  background: #dc3545 !important;
+  color: white;
+}
+
+.claim-time {
+  display: block;
+  font-size: 10px;
+  margin-top: 3px;
+  font-weight: bold;
+}
+
+/* =====================================
+   NUMBER BOARD
+===================================== */
+
+.board {
+  display: grid;
+  grid-template-columns: repeat(
+    10,
+    minmax(0,1fr)
+  );
+  gap: 4px;
+}
+
+.board-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  aspect-ratio: 1;
+  background: #eee;
+  color: #333;
+  border-radius: 6px;
+  font-size: clamp(10px,2vw,15px);
+  font-weight: bold;
+}
+
+.board-cell.called {
+  background: #ffd43b;
+}
+
+/* =====================================
    TAMBOLA TICKETS
-============================== */
+===================================== */
 
 .ticket {
   display: grid;
@@ -369,7 +456,7 @@ button.ticket-cell {
   background: #ddd;
 }
 
-/* Yellow = called by admin */
+/* Yellow = Called */
 
 .ticket-cell.called,
 .ticket-cell.called:hover:not(:disabled),
@@ -378,7 +465,7 @@ button.ticket-cell {
   color: #333;
 }
 
-/* Green = selected by player */
+/* Green = Selected */
 
 .ticket-cell.marked,
 .ticket-cell.marked:hover:not(:disabled),
@@ -402,9 +489,9 @@ button.ticket-cell:disabled {
   margin: 5px 0;
 }
 
-/* ==============================
+/* =====================================
    WINNERS
-============================== */
+===================================== */
 
 .winner {
   background: #fff3c4;
@@ -422,9 +509,9 @@ button.ticket-cell:disabled {
   overflow-wrap: anywhere;
 }
 
-/* ==============================
+/* =====================================
    POPUP
-============================== */
+===================================== */
 
 .popup {
   position: fixed;
@@ -451,25 +538,9 @@ button.ticket-cell:disabled {
   font-size: clamp(24px,6vw,32px);
 }
 
-.btn-success {
-  background: #20a86b;
-}
-
-.btn-danger {
-  background: #dc3545;
-}
-
-.btn-warning {
-  background: #c78300;
-}
-
-.btn-secondary {
-  background: #626b78;
-}
-
-/* ==============================
+/* =====================================
    MOBILE
-============================== */
+===================================== */
 
 @media(max-width:600px) {
 
@@ -531,6 +602,28 @@ button.ticket-cell:disabled {
     min-height: 29px;
   }
 
+  .timer-box {
+    padding: 7px;
+    margin: 6px 0;
+  }
+
+  .timer-title {
+    font-size: 11px;
+  }
+
+  .timer-value {
+    font-size: 25px;
+  }
+
+  .timer-subtitle {
+    font-size: 10px;
+  }
+
+  .claim-note {
+    font-size: 11px;
+    padding: 7px;
+  }
+
   .admin-actions button {
     flex: 1 1 140px;
   }
@@ -553,9 +646,9 @@ button.ticket-cell:disabled {
 
 </header>
 
-<!-- ==============================
+<!-- =====================================
      HOME
-============================== -->
+===================================== -->
 
 <section id="home" class="card center">
 
@@ -573,9 +666,9 @@ button.ticket-cell:disabled {
 
 </section>
 
-<!-- ==============================
+<!-- =====================================
      ADMIN SETUP
-============================== -->
+===================================== -->
 
 <section id="adminSetup" class="card hidden">
 
@@ -608,13 +701,10 @@ button.ticket-cell:disabled {
 
 <hr>
 
-<!-- NEW PRIZE SELECTION -->
-
 <h3>🏆 Select Prizes for This Game</h3>
 
 <p>
 Choose which prizes players can win.
-Only selected prizes will appear in the game.
 </p>
 
 <div class="prize-select-actions">
@@ -635,30 +725,34 @@ Clear All
 
 </div>
 
-<div id="prizeSelection" class="prize-selection"></div>
+<div
+id="prizeSelection"
+class="prize-selection">
+</div>
 
-<p id="selectedPrizeCount" class="status"></p>
+<p
+id="selectedPrizeCount"
+class="status">
+</p>
 
 <hr>
 
 <h3>🏆 Winning Rules</h3>
-
-<p>Choose how winners will be selected.</p>
 
 <select
 id="winningMode"
 onchange="updateWinningMode()">
 
 <option value="first_claim">
-⚡ Option A - First to Claim
+⚡ First to Claim
 </option>
 
 <option value="same_number">
-🎊 Option B - Same Number Winners
+🎊 Same Number Winners
 </option>
 
 <option value="custom">
-🎛️ Option C - Custom Prize Rules
+🎛️ Custom Prize Rules
 </option>
 
 </select>
@@ -689,13 +783,21 @@ Unlimited
 
 </select>
 
-<div id="customPrizeSettings" class="hidden">
+<p class="claim-note">
+
+<strong>Note:</strong>
+The default claim time is 10 seconds.
+
+Players must claim their completed prizes
+before the selected deadline expires.
+
+</p>
+
+<div
+id="customPrizeSettings"
+class="hidden">
 
 <h3>🎛️ Custom Winning Rules</h3>
-
-<p>
-Choose the winning rule for each selected prize.
-</p>
 
 <div id="customPrizeList"></div>
 
@@ -713,9 +815,9 @@ onclick="createGame()">
 
 </section>
 
-<!-- ==============================
+<!-- =====================================
      JOIN GAME
-============================== -->
+===================================== -->
 
 <section id="joinSetup" class="card hidden">
 
@@ -760,9 +862,9 @@ Join Game 🎉
 
 </section>
 
-<!-- ==============================
+<!-- =====================================
      ADMIN PANEL
-============================== -->
+===================================== -->
 
 <section id="adminPanel" class="hidden">
 
@@ -848,6 +950,28 @@ id="lockBtn">
 --
 </div>
 
+<!-- ADMIN TIMER -->
+
+<div
+id="adminTimerBox"
+class="timer-box">
+
+<div class="timer-title">
+⏱️ Latest Number Claim Window
+</div>
+
+<div
+id="adminTimer"
+class="timer-value">
+--
+</div>
+
+<div class="timer-subtitle">
+Time remaining from the latest number call
+</div>
+
+</div>
+
 <button
 id="callNextBtn"
 onclick="callNextNumber()">
@@ -906,13 +1030,13 @@ Total Players: 0
 
 </section>
 
-<!-- ==============================
+<!-- =====================================
      PLAYER PANEL
-============================== -->
+===================================== -->
 
 <section id="playerPanel" class="hidden">
 
-<!-- COMPACT NUMBER DISPLAY -->
+<!-- COMPACT PLAYER DISPLAY -->
 
 <div class="card center player-number-card">
 
@@ -922,17 +1046,73 @@ Total Players: 0
 
 <h3>🎯 Latest Number</h3>
 
-<div id="playerNumber" class="player-number">
+<div
+id="playerNumber"
+class="player-number">
 --
 </div>
 
 <p id="playerCalledCount"></p>
 
-<p id="playerGameStatus" class="status"></p>
+<p
+id="playerGameStatus"
+class="status">
+</p>
+
+<!-- PLAYER TIMER -->
+
+<div
+id="playerTimerBox"
+class="timer-box">
+
+<div class="timer-title">
+⏱️ Latest Number Claim Window
+</div>
+
+<div
+id="playerTimer"
+class="timer-value">
+--
+</div>
+
+<div class="timer-subtitle">
+Time remaining from the latest number call
+</div>
 
 </div>
 
-<!-- CLAIM PRIZES ABOVE TICKETS -->
+</div>
+
+<!-- CLAIM TIME NOTICE -->
+
+<div class="claim-note">
+
+<strong>📢 Important Claim Rule</strong>
+
+<br>
+
+The default claim time is
+<strong>10 seconds</strong>.
+
+<br>
+
+Your admin has selected
+<strong id="playerClaimDuration">
+10 seconds
+</strong>
+for this game.
+
+<br>
+
+The countdown begins when the number
+completing your winning combination
+is called.
+
+Claim your prize before the timer expires!
+
+</div>
+
+<!-- CLAIM PRIZES -->
 
 <div class="card player-claims-card">
 
@@ -976,11 +1156,13 @@ Total Players: 0
 
 </div>
 
-<!-- ==============================
+<!-- =====================================
      WINNER POPUP
-============================== -->
+===================================== -->
 
-<div id="winnerPopup" class="popup hidden">
+<div
+id="winnerPopup"
+class="popup hidden">
 
 <div class="popup-box">
 
@@ -1006,9 +1188,9 @@ Continue Playing
 
 "use strict";
 
-// ==============================
+// =====================================
 // SUPABASE
-// ==============================
+// =====================================
 
 const SUPABASE_URL =
 "https://prdgeodluuiylzrywdxm.supabase.co";
@@ -1021,9 +1203,9 @@ const db = window.supabase.createClient(
   SUPABASE_KEY
 );
 
-// ==============================
+// =====================================
 // GLOBAL VARIABLES
-// ==============================
+// =====================================
 
 let game = null;
 let player = null;
@@ -1039,6 +1221,7 @@ let marked = {};
 
 let realtimeChannel = null;
 let refreshTimer = null;
+let countdownTimer = null;
 
 let currentView = "home";
 
@@ -1056,6 +1239,9 @@ let winnerPopupTimer = null;
 let winnerPopupQueue = [];
 let winnerPopupActive = false;
 
+let numberCallHistory = [];
+let serverTimeOffset = 0;
+
 const SESSION_KEY = "tambola_session";
 
 const prizes = [
@@ -1068,9 +1254,9 @@ const prizes = [
   "Full House"
 ];
 
-// ==============================
+// =====================================
 // HELPERS
-// ==============================
+// =====================================
 
 function element(id) {
   return document.getElementById(id);
@@ -1162,7 +1348,7 @@ function saveSession() {
   );
 }
 
-function setBusy(id,busy) {
+function setBusy(id, busy) {
 
   const button = element(id);
 
@@ -1171,9 +1357,9 @@ function setBusy(id,busy) {
   }
 }
 
-// ==============================
-// NEW PRIZE SELECTION
-// ==============================
+// =====================================
+// PRIZE SELECTION
+// =====================================
 
 function renderPrizeSelection() {
 
@@ -1181,7 +1367,7 @@ function renderPrizeSelection() {
 
   container.innerHTML = "";
 
-  prizes.forEach((prize,index) => {
+  prizes.forEach((prize, index) => {
 
     const label = document.createElement("label");
 
@@ -1190,11 +1376,8 @@ function renderPrizeSelection() {
     const checkbox = document.createElement("input");
 
     checkbox.type = "checkbox";
-
     checkbox.value = prize;
-
     checkbox.id = "prize_" + index;
-
     checkbox.checked = true;
 
     checkbox.addEventListener(
@@ -1218,7 +1401,7 @@ function renderPrizeSelection() {
 
 function getSelectedPrizes() {
 
-  return prizes.filter((prize,index) => {
+  return prizes.filter((prize, index) => {
 
     return element("prize_" + index)?.checked;
 
@@ -1227,7 +1410,7 @@ function getSelectedPrizes() {
 
 function selectAllPrizes() {
 
-  prizes.forEach((prize,index) => {
+  prizes.forEach((prize, index) => {
 
     element("prize_" + index).checked = true;
 
@@ -1238,7 +1421,7 @@ function selectAllPrizes() {
 
 function clearAllPrizes() {
 
-  prizes.forEach((prize,index) => {
+  prizes.forEach((prize, index) => {
 
     element("prize_" + index).checked = false;
 
@@ -1260,9 +1443,9 @@ function updatePrizeSelection() {
   renderCustomPrizeSettings();
 }
 
-// ==============================
+// =====================================
 // CUSTOM WINNING RULES
-// ==============================
+// =====================================
 
 function updateWinningMode() {
 
@@ -1270,7 +1453,7 @@ function updateWinningMode() {
     element("winningMode").value === "custom";
 
   element("customPrizeSettings")
-    .classList.toggle("hidden",!custom);
+    .classList.toggle("hidden", !custom);
 
   renderCustomPrizeSettings();
 }
@@ -1281,7 +1464,7 @@ function renderCustomPrizeSettings() {
 
   const previousValues = {};
 
-  prizes.forEach((prize,index) => {
+  prizes.forEach((prize, index) => {
 
     const oldSelect =
       element("customPrize_" + index);
@@ -1294,9 +1477,7 @@ function renderCustomPrizeSettings() {
 
   container.innerHTML = "";
 
-  const selected = getSelectedPrizes();
-
-  selected.forEach(prize => {
+  getSelectedPrizes().forEach(prize => {
 
     const index = prizes.indexOf(prize);
 
@@ -1316,7 +1497,6 @@ function renderCustomPrizeSettings() {
       <option value="first_claim">
         ⚡ First to Claim
       </option>
-
       <option value="same_number">
         🎊 Same Number Winners
       </option>
@@ -1349,9 +1529,364 @@ function getCustomPrizeRules() {
   return rules;
 }
 
-// ==============================
-// CONNECTION CLEANUP
-// ==============================
+// =====================================
+// TIMER HELPERS
+// =====================================
+
+// Server remains authoritative.
+// Browser countdowns are informational.
+
+function getClaimDuration() {
+
+  return Number(
+    game?.claim_window_seconds ?? 10
+  );
+}
+
+function currentTime() {
+
+  return Date.now() + serverTimeOffset;
+}
+
+function formatSeconds(milliseconds) {
+
+  const seconds = Math.max(
+    0,
+    Math.ceil(milliseconds / 1000)
+  );
+
+  return seconds + "s";
+}
+
+function getLatestCall() {
+
+  if (!numberCallHistory.length) {
+    return null;
+  }
+
+  return numberCallHistory[
+    numberCallHistory.length - 1
+  ];
+}
+
+function getLatestDeadline() {
+
+  const latest = getLatestCall();
+
+  if (!latest) return null;
+
+  const duration = getClaimDuration();
+
+  if (duration === 0) return Infinity;
+
+  const calledAt = Date.parse(
+    latest.called_at
+  );
+
+  if (!Number.isFinite(calledAt)) {
+    return null;
+  }
+
+  return calledAt + duration * 1000;
+}
+
+// =====================================
+// LOAD NUMBER CALL TIMESTAMPS
+// =====================================
+
+async function loadNumberCallHistory(gameId) {
+
+  const { data, error } = await db
+    .from("number_calls")
+    .select("draw_position,called_at")
+    .eq("game_id", gameId)
+    .order("draw_position", {
+      ascending: true
+    });
+
+  if (error) {
+
+    console.warn(
+      "Number history unavailable:",
+      error
+    );
+
+    return false;
+  }
+
+  if (!game || game.id !== gameId) {
+    return false;
+  }
+
+  numberCallHistory = data || [];
+
+  return true;
+}
+
+// =====================================
+// TIMER DISPLAY
+// =====================================
+
+function updateTimerDisplay(
+  boxId,
+  valueId
+) {
+
+  const box = element(boxId);
+  const value = element(valueId);
+
+  if (!box || !value) return;
+
+  box.classList.remove(
+    "warning",
+    "expired",
+    "unlimited"
+  );
+
+  const duration = getClaimDuration();
+
+  if (duration === 0) {
+
+    value.textContent = "Unlimited";
+
+    box.classList.add("unlimited");
+
+    return;
+  }
+
+  const deadline = getLatestDeadline();
+
+  if (deadline === null) {
+
+    value.textContent = "--";
+
+    return;
+  }
+
+  const remaining =
+    deadline - currentTime();
+
+  if (remaining <= 0) {
+
+    value.textContent = "Time Up";
+
+    box.classList.add("expired");
+
+    return;
+  }
+
+  value.textContent =
+    formatSeconds(remaining);
+
+  if (remaining <= 5000) {
+
+    box.classList.add("warning");
+
+  }
+}
+
+function updateCountdowns() {
+
+  if (!game) return;
+
+  if (currentView === "adminPanel") {
+
+    updateTimerDisplay(
+      "adminTimerBox",
+      "adminTimer"
+    );
+
+  }
+
+  if (currentView === "playerPanel") {
+
+    updateTimerDisplay(
+      "playerTimerBox",
+      "playerTimer"
+    );
+
+    updateClaimCountdowns();
+
+  }
+}
+
+function startCountdownTimer() {
+
+  if (countdownTimer) {
+    clearInterval(countdownTimer);
+  }
+
+  countdownTimer = setInterval(
+    updateCountdowns,
+    250
+  );
+
+  updateCountdowns();
+}
+
+// =====================================
+// PRIZE COMPLETION DRAW
+// =====================================
+
+// Determines the draw where a prize
+// first became complete.
+//
+// This follows the supported prize
+// patterns and uses the actual called
+// number order.
+
+function getPrizeCompletionDraw(
+  ticket,
+  prize
+) {
+
+  const numbers =
+    patternNumbers(ticket, prize);
+
+  if (!numbers.length) return null;
+
+  const required =
+    prize === "Early 5"
+      ? 5
+      : prize === "Early 7"
+        ? 7
+        : numbers.length;
+
+  const called = calledNumbers();
+
+  const numberLookup = new Set(
+    numbers.map(Number)
+  );
+
+  let hits = 0;
+
+  for (let i = 0; i < called.length; i++) {
+
+    if (numberLookup.has(called[i])) {
+
+      hits++;
+
+      if (hits >= required) {
+        return i + 1;
+      }
+
+    }
+
+  }
+
+  return null;
+}
+
+function getPrizeDeadline(ticket, prize) {
+
+  const duration = getClaimDuration();
+
+  if (duration === 0) {
+    return Infinity;
+  }
+
+  const completionDraw =
+    getPrizeCompletionDraw(ticket, prize);
+
+  if (completionDraw === null) {
+    return null;
+  }
+
+  const call = numberCallHistory.find(
+    item =>
+      Number(item.draw_position) ===
+      completionDraw
+  );
+
+  if (!call) return null;
+
+  const calledAt = Date.parse(
+    call.called_at
+  );
+
+  if (!Number.isFinite(calledAt)) {
+    return null;
+  }
+
+  return calledAt + duration * 1000;
+}
+
+function updateClaimCountdowns() {
+
+  if (!game || !player) return;
+
+  const buttons = document.querySelectorAll(
+    "[data-claim-ticket][data-claim-prize]"
+  );
+
+  buttons.forEach(button => {
+
+    const ticketId =
+      button.dataset.claimTicket;
+
+    const prize =
+      button.dataset.claimPrize;
+
+    const ticket = tickets.find(
+      t => String(t.id) === ticketId
+    );
+
+    if (!ticket) return;
+
+    const deadline =
+      getPrizeDeadline(ticket, prize);
+
+    const timeLabel =
+      button.querySelector(".claim-time");
+
+    if (!timeLabel) return;
+
+    const duration = getClaimDuration();
+
+    if (duration === 0) {
+
+      timeLabel.textContent = "Unlimited";
+
+      return;
+    }
+
+    if (deadline === null) {
+
+      timeLabel.textContent =
+        "Checking time";
+
+      // Do not claim the deadline is
+      // valid without timestamp data.
+
+      return;
+    }
+
+    const remaining =
+      deadline - currentTime();
+
+    if (remaining <= 0) {
+
+      button.disabled = true;
+
+      button.classList.remove("ready");
+
+      button.classList.add("expired");
+
+      timeLabel.textContent = "Expired";
+
+    } else {
+
+      timeLabel.textContent =
+        formatSeconds(remaining);
+
+    }
+
+  });
+}
+
+// =====================================
+// CLEANUP
+// =====================================
 
 async function stopLiveUpdates() {
 
@@ -1360,6 +1895,14 @@ async function stopLiveUpdates() {
     clearInterval(refreshTimer);
 
     refreshTimer = null;
+
+  }
+
+  if (countdownTimer) {
+
+    clearInterval(countdownTimer);
+
+    countdownTimer = null;
 
   }
 
@@ -1410,6 +1953,9 @@ async function resetGameState() {
 
   marked = {};
 
+  numberCallHistory = [];
+  serverTimeOffset = 0;
+
   hostToken = null;
   playerToken = null;
 
@@ -1420,9 +1966,9 @@ async function resetGameState() {
   switchingGame = false;
 }
 
-// ==============================
+// =====================================
 // CREATE GAME
-// ==============================
+// =====================================
 
 async function prepareNewGame() {
 
@@ -1438,20 +1984,23 @@ async function prepareNewGame() {
 
 async function createGame() {
 
-  if (element("createGameBtn").disabled) return;
+  if (element("createGameBtn").disabled) {
+    return;
+  }
 
-  const selectedPrizes = getSelectedPrizes();
+  const selectedPrizes =
+    getSelectedPrizes();
 
-  if (selectedPrizes.length === 0) {
+  if (!selectedPrizes.length) {
 
     alert(
-      "Please select at least one winning prize."
+      "Please select at least one prize."
     );
 
     return;
   }
 
-  setBusy("createGameBtn",true);
+  setBusy("createGameBtn", true);
 
   try {
 
@@ -1472,7 +2021,7 @@ async function createGame() {
         ? getCustomPrizeRules()
         : {};
 
-    const {data,error} = await db.rpc(
+    const { data, error } = await db.rpc(
       "create_game_v3",
       {
         p_max_tickets: maxTickets,
@@ -1489,7 +2038,7 @@ async function createGame() {
     if (!data?.game_id || !data?.host_token) {
 
       throw new Error(
-        "Invalid game response from Supabase."
+        "Invalid game response."
       );
 
     }
@@ -1527,35 +2076,37 @@ async function createGame() {
 
     alert(
       "🎉 Game Created Successfully!\n\n" +
-      "Room Code: " + data.code +
-      "\nActive Prizes: " +
-      selectedPrizes.join(", ")
+      "Room Code: " + data.code
     );
 
-  } catch(error) {
+  } catch (error) {
 
     getError(error);
 
   } finally {
 
-    setBusy("createGameBtn",false);
+    setBusy("createGameBtn", false);
 
   }
 }
 
-// ==============================
+// =====================================
 // JOIN GAME
-// ==============================
+// =====================================
 
 async function joinGame() {
 
-  if (element("joinGameBtn").disabled) return;
+  if (element("joinGameBtn").disabled) {
+    return;
+  }
 
   const name =
     element("playerName").value.trim();
 
   const code =
-    element("roomCode").value.trim().toUpperCase();
+    element("roomCode").value
+      .trim()
+      .toUpperCase();
 
   const count =
     Number(element("ticketCount").value);
@@ -1565,14 +2116,13 @@ async function joinGame() {
     alert("Enter your name and room code.");
 
     return;
-
   }
 
-  setBusy("joinGameBtn",true);
+  setBusy("joinGameBtn", true);
 
   try {
 
-    const {data,error} = await db.rpc(
+    const { data, error } = await db.rpc(
       "join_game",
       {
         p_code: code,
@@ -1626,26 +2176,25 @@ async function joinGame() {
 
     }
 
-  } catch(error) {
+  } catch (error) {
 
     getError(error);
 
   } finally {
 
-    setBusy("joinGameBtn",false);
+    setBusy("joinGameBtn", false);
 
   }
 }
 
-// ==============================
+// =====================================
 // RESTORE SESSION
-// ==============================
+// =====================================
 
 async function restoreSession() {
 
-  const saved = localStorage.getItem(
-    SESSION_KEY
-  );
+  const saved =
+    localStorage.getItem(SESSION_KEY);
 
   if (!saved) return;
 
@@ -1657,10 +2206,10 @@ async function restoreSession() {
 
       hostToken = session.hostToken;
 
-      const {data,error} = await db
+      const { data, error } = await db
         .from("games")
         .select("*")
-        .eq("id",session.gameId)
+        .eq("id", session.gameId)
         .single();
 
       if (error) throw error;
@@ -1673,7 +2222,7 @@ async function restoreSession() {
 
       playerToken = session.playerToken;
 
-      const {data,error} = await db.rpc(
+      const { data, error } = await db.rpc(
         "get_my_state",
         {
           p_player_token: playerToken
@@ -1717,11 +2266,13 @@ async function restoreSession() {
 
     }
 
-  } catch(error) {
+  } catch (error) {
 
     console.error(error);
 
-    localStorage.removeItem(SESSION_KEY);
+    localStorage.removeItem(
+      SESSION_KEY
+    );
 
     await resetGameState();
 
@@ -1730,9 +2281,9 @@ async function restoreSession() {
   }
 }
 
-// ==============================
+// =====================================
 // REFRESH GAME
-// ==============================
+// =====================================
 
 async function refreshGame() {
 
@@ -1743,7 +2294,6 @@ async function refreshGame() {
     refreshAgain = true;
 
     return;
-
   }
 
   refreshing = true;
@@ -1752,15 +2302,17 @@ async function refreshGame() {
 
   try {
 
-    const {data,error} = await db
+    const { data, error } = await db
       .from("games")
       .select("*")
-      .eq("id",gameId)
+      .eq("id", gameId)
       .single();
 
     if (error) throw error;
 
-    if (!game || game.id !== gameId) return;
+    if (!game || game.id !== gameId) {
+      return;
+    }
 
     game = normalizeGame(data);
 
@@ -1771,7 +2323,9 @@ async function refreshGame() {
 
       switchingGame = true;
 
-      localStorage.removeItem(SESSION_KEY);
+      localStorage.removeItem(
+        SESSION_KEY
+      );
 
       await stopLiveUpdates();
 
@@ -1782,6 +2336,8 @@ async function refreshGame() {
       tickets = [];
       winners = [];
       marked = {};
+
+      numberCallHistory = [];
 
       resetNotifications();
 
@@ -1795,7 +2351,14 @@ async function refreshGame() {
       );
 
       return;
+    }
 
+    // Fetch number-call timestamps.
+
+    await loadNumberCallHistory(gameId);
+
+    if (!game || game.id !== gameId) {
+      return;
     }
 
     const {
@@ -1804,12 +2367,16 @@ async function refreshGame() {
     } = await db
       .from("winners")
       .select("*")
-      .eq("game_id",gameId)
-      .order("won_at",{ascending:true});
+      .eq("game_id", gameId)
+      .order("won_at", {
+        ascending: true
+      });
 
     if (winnerError) throw winnerError;
 
-    if (!game || game.id !== gameId) return;
+    if (!game || game.id !== gameId) {
+      return;
+    }
 
     winners = winnerData || [];
 
@@ -1821,7 +2388,7 @@ async function refreshGame() {
       } = await db
         .from("players")
         .select("id,name")
-        .eq("game_id",gameId);
+        .eq("game_id", gameId);
 
       if (playerError) {
 
@@ -1845,9 +2412,14 @@ async function refreshGame() {
 
     checkNewWinners();
 
-  } catch(error) {
+    updateCountdowns();
 
-    console.error("Refresh error:",error);
+  } catch (error) {
+
+    console.error(
+      "Refresh error:",
+      error
+    );
 
   } finally {
 
@@ -1859,7 +2431,10 @@ async function refreshGame() {
 
       if (game && !switchingGame) {
 
-        setTimeout(refreshGame,0);
+        setTimeout(
+          refreshGame,
+          0
+        );
 
       }
 
@@ -1868,9 +2443,9 @@ async function refreshGame() {
   }
 }
 
-// ==============================
+// =====================================
 // REALTIME
-// ==============================
+// =====================================
 
 function subscribeToGame() {
 
@@ -1897,30 +2472,30 @@ function subscribeToGame() {
     .on(
       "postgres_changes",
       {
-        event:"*",
-        schema:"public",
-        table:"games",
-        filter:"id=eq." + gameId
+        event: "*",
+        schema: "public",
+        table: "games",
+        filter: "id=eq." + gameId
       },
       refreshGame
     )
     .on(
       "postgres_changes",
       {
-        event:"*",
-        schema:"public",
-        table:"winners",
-        filter:"game_id=eq." + gameId
+        event: "*",
+        schema: "public",
+        table: "winners",
+        filter: "game_id=eq." + gameId
       },
       refreshGame
     )
     .on(
       "postgres_changes",
       {
-        event:"*",
-        schema:"public",
-        table:"players",
-        filter:"game_id=eq." + gameId
+        event: "*",
+        schema: "public",
+        table: "players",
+        filter: "game_id=eq." + gameId
       },
       refreshGame
     )
@@ -1929,7 +2504,7 @@ function subscribeToGame() {
       if (status === "CHANNEL_ERROR") {
 
         console.warn(
-          "Realtime unavailable. Polling remains active."
+          "Realtime unavailable. Polling active."
         );
 
       }
@@ -1947,25 +2522,35 @@ function startRefreshing() {
 
   }
 
+  // Polling backup.
+  // Realtime remains the primary
+  // update mechanism.
+
   refreshTimer = setInterval(
     refreshGame,
-    1000
+    3000
   );
+
+  startCountdownTimer();
 }
 
-// ==============================
+// =====================================
 // ADMIN CONTROLS
-// ==============================
+// =====================================
 
 async function callNextNumber() {
 
-  if (!game || !hostToken || callingNumber) return;
+  if (!game || !hostToken || callingNumber) {
+    return;
+  }
 
   if (
     game.status === "ended" ||
     game.status === "paused" ||
     calledNumbers().length >= 90
-  ) return;
+  ) {
+    return;
+  }
 
   callingNumber = true;
 
@@ -1973,7 +2558,7 @@ async function callNextNumber() {
 
   try {
 
-    const {data,error} = await db.rpc(
+    const { data, error } = await db.rpc(
       "call_number",
       {
         p_game_id: game.id,
@@ -1991,7 +2576,7 @@ async function callNextNumber() {
 
     await refreshGame();
 
-  } catch(error) {
+  } catch (error) {
 
     getError(error);
 
@@ -1999,14 +2584,18 @@ async function callNextNumber() {
 
     callingNumber = false;
 
-    if (game) updateAdminControls();
+    if (game) {
+      updateAdminControls();
+    }
 
   }
 }
 
 function announceNumber(number) {
 
-  if (!("speechSynthesis" in window)) return;
+  if (!("speechSynthesis" in window)) {
+    return;
+  }
 
   try {
 
@@ -2021,7 +2610,7 @@ function announceNumber(number) {
 
     speechSynthesis.speak(speech);
 
-  } catch(error) {
+  } catch (error) {
 
     console.warn(error);
 
@@ -2030,11 +2619,13 @@ function announceNumber(number) {
 
 async function setStatus(status) {
 
-  if (!game || !hostToken) return false;
+  if (!game || !hostToken) {
+    return false;
+  }
 
   try {
 
-    const {error} = await db.rpc(
+    const { error } = await db.rpc(
       "set_game_state",
       {
         p_game_id: game.id,
@@ -2049,7 +2640,7 @@ async function setStatus(status) {
 
     return true;
 
-  } catch(error) {
+  } catch (error) {
 
     getError(error);
 
@@ -2060,23 +2651,27 @@ async function setStatus(status) {
 
 async function togglePause() {
 
-  if (!game || game.status === "ended") return;
+  if (!game || game.status === "ended") {
+    return;
+  }
 
   await setStatus("paused");
-
 }
 
 async function resumeGame() {
 
-  if (!game || game.status === "ended") return;
+  if (!game || game.status === "ended") {
+    return;
+  }
 
   await setStatus("active");
-
 }
 
 async function endGame() {
 
-  if (!game || game.status === "ended") return;
+  if (!game || game.status === "ended") {
+    return;
+  }
 
   const confirmed = confirm(
     "Are you sure you want to END this game?"
@@ -2101,7 +2696,7 @@ async function toggleLock() {
 
   try {
 
-    const {error} = await db.rpc(
+    const { error } = await db.rpc(
       "set_game_state",
       {
         p_game_id: game.id,
@@ -2114,27 +2709,32 @@ async function toggleLock() {
 
     await refreshGame();
 
-  } catch(error) {
+  } catch (error) {
 
     getError(error);
 
   }
 }
 
-// ==============================
+// =====================================
 // SHARE GAME
-// ==============================
+// =====================================
 
 async function shareGame() {
 
   if (!game) return;
 
-  const url = new URL(window.location.href);
+  const url = new URL(
+    window.location.href
+  );
 
   url.search = "";
   url.hash = "";
 
-  url.searchParams.set("room",game.code);
+  url.searchParams.set(
+    "room",
+    game.code
+  );
 
   const shareUrl = url.toString();
 
@@ -2143,16 +2743,20 @@ async function shareGame() {
     try {
 
       await navigator.share({
-        title:"Tambola Party",
-        text:"Join my Tambola game! Room: " + game.code,
-        url:shareUrl
+        title: "Tambola Party",
+        text:
+          "Join my Tambola game! Room: " +
+          game.code,
+        url: shareUrl
       });
 
       return;
 
-    } catch(error) {
+    } catch (error) {
 
-      if (error.name === "AbortError") return;
+      if (error.name === "AbortError") {
+        return;
+      }
 
     }
 
@@ -2160,11 +2764,13 @@ async function shareGame() {
 
   try {
 
-    await navigator.clipboard.writeText(shareUrl);
+    await navigator.clipboard.writeText(
+      shareUrl
+    );
 
     alert("Invitation link copied!");
 
-  } catch(error) {
+  } catch (error) {
 
     window.prompt(
       "Copy this invitation link:",
@@ -2174,9 +2780,9 @@ async function shareGame() {
   }
 }
 
-// ==============================
+// =====================================
 // ADMIN DISPLAY
-// ==============================
+// =====================================
 
 function updateAdminControls() {
 
@@ -2246,8 +2852,6 @@ function renderAdmin() {
     "Entries: " +
     (game.locked ? "Locked" : "Open");
 
-  // Show only selected prizes.
-
   element("adminActivePrizes").textContent =
     activePrizes().join(" • ");
 
@@ -2257,7 +2861,7 @@ function renderAdmin() {
 
   board.innerHTML = "";
 
-  for (let n=1;n<=90;n++) {
+  for (let n = 1; n <= 90; n++) {
 
     const cell = document.createElement("div");
 
@@ -2276,20 +2880,24 @@ function renderAdmin() {
   }
 
   element("playerList").textContent =
-    "Total Players: " + players.length;
+    "Total Players: " +
+    players.length;
 
-  const container = element("adminPlayersList");
+  const container =
+    element("adminPlayersList");
 
   container.innerHTML = "";
 
-  players.forEach((p,index) => {
+  players.forEach((p, index) => {
 
     const row = document.createElement("div");
 
     row.className = "player-row";
 
     row.textContent =
-      (index+1) + ". 🎟️ " + p.name;
+      (index + 1) +
+      ". 🎟️ " +
+      p.name;
 
     container.appendChild(row);
 
@@ -2300,9 +2908,9 @@ function renderAdmin() {
   renderWinners();
 }
 
-// ==============================
+// =====================================
 // PENDING CLAIMS
-// ==============================
+// =====================================
 
 function renderPendingClaims() {
 
@@ -2311,9 +2919,9 @@ function renderPendingClaims() {
     "No pending-claim review API is configured.";
 }
 
-// ==============================
+// =====================================
 // PLAYER MARKING
-// ==============================
+// =====================================
 
 function loadMarks() {
 
@@ -2335,7 +2943,7 @@ function loadMarks() {
         ? stored
         : {};
 
-  } catch(error) {
+  } catch (error) {
 
     marked = {};
 
@@ -2352,13 +2960,15 @@ function saveMarks() {
   );
 }
 
-function toggleMark(ticketId,number) {
+function toggleMark(ticketId, number) {
 
   if (!game || !player) return;
 
   const numericNumber = Number(number);
 
-  if (!calledSet().has(numericNumber)) return;
+  if (!calledSet().has(numericNumber)) {
+    return;
+  }
 
   if (!Array.isArray(marked[ticketId])) {
 
@@ -2389,9 +2999,9 @@ function toggleMark(ticketId,number) {
   renderPlayer();
 }
 
-// ==============================
+// =====================================
 // PLAYER DISPLAY
-// ==============================
+// =====================================
 
 function renderPlayer() {
 
@@ -2400,7 +3010,9 @@ function renderPlayer() {
   const called = calledSet();
 
   element("welcomePlayer").textContent =
-    "Welcome, " + player.name + "! 🎉";
+    "Welcome, " +
+    player.name +
+    "! 🎉";
 
   element("playerRoom").textContent =
     "Room: " + game.code;
@@ -2416,7 +3028,15 @@ function renderPlayer() {
   element("playerGameStatus").textContent =
     "Game Status: " + game.status;
 
-  const container = element("ticketsContainer");
+  const duration = getClaimDuration();
+
+  element("playerClaimDuration").textContent =
+    duration === 0
+      ? "Unlimited"
+      : duration + " seconds";
+
+  const container =
+    element("ticketsContainer");
 
   container.innerHTML = "";
 
@@ -2443,7 +3063,6 @@ function renderPlayer() {
       container.appendChild(error);
 
       return;
-
     }
 
     ticket.numbers.forEach(row => {
@@ -2464,7 +3083,8 @@ function renderPlayer() {
 
         } else {
 
-          const numericNumber = Number(number);
+          const numericNumber =
+            Number(number);
 
           const wasCalled =
             called.has(numericNumber);
@@ -2476,7 +3096,8 @@ function renderPlayer() {
               .map(Number)
               .includes(numericNumber);
 
-          cell.textContent = numericNumber;
+          cell.textContent =
+            numericNumber;
 
           cell.type = "button";
 
@@ -2520,31 +3141,35 @@ function renderPlayer() {
   renderClaims();
 
   renderWinners();
+
+  updateCountdowns();
 }
 
-// ==============================
-// PRIZE CHECKING
-// ==============================
+// =====================================
+// PRIZE PATTERNS
+// =====================================
 
-function rowNumbers(ticket,row) {
+function rowNumbers(ticket, row) {
 
   if (
     !Array.isArray(ticket.numbers) ||
     !Array.isArray(ticket.numbers[row])
-  ) return [];
+  ) {
+    return [];
+  }
 
   return ticket.numbers[row]
     .filter(n => n !== null)
     .map(Number);
 }
 
-function patternNumbers(ticket,prize) {
+function patternNumbers(ticket, prize) {
 
-  const top = rowNumbers(ticket,0);
+  const top = rowNumbers(ticket, 0);
 
-  const middle = rowNumbers(ticket,1);
+  const middle = rowNumbers(ticket, 1);
 
-  const bottom = rowNumbers(ticket,2);
+  const bottom = rowNumbers(ticket, 2);
 
   const all = [
     ...top,
@@ -2552,25 +3177,29 @@ function patternNumbers(ticket,prize) {
     ...bottom
   ];
 
-  if (prize === "Top Line") return top;
+  if (prize === "Top Line") {
+    return top;
+  }
 
-  if (prize === "Middle Line") return middle;
+  if (prize === "Middle Line") {
+    return middle;
+  }
 
-  if (prize === "Bottom Line") return bottom;
+  if (prize === "Bottom Line") {
+    return bottom;
+  }
 
   if (prize === "Four Corners") {
 
     if (!top.length || !bottom.length) {
-
       return [];
-
     }
 
     return [
       top[0],
-      top[top.length-1],
+      top[top.length - 1],
       bottom[0],
-      bottom[bottom.length-1]
+      bottom[bottom.length - 1]
     ];
 
   }
@@ -2580,28 +3209,22 @@ function patternNumbers(ticket,prize) {
     prize === "Early 7" ||
     prize === "Full House"
   ) {
-
     return all;
-
   }
 
   return [];
 }
 
-function qualifies(ticket,prize) {
+function qualifies(ticket, prize) {
 
   if (!game) return false;
 
-  // Prize must be active.
-
   if (!activePrizes().includes(prize)) {
-
     return false;
-
   }
 
   const numbers =
-    patternNumbers(ticket,prize);
+    patternNumbers(ticket, prize);
 
   if (!numbers.length) return false;
 
@@ -2612,33 +3235,28 @@ function qualifies(ticket,prize) {
   ).length;
 
   if (prize === "Early 5") {
-
     return hits >= 5;
-
   }
 
   if (prize === "Early 7") {
-
     return hits >= 7;
-
   }
 
   return hits === numbers.length;
 }
 
-// ==============================
+// =====================================
 // CLAIM BUTTONS
-// ==============================
+// =====================================
 
 function renderClaims() {
 
   if (!game || !player) return;
 
-  const container = element("claimContainer");
+  const container =
+    element("claimContainer");
 
   container.innerHTML = "";
-
-  // Only prizes selected by the admin.
 
   const gamePrizes = activePrizes();
 
@@ -2651,7 +3269,8 @@ function renderClaims() {
 
     container.appendChild(heading);
 
-    const buttonRow = document.createElement("div");
+    const buttonRow =
+      document.createElement("div");
 
     buttonRow.className = "claim-buttons";
 
@@ -2665,7 +3284,8 @@ function renderClaims() {
 
       if (alreadyWon) {
 
-        const badge = document.createElement("span");
+        const badge =
+          document.createElement("span");
 
         badge.className = "winner";
 
@@ -2675,11 +3295,10 @@ function renderClaims() {
         buttonRow.appendChild(badge);
 
         return;
-
       }
 
       const eligible =
-        qualifies(ticket,prize);
+        qualifies(ticket, prize);
 
       const winnerCount =
         winners.filter(
@@ -2702,29 +3321,39 @@ function renderClaims() {
         game.status !== "ended" &&
         game.status !== "paused";
 
+      const deadline =
+        eligible
+          ? getPrizeDeadline(ticket, prize)
+          : null;
+
+      const expired =
+        eligible &&
+        deadline !== null &&
+        deadline !== Infinity &&
+        currentTime() >= deadline;
+
       const button =
         document.createElement("button");
 
       button.className = "prize-button";
 
-      button.textContent =
-        claimInProgress
-          ? "⏳ Claiming..."
-          : prizeFull
-            ? "🏆 " + prize + " Closed"
-            : eligible
-              ? "🏆 Claim " + prize
-              : "🔒 " + prize;
+      button.dataset.claimTicket =
+        String(ticket.id);
+
+      button.dataset.claimPrize =
+        prize;
 
       button.disabled =
         !eligible ||
         prizeFull ||
         !gameAllowsClaims ||
-        claimInProgress;
+        claimInProgress ||
+        expired;
 
       if (
         eligible &&
         !prizeFull &&
+        !expired &&
         gameAllowsClaims
       ) {
 
@@ -2732,9 +3361,70 @@ function renderClaims() {
 
       }
 
+      if (expired) {
+
+        button.classList.add("expired");
+
+      }
+
+      const label =
+        document.createElement("span");
+
+      label.textContent =
+        claimInProgress
+          ? "⏳ Claiming..."
+          : prizeFull
+            ? "🏆 " + prize + " Closed"
+            : expired
+              ? "⌛ " + prize
+              : eligible
+                ? "🏆 Claim " + prize
+                : "🔒 " + prize;
+
+      button.appendChild(label);
+
+      if (
+        eligible &&
+        !prizeFull &&
+        !claimInProgress
+      ) {
+
+        const time =
+          document.createElement("span");
+
+        time.className = "claim-time";
+
+        if (expired) {
+
+          time.textContent = "Expired";
+
+        } else if (deadline === Infinity) {
+
+          time.textContent = "Unlimited";
+
+        } else if (deadline === null) {
+
+          time.textContent = "Checking time";
+
+        } else {
+
+          time.textContent =
+            formatSeconds(
+              deadline - currentTime()
+            );
+
+        }
+
+        button.appendChild(time);
+
+      }
+
       button.onclick = () => {
 
-        claimPrize(ticket.id,prize);
+        claimPrize(
+          ticket.id,
+          prize
+        );
 
       };
 
@@ -2745,28 +3435,27 @@ function renderClaims() {
     container.appendChild(buttonRow);
 
   });
+
 }
 
-// ==============================
+// =====================================
 // SERVER CLAIM
-// ==============================
+// =====================================
 
-async function claimPrize(ticketId,prize) {
+async function claimPrize(ticketId, prize) {
 
   if (!playerToken || !game) return;
 
-  // Prevent claims for inactive prizes.
-
   if (!activePrizes().includes(prize)) {
-
     return;
-
   }
 
   const claimKey =
     ticketId + "_" + prize;
 
-  if (claimingPrizes.has(claimKey)) return;
+  if (claimingPrizes.has(claimKey)) {
+    return;
+  }
 
   claimingPrizes.add(claimKey);
 
@@ -2774,7 +3463,7 @@ async function claimPrize(ticketId,prize) {
 
   try {
 
-    const {data,error} = await db.rpc(
+    const { data, error } = await db.rpc(
       "claim_prize",
       {
         p_player_token: playerToken,
@@ -2804,7 +3493,7 @@ async function claimPrize(ticketId,prize) {
 
     await refreshGame();
 
-  } catch(error) {
+  } catch (error) {
 
     getError(error);
 
@@ -2826,9 +3515,9 @@ async function claimPrize(ticketId,prize) {
   }
 }
 
-// ==============================
+// =====================================
 // WINNER ANNOUNCEMENTS
-// ==============================
+// =====================================
 
 function checkNewWinners() {
 
@@ -2843,7 +3532,6 @@ function checkNewWinners() {
     initialWinnersLoaded = true;
 
     return;
-
   }
 
   const newWinners = winners.filter(
@@ -2871,7 +3559,8 @@ function showNextWinnerPopup() {
 
   if (!winnerPopupQueue.length) return;
 
-  const winner = winnerPopupQueue.shift();
+  const winner =
+    winnerPopupQueue.shift();
 
   winnerPopupActive = true;
 
@@ -2931,14 +3620,16 @@ function renderWinners() {
       `).join("")
     : "<p>No winners yet.</p>";
 
-  element("adminWinners").innerHTML = html;
+  element("adminWinners").innerHTML =
+    html;
 
-  element("playerWinners").innerHTML = html;
+  element("playerWinners").innerHTML =
+    html;
 }
 
-// ==============================
+// =====================================
 // INITIALISE
-// ==============================
+// =====================================
 
 async function initialise() {
 
@@ -2946,9 +3637,10 @@ async function initialise() {
 
   updateWinningMode();
 
-  const params = new URLSearchParams(
-    window.location.search
-  );
+  const params =
+    new URLSearchParams(
+      window.location.search
+    );
 
   const room = params.get("room");
 
@@ -2973,5 +3665,4 @@ initialise();
 </script>
 
 </body>
-
 </html>
