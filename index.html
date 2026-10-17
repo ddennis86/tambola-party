@@ -465,7 +465,7 @@ Join Game 🎉
               🎲 CALL NEXT NUMBER
             </button>
             <p class="mt-2 text-sm text-gray-600">
-              Numbers Called: <span id="calledCount">0</span>/90
+              <span id="calledCount">0</span>/90
             </p>
           </div>
         </div>
@@ -484,15 +484,19 @@ Join Game 🎉
       <div class="space-y-4">
 
         <!-- Players -->
-        <div class="card">
-          <h2 class="text-xl font-bold mb-3 flex items-center gap-2">
-            👥 Players
-          </h2>
-          <p class="text-sm text-gray-600 mb-2">
-            Total Players: <span id="playerCount">0</span>
-          </p>
-          <div id="playersList" class="space-y-2 max-h-64 overflow-y-auto"></div>
-        </div>
+            <!-- Players Section -->
+    <div class="card">
+      <h2 class="text-xl font-bold mb-3 flex items-center gap-2">
+        👥 Players
+      </h2>
+      <div id="playersList">
+        <p class="text-sm text-gray-600 mb-2">
+          Total Players: <span id="playerCount">0</span>
+        </p>
+      </div>
+      <!-- This ID is what the JavaScript is missing -->
+      <div id="adminPlayersList" class="space-y-2 max-h-64 overflow-y-auto"></div>
+    </div>
 
         <!-- Claims (Pending) -->
         <div class="card">
