@@ -271,6 +271,19 @@ select {
   margin: 5px 0;
 }
 
+.player-number-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.player-number-header button {
+  padding: 6px 9px;
+  margin: 0;
+  font-size: 12px;
+}
+
 .player-number-card p {
   font-size: 12px;
   margin: 4px 0;
@@ -1240,7 +1253,14 @@ button.ticket-cell:disabled {
 
     <p id="playerRoom"></p>
 
-    <h3>🎯 Latest Number</h3>
+    <div class="player-number-header">
+      <h3>🎯 Latest Number</h3>
+      <button
+        id="playerSoundToggle"
+        type="button"
+        onclick="togglePlayerSound()"
+      >Sound OFF</button>
+    </div>
 
     <div
       id="playerNumber"
@@ -1419,6 +1439,15 @@ let winnerPopupActive = false;
 let numberCallHistory = [];
 let serverTimeOffset = 0;
 
+const PLAYER_SOUND_KEY = "tambola_player_sound";
+let playerSoundEnabled =
+  localStorage.getItem(PLAYER_SOUND_KEY) === "true";
+let playerSoundReady = false;
+let playerNumberAnnouncements = {
+  gameId: null,
+  observed: new Set()
+};
+
 let adminValidationInProgress = false;
 let lastAdminValidation = 0;
 
@@ -1483,6 +1512,108 @@ function getError(error) {
 function setBusy(id, busy) {
   const button = element(id);
   if (button) button.disabled = busy;
+}
+
+function togglePlayerSound() {
+  if (
+    !("speechSynthesis" in window) ||
+    typeof SpeechSynthesisUtterance === "undefined"
+  ) {
+    return;
+  }
+
+  if (playerSoundEnabled && playerSoundReady) {
+    playerSoundEnabled = false;
+    playerSoundReady = false;
+    localStorage.setItem(
+      PLAYER_SOUND_KEY,
+      "false"
+    );
+    window.speechSynthesis.cancel();
+  } else {
+    playerSoundEnabled = true;
+    playerSoundReady = true;
+    localStorage.setItem(
+      PLAYER_SOUND_KEY,
+      "true"
+    );
+
+    try {
+      const activationSpeech =
+        new SpeechSynthesisUtterance("Sound enabled");
+      activationSpeech.lang = "en-US";
+      window.speechSynthesis.speak(activationSpeech);
+    } catch (error) {
+      console.warn("Player speech activation failed:", error);
+    }
+  }
+
+  renderPlayerSoundControl();
+}
+
+function renderPlayerSoundControl() {
+  const button = element("playerSoundToggle");
+  if (!button) return;
+
+  const supported =
+    "speechSynthesis" in window &&
+    typeof SpeechSynthesisUtterance !== "undefined";
+
+  button.disabled = !supported;
+  button.textContent = !supported
+    ? "Sound unavailable"
+    : playerSoundEnabled
+      ? playerSoundReady
+        ? "Sound ON"
+        : "Enable Sound"
+      : "Enable Sound (OFF)";
+}
+
+function resetPlayerNumberAnnouncements() {
+  playerNumberAnnouncements = {
+    gameId: null,
+    observed: new Set()
+  };
+}
+
+function initializePlayerNumberAnnouncements() {
+  playerNumberAnnouncements = {
+    gameId: game?.id ?? null,
+    observed: new Set(calledNumbers())
+  };
+}
+
+function announceNewPlayerNumbers() {
+  if (playerNumberAnnouncements.gameId !== game.id) {
+    playerNumberAnnouncements = {
+      gameId: game.id,
+      observed: new Set(calledNumbers())
+    };
+    return;
+  }
+
+  calledNumbers().forEach(number => {
+    if (playerNumberAnnouncements.observed.has(number)) {
+      return;
+    }
+
+    playerNumberAnnouncements.observed.add(number);
+
+    if (!playerSoundEnabled || !playerSoundReady) {
+      return;
+    }
+
+    try {
+      const speech = new SpeechSynthesisUtterance(
+        "Number " + number
+      );
+      speech.lang = "en-US";
+      speech.rate = 0.85;
+      window.speechSynthesis.speak(speech);
+    } catch (error) {
+      console.warn("Player number announcement failed:", error);
+    }
+  });
 }
 
 function calledNumbers() {
@@ -2294,6 +2425,7 @@ async function resetGameState() {
 
   numberCallHistory = [];
   serverTimeOffset = 0;
+  resetPlayerNumberAnnouncements();
 
   hostToken = null;
   playerToken = null;
@@ -2520,6 +2652,8 @@ async function joinGame() {
       prizes: data.prizes
     });
 
+    initializePlayerNumberAnnouncements();
+
     loadMarks();
     saveSession();
 
@@ -2585,6 +2719,8 @@ async function restoreSession() {
       status: data.status,
       prizes: data.prizes
     });
+
+    initializePlayerNumberAnnouncements();
 
     loadMarks();
 
@@ -3917,6 +4053,9 @@ function renderPlayer() {
 
   const called =
     calledSet();
+
+  announceNewPlayerNumbers();
+  renderPlayerSoundControl();
 
   element("welcomePlayer").textContent =
     "Welcome, " +
