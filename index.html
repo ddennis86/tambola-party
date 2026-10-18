@@ -664,12 +664,82 @@ button.ticket-cell:disabled {
 
   <p>Create a game or join your friends.</p>
 
-  <button onclick="show('adminSetup')">
-    👑 Create Game
+  <button onclick="openMainAdminLogin()">
+    👑 Main Admin Login
   </button>
 
   <button onclick="show('joinSetup')">
     🎟️ Join Game
+  </button>
+
+</section>
+
+
+<!-- PERMANENT MAIN ADMIN LOGIN -->
+
+<section id="adminLogin" class="card center hidden">
+
+  <h2>👑 Main Admin Login</h2>
+
+  <p>Sign in to manage your Tambola games.</p>
+
+  <input
+    id="adminEmail"
+    type="email"
+    placeholder="Email Address"
+    autocomplete="username"
+  >
+
+  <br>
+
+  <input
+    id="adminPassword"
+    type="password"
+    placeholder="Password"
+    autocomplete="current-password"
+  >
+
+  <br>
+
+  <button
+    id="adminLoginBtn"
+    onclick="loginMainAdmin()"
+    class="btn-success"
+  >
+    🔐 Login
+  </button>
+
+  <button
+    onclick="show('home')"
+    class="btn-secondary"
+  >
+    ← Back
+  </button>
+
+</section>
+
+<!-- MAIN ADMIN GAME LIST -->
+
+<section id="adminGames" class="card hidden">
+
+  <h2>👑 My Tambola Games</h2>
+
+  <p id="adminWelcome"></p>
+
+  <div id="adminGamesList"></div>
+
+  <button
+    onclick="openAdminSetup()"
+    class="btn-success"
+  >
+    ➕ Create New Game
+  </button>
+
+  <button
+    onclick="logoutMainAdmin()"
+    class="btn-danger"
+  >
+    🚪 Logout
   </button>
 
 </section>
@@ -858,6 +928,22 @@ button.ticket-cell:disabled {
         onclick="prepareNewGame()"
       >
         ➕ Create New Game
+      </button>
+
+      <button
+        id="backToGamesBtn"
+        onclick="returnToAdminGames()"
+        class="btn-secondary"
+      >
+        📋 My Games
+      </button>
+
+      <button
+        id="adminLogoutBtn"
+        onclick="logoutMainAdmin()"
+        class="btn-danger"
+      >
+        🚪 Logout
       </button>
 
       <button
@@ -1362,6 +1448,8 @@ function element(id) {
 function show(id) {
   [
     "home",
+    "adminLogin",
+    "adminGames",
     "adminSetup",
     "joinSetup",
     "adminPanel",
@@ -1450,10 +1538,243 @@ function updateCoAdminInterface() {
   element("createNewGameBtn")
     .classList.toggle("hidden", isCo);
 
+  element("backToGamesBtn")
+    .classList.toggle("hidden", isCo);
+
+  element("adminLogoutBtn")
+    .classList.toggle("hidden", isCo);
+
   element("adminRoleLabel").textContent =
     isCo
       ? "👑 Co-Admin: " + (coAdminName || "Admin")
       : "👑 Main Admin";
+}
+
+
+// =====================================
+// PERMANENT MAIN ADMIN AUTHENTICATION
+// =====================================
+
+let authenticatedAdmin = null;
+
+async function verifyMainAdmin() {
+  const { data, error } = await db.auth.getUser();
+
+  if (error || !data?.user) {
+    authenticatedAdmin = null;
+    return false;
+  }
+
+  try {
+    // Server-side RPC verifies main_admin + active.
+    const result = await db.rpc("get_admin_games");
+
+    if (result.error) {
+      authenticatedAdmin = null;
+      return false;
+    }
+
+    authenticatedAdmin = data.user;
+    return true;
+
+  } catch (error) {
+    console.error("Admin verification failed:", error);
+    authenticatedAdmin = null;
+    return false;
+  }
+}
+
+async function openMainAdminLogin() {
+  const valid = await verifyMainAdmin();
+
+  if (valid) {
+    await loadAdminGames();
+  } else {
+    show("adminLogin");
+  }
+}
+
+async function loginMainAdmin() {
+  const email = element("adminEmail").value.trim();
+  const password = element("adminPassword").value;
+
+  if (!email || !password) {
+    alert("Enter your email and password.");
+    return;
+  }
+
+  setBusy("adminLoginBtn", true);
+
+  try {
+    const { error } = await db.auth.signInWithPassword({
+      email,
+      password
+    });
+
+    if (error) throw error;
+
+    if (!(await verifyMainAdmin())) {
+      await db.auth.signOut();
+
+      throw new Error(
+        "This account does not have active Main Admin access."
+      );
+    }
+
+    element("adminPassword").value = "";
+
+    await loadAdminGames();
+
+  } catch (error) {
+    getError(error);
+  } finally {
+    setBusy("adminLoginBtn", false);
+  }
+}
+
+async function loadAdminGames() {
+  if (!(await verifyMainAdmin())) {
+    show("adminLogin");
+    return;
+  }
+
+  try {
+    const { data, error } = await db.rpc(
+      "get_admin_games"
+    );
+
+    if (error) throw error;
+
+    show("adminGames");
+
+    element("adminWelcome").textContent =
+      "Logged in as: " + authenticatedAdmin.email;
+
+    const container = element("adminGamesList");
+
+    container.innerHTML = "";
+
+    if (!data?.length) {
+      container.textContent =
+        "No games found. Create your first game.";
+      return;
+    }
+
+    data.forEach(item => {
+      const row = document.createElement("div");
+      row.className = "player-row";
+
+      const label = document.createElement("p");
+
+      label.textContent =
+        "🎮 Room: " + item.room_code +
+        " | Status: " + item.game_status;
+
+      const button = document.createElement("button");
+
+      button.textContent = "👑 Open Dashboard";
+
+      button.onclick = () =>
+        openAdminGame(item.game_id);
+
+      row.appendChild(label);
+      row.appendChild(button);
+
+      container.appendChild(row);
+    });
+
+  } catch (error) {
+    getError(error);
+  }
+}
+
+async function openAdminSetup() {
+  if (!(await verifyMainAdmin())) {
+    show("adminLogin");
+    return;
+  }
+
+  show("adminSetup");
+}
+
+async function openAdminGame(gameId) {
+  if (!(await verifyMainAdmin())) {
+    show("adminLogin");
+    return;
+  }
+
+  try {
+    const { data, error } = await db.rpc(
+      "get_admin_game_access",
+      {
+        p_game_id: gameId
+      }
+    );
+
+    if (error) throw error;
+
+    if (!data?.host_token) {
+      throw new Error("Game access unavailable.");
+    }
+
+    const response = await db
+      .from("games")
+      .select("*")
+      .eq("id", gameId)
+      .single();
+
+    if (response.error) throw response.error;
+
+    await resetGameState();
+
+    localStorage.removeItem(CO_ADMIN_SESSION_KEY);
+
+    hostToken = data.host_token;
+    game = normalizeGame(response.data);
+
+    saveSession();
+
+    show("adminPanel");
+    updateCoAdminInterface();
+
+    await refreshGame();
+
+    if (game) {
+      subscribeToGame();
+      startRefreshing();
+    }
+
+  } catch (error) {
+    getError(error);
+  }
+}
+
+async function returnToAdminGames() {
+  if (isCoAdmin()) return;
+
+  await resetGameState();
+
+  localStorage.removeItem(SESSION_KEY);
+
+  await loadAdminGames();
+}
+
+async function logoutMainAdmin() {
+  await resetGameState();
+
+  localStorage.removeItem(SESSION_KEY);
+  localStorage.removeItem(CO_ADMIN_SESSION_KEY);
+
+  const { error } = await db.auth.signOut();
+
+  if (error) {
+    getError(error);
+    return;
+  }
+
+  authenticatedAdmin = null;
+
+  show("home");
 }
 
 // =====================================
@@ -2008,11 +2329,17 @@ async function prepareNewGame() {
 
   if (!confirmed) return;
 
-  show("adminSetup");
+  await openAdminSetup();
 }
 
 async function createGame() {
   if (element("createGameBtn").disabled) {
+    return;
+  }
+
+  if (!(await verifyMainAdmin())) {
+    alert("Please log in as Main Admin.");
+    show("adminLogin");
     return;
   }
 
@@ -2051,7 +2378,7 @@ async function createGame() {
         : {};
 
     const { data, error } = await db.rpc(
-      "create_game_v3",
+      "create_admin_game",
       {
         p_max_tickets: maxTickets,
         p_winners_per_prize: winnersPerPrize,
@@ -2213,84 +2540,67 @@ async function joinGame() {
 }
 
 // =====================================
-// RESTORE MAIN ADMIN / PLAYER SESSION
+// RESTORE PLAYER SESSION
 // =====================================
 
 async function restoreSession() {
-  const saved =
-    localStorage.getItem(SESSION_KEY);
+  const saved = localStorage.getItem(SESSION_KEY);
 
   if (!saved) return;
 
   try {
     const session = JSON.parse(saved);
 
-    if (
-      session.hostToken &&
-      session.gameId
-    ) {
-      hostToken = session.hostToken;
-
-      const { data, error } = await db
-        .from("games")
-        .select("*")
-        .eq("id", session.gameId)
-        .single();
-
-      if (error) throw error;
-
-      game = normalizeGame(data);
-
-      show("adminPanel");
-      updateCoAdminInterface();
-
-    } else if (session.playerToken) {
-      playerToken = session.playerToken;
-
-      const { data, error } = await db.rpc(
-        "get_my_state",
-        {
-          p_player_token: playerToken
-        }
-      );
-
-      if (error) throw error;
-
-      player = {
-        id: data.player_id,
-        name: data.player_name
-      };
-
-      tickets = data.tickets || [];
-
-      game = normalizeGame({
-        id: data.game_id,
-        code: data.code,
-        called: data.called,
-        status: data.status,
-        prizes: data.prizes
-      });
-
-      loadMarks();
-
-      show("playerPanel");
+    // Main Admin sessions must be recovered through
+    // authenticated, owner-checked Supabase RPCs.
+    if (session.hostToken && session.gameId) {
+      localStorage.removeItem(SESSION_KEY);
+      return;
     }
 
-    if (game) {
-      await refreshGame();
+    if (!session.playerToken) return;
 
-      if (game) {
-        subscribeToGame();
-        startRefreshing();
+    playerToken = session.playerToken;
+
+    const { data, error } = await db.rpc(
+      "get_my_state",
+      {
+        p_player_token: playerToken
       }
+    );
+
+    if (error) throw error;
+
+    player = {
+      id: data.player_id,
+      name: data.player_name
+    };
+
+    tickets = data.tickets || [];
+
+    game = normalizeGame({
+      id: data.game_id,
+      code: data.code,
+      called: data.called,
+      status: data.status,
+      prizes: data.prizes
+    });
+
+    loadMarks();
+
+    show("playerPanel");
+
+    await refreshGame();
+
+    if (game) {
+      subscribeToGame();
+      startRefreshing();
     }
 
   } catch (error) {
     console.error(error);
 
-    localStorage.removeItem(
-      SESSION_KEY
-    );
+    localStorage.removeItem(SESSION_KEY);
 
     await resetGameState();
 
@@ -2299,6 +2609,7 @@ async function restoreSession() {
 }
 
 // =====================================
+
 // PLAYER WHATSAPP INVITATION
 // =====================================
 
@@ -2859,13 +3170,18 @@ async function handleCoAdminInvitation() {
 
   if (!token) return false;
 
-  history.replaceState(
-    null,
-    "",
-    window.location.pathname
-  );
+  const joined = await joinAsCoAdmin(token);
 
-  return await joinAsCoAdmin(token);
+  if (joined) {
+    history.replaceState(
+      null,
+      "",
+      window.location.pathname +
+      window.location.search
+    );
+  }
+
+  return joined;
 }
 
 // =====================================
@@ -4312,34 +4628,38 @@ async function initialise() {
   renderPrizeSelection();
   updateWinningMode();
 
-  const params =
-    new URLSearchParams(
-      window.location.search
-    );
+  const params = new URLSearchParams(
+    window.location.search
+  );
 
-  const room =
-    params.get("room");
+  const room = params.get("room");
 
   if (room) {
     element("roomCode").value =
       room.toUpperCase();
   }
 
-  const hashParams =
-    new URLSearchParams(
-      window.location.hash.replace(
-        /^#/,
-        ""
-      )
-    );
+  const hashParams = new URLSearchParams(
+    window.location.hash.replace(/^#/, "")
+  );
 
-  if (
-    hashParams.has("coadmin")
-  ) {
-    const joined =
-      await handleCoAdminInvitation();
+  // Invitation links take priority.
+  if (hashParams.has("coadmin")) {
+    const joined = await handleCoAdminInvitation();
 
     if (joined) return;
+  }
+
+  // Player invitation links take priority over
+  // an existing administrator login.
+  if (room) {
+    await restoreSession();
+
+    if (!game) {
+      show("joinSetup");
+    }
+
+    return;
   }
 
   const restoredCoAdmin =
@@ -4347,20 +4667,14 @@ async function initialise() {
 
   if (restoredCoAdmin) return;
 
+  // Restore permanent Main Admin login.
+  if (await verifyMainAdmin()) {
+    await loadAdminGames();
+    return;
+  }
+
+  // Restore ordinary player session.
   await restoreSession();
-
-  if (
-    !game &&
-    room
-  ) {
-    show("joinSetup");
-  }
-
-  if (
-    currentView === "adminPanel"
-  ) {
-    updateCoAdminInterface();
-  }
 }
 
 initialise();
