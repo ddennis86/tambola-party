@@ -1,0 +1,5276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Tambola Party 🎉</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: Arial, sans-serif;
+  color: white;
+  background: linear-gradient(135deg, #6026a6, #e83e96);
+}
+
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: auto;
+  padding: 12px;
+}
+
+.header {
+  text-align: center;
+  padding: 14px 5px;
+}
+
+.header h1 {
+  font-size: clamp(25px, 5vw, 40px);
+  margin: 0;
+}
+
+.header p {
+  font-size: 14px;
+}
+
+.card {
+  background: white;
+  color: #333;
+  padding: 16px;
+  margin: 10px 0;
+  border-radius: 15px;
+  box-shadow: 0 8px 25px rgba(0,0,0,.15);
+  min-width: 0;
+}
+
+.card h2 {
+  margin-top: 0;
+}
+
+.center {
+  text-align: center;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.status {
+  background: #f1e8ff;
+  padding: 9px;
+  border-radius: 8px;
+  margin: 8px 0;
+}
+
+button {
+  background: #762ac2;
+  color: white;
+  border: none;
+  padding: 11px 16px;
+  margin: 4px;
+  border-radius: 9px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+button:hover:not(:disabled) {
+  background: #51158f;
+}
+
+button:disabled {
+  background: #aaa;
+  cursor: not-allowed;
+}
+
+button:focus-visible,
+input:focus-visible,
+select:focus-visible {
+  outline: 3px solid #ffbf47;
+  outline-offset: 2px;
+}
+
+input,
+select {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  margin: 5px;
+  font-size: 15px;
+  max-width: 100%;
+}
+
+.btn-success {
+  background: #20a86b;
+}
+
+.btn-danger {
+  background: #dc3545;
+}
+
+.btn-warning {
+  background: #c78300;
+}
+
+.btn-secondary {
+  background: #626b78;
+}
+
+/* PRIZE SELECTION */
+
+.prize-selection {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin: 12px 0;
+}
+
+.prize-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #f5efff;
+  padding: 12px;
+  border-radius: 9px;
+  cursor: pointer;
+  font-size: 14px;
+  border: 2px solid transparent;
+}
+
+.prize-option:has(input:checked) {
+  background: #e4fff0;
+  border-color: #21b573;
+}
+
+.prize-option input {
+  width: 18px;
+  height: 18px;
+  accent-color: #20a86b;
+  margin: 0;
+}
+
+.prize-select-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.custom-prize-row {
+  padding: 8px;
+  margin: 6px 0;
+  background: #f5efff;
+  border-radius: 8px;
+}
+
+/* ADMIN DASHBOARD */
+
+.admin-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.admin-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 16px;
+}
+
+.admin-grid > div {
+  min-width: 0;
+}
+
+.admin-grid .card {
+  margin: 0 0 16px;
+}
+
+@media (min-width: 1024px) {
+  .admin-grid {
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr);
+  }
+}
+
+.number {
+  font-size: clamp(3rem, 9vw, 5rem);
+  color: #762ac2;
+  font-weight: bold;
+  text-align: center;
+  padding: 12px;
+}
+
+/* TIMER */
+
+.timer-box {
+  background: #fff3cd;
+  color: #664d03;
+  border: 2px solid #ffda6a;
+  padding: 10px;
+  border-radius: 12px;
+  text-align: center;
+  margin: 10px 0;
+}
+
+.timer-title {
+  font-size: 13px;
+  font-weight: bold;
+  margin-bottom: 4px;
+}
+
+.timer-value {
+  font-size: 32px;
+  font-weight: bold;
+  line-height: 1.2;
+}
+
+.timer-subtitle {
+  font-size: 11px;
+  margin-top: 4px;
+}
+
+.timer-box.warning {
+  background: #fff0cc;
+  border-color: #ff9800;
+  color: #9a5600;
+}
+
+.timer-box.expired {
+  background: #ffe4e4;
+  border-color: #dc3545;
+  color: #b02a37;
+}
+
+.timer-box.unlimited {
+  background: #e4fff0;
+  border-color: #21b573;
+  color: #146c43;
+}
+
+/* PLAYER HEADER */
+
+.player-number-card {
+  padding: 10px;
+  margin: 6px 0;
+  border-radius: 12px;
+}
+
+.player-number-card h2 {
+  font-size: 17px;
+  margin: 3px 0;
+}
+
+.player-number-card h3 {
+  font-size: 13px;
+  margin: 5px 0;
+}
+
+.player-number-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.player-number-header button {
+  padding: 6px 9px;
+  margin: 0;
+  font-size: 12px;
+}
+
+.player-number-card p {
+  font-size: 12px;
+  margin: 4px 0;
+}
+
+.player-number {
+  font-size: 35px;
+  font-weight: bold;
+  color: #762ac2;
+  line-height: 1.1;
+  padding: 3px;
+}
+
+.player-number-card .timer-box {
+  padding: 5px;
+  margin: 5px 0 0;
+  border-radius: 8px;
+}
+
+.player-number-card .timer-title {
+  font-size: 11px;
+  margin-bottom: 2px;
+}
+
+.player-number-card .timer-value {
+  font-size: 24px;
+  line-height: 1.1;
+}
+
+/* PLAYER CLAIMS */
+
+.player-claims-card {
+  padding: 10px;
+  margin: 6px 0;
+  border-radius: 12px;
+}
+
+.player-claims-card h2 {
+  font-size: 16px;
+  margin: 0 0 8px;
+}
+
+.player-claims-card h3 {
+  font-size: 12px;
+  color: #613399;
+  margin: 8px 0 4px;
+}
+
+.claim-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.prize-button {
+  font-size: 11px;
+  padding: 7px 9px;
+  margin: 0;
+  min-height: 30px;
+  border-radius: 6px;
+}
+
+.prize-button.ready,
+.prize-button.ready:hover:not(:disabled) {
+  background: #20b573;
+  color: white;
+}
+
+.prize-button.expired {
+  background: #dc3545 !important;
+  color: white;
+}
+
+.claim-time {
+  display: block;
+  font-size: 10px;
+  margin-top: 3px;
+  font-weight: bold;
+}
+
+/* CLAIM NOTE */
+
+.claim-note {
+  background: #e8f4ff;
+  color: #174b78;
+  border-left: 4px solid #2196f3;
+  border-radius: 8px;
+  padding: 9px;
+  font-size: 12px;
+  line-height: 1.5;
+  margin: 8px 0;
+}
+
+.claim-note strong {
+  color: #0b559b;
+}
+
+/* NUMBER BOARD */
+
+.board {
+  display: grid;
+  grid-template-columns: repeat(10, minmax(0, 1fr));
+  gap: 4px;
+}
+
+.board-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  aspect-ratio: 1;
+  background: #eee;
+  color: #333;
+  border-radius: 6px;
+  font-size: clamp(10px, 2vw, 15px);
+  font-weight: bold;
+}
+
+.board-cell.called {
+  background: #ffd43b;
+}
+
+/* TICKETS */
+
+.ticket {
+  display: grid;
+  grid-template-columns: repeat(9, minmax(0, 1fr));
+  gap: 3px;
+  margin: 12px 0;
+}
+
+.ticket-cell {
+  min-width: 0;
+  min-height: 42px;
+  border-radius: 5px;
+  background: #f2f2f2;
+  border: 1px solid #ddd;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  color: #333;
+  font-size: 14px;
+}
+
+button.ticket-cell {
+  margin: 0;
+  padding: 0;
+}
+
+.ticket-cell.empty {
+  background: #ddd;
+}
+
+.ticket-cell.called,
+.ticket-cell.called:hover:not(:disabled),
+.ticket-cell.called:active {
+  background: #ffd43b;
+  color: #333;
+}
+
+.ticket-cell.marked,
+.ticket-cell.marked:hover:not(:disabled),
+.ticket-cell.marked:active,
+.ticket-cell.marked:focus {
+  background: #21b573;
+  color: white;
+}
+
+.ticket-cell.uncalled {
+  cursor: not-allowed;
+}
+
+button.ticket-cell:disabled {
+  background: #f2f2f2;
+  color: #333;
+}
+
+.ticket-legend {
+  font-size: 12px;
+  margin: 5px 0;
+}
+
+/* WINNERS */
+
+.winner {
+  background: #fff3c4;
+  color: #613399;
+  padding: 10px;
+  margin: 7px 0;
+  border-radius: 9px;
+}
+
+.player-row {
+  padding: 10px;
+  margin: 6px 0;
+  background: #f5f0fc;
+  border-radius: 8px;
+  overflow-wrap: anywhere;
+}
+
+/* CO-ADMIN MANAGEMENT */
+
+.co-admin-card {
+  border: 2px solid #762ac2;
+  background: #f9f5ff;
+  border-radius: 12px;
+  padding: 15px;
+  margin: 12px 0;
+}
+
+.co-admin-card h3 {
+  color: #6026a6;
+}
+
+.co-admin-link {
+  width: 100%;
+  background: white;
+  font-size: 13px;
+}
+
+.co-admin-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.co-admin-badge {
+  display: inline-block;
+  padding: 6px 10px;
+  border-radius: 20px;
+  background: #e4fff0;
+  color: #146c43;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.co-admin-revoked {
+  background: #ffe4e4;
+  color: #b02a37;
+}
+
+.admin-role-label {
+  font-size: 13px;
+  font-weight: bold;
+  color: #613399;
+}
+
+/* WHATSAPP BUTTON */
+
+.btn-whatsapp {
+  background: #25D366;
+  color: white;
+}
+
+.btn-whatsapp:hover:not(:disabled) {
+  background: #128C7E;
+}
+
+/* POPUP */
+
+.popup {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.65);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.popup-box {
+  background: white;
+  color: #54218c;
+  padding: 25px;
+  border-radius: 18px;
+  text-align: center;
+  max-width: 450px;
+  width: 100%;
+}
+
+.popup-box h1 {
+  font-size: clamp(24px, 6vw, 32px);
+}
+
+/* MOBILE */
+
+@media (max-width: 600px) {
+  .container {
+    padding: 7px;
+  }
+
+  .header {
+    padding: 10px 5px;
+  }
+
+  .header h1 {
+    font-size: 24px;
+  }
+
+  .header p {
+    font-size: 12px;
+    margin: 5px 0;
+  }
+
+  .card {
+    padding: 11px;
+    margin: 7px 0;
+  }
+
+  .prize-selection {
+    gap: 5px;
+  }
+
+  .prize-option {
+    padding: 9px;
+    font-size: 12px;
+  }
+
+  .ticket-cell {
+    min-height: 34px;
+    font-size: 12px;
+  }
+
+  .board {
+    gap: 3px;
+  }
+
+  .player-number {
+    font-size: 31px;
+  }
+
+  .player-number-card .timer-box {
+    padding: 4px;
+    margin-top: 4px;
+  }
+
+  .player-number-card .timer-title {
+    font-size: 10px;
+  }
+
+  .player-number-card .timer-value {
+    font-size: 21px;
+  }
+
+  .player-claims-card {
+    padding: 8px;
+  }
+
+  .player-claims-card h2 {
+    font-size: 15px;
+  }
+
+  .prize-button {
+    font-size: 10px;
+    padding: 6px 8px;
+    min-height: 29px;
+  }
+
+  .claim-note {
+    font-size: 11px;
+    padding: 7px;
+  }
+
+  .admin-actions button {
+    flex: 1 1 140px;
+  }
+
+  .co-admin-actions button {
+    flex: 1 1 120px;
+  }
+}
+/* Player fun announcements */
+#playerAnnouncementBox {
+  background: #fff3cd;
+  color: #664d03;
+  border-radius: 12px;
+  padding: 14px;
+  margin: 8px 0;
+}
+#playerAnnouncementText {
+  font-size: 19px;
+  font-weight: bold;
+  line-height: 1.5;
+}
+.player-announcement-item {
+  background: white;
+  border-radius: 8px;
+  padding: 8px;
+  margin: 6px 0;
+  font-size: 14px;
+  color: #333;
+  text-align: left;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<header class="header">
+  <h1>🎉 TAMBOLA PARTY 🎉</h1>
+  <p>Play Housie With Friends!</p>
+</header>
+
+<!-- HOME -->
+
+<section id="home" class="card center">
+
+  <h2>Welcome to Tambola Party!</h2>
+
+  <p>Create a game or join your friends.</p>
+
+  <button onclick="openMainAdminLogin()">
+    👑 Main Admin Login
+  </button>
+
+  <button onclick="show('joinSetup')">
+    🎟️ Join Game
+  </button>
+
+</section>
+
+
+<!-- PERMANENT MAIN ADMIN LOGIN -->
+
+<section id="adminLogin" class="card center hidden">
+
+  <h2>👑 Main Admin Login</h2>
+
+  <p>Sign in to manage your Tambola games.</p>
+
+  <input
+    id="adminEmail"
+    type="email"
+    placeholder="Email Address"
+    autocomplete="username"
+  >
+
+  <br>
+
+  <input
+    id="adminPassword"
+    type="password"
+    placeholder="Password"
+    autocomplete="current-password"
+  >
+
+  <br>
+
+  <button
+    id="adminLoginBtn"
+    onclick="loginMainAdmin()"
+    class="btn-success"
+  >
+    🔐 Login
+  </button>
+
+  <button
+    onclick="show('home')"
+    class="btn-secondary"
+  >
+    ← Back
+  </button>
+
+</section>
+
+<!-- MAIN ADMIN GAME LIST -->
+
+<section id="adminGames" class="card hidden">
+
+  <h2>👑 My Tambola Games</h2>
+
+  <p id="adminWelcome"></p>
+
+  <div class="admin-actions">
+
+    <button
+      onclick="openAdminSetup()"
+      class="btn-success"
+    >
+      🟢 Create New Game
+    </button>
+
+    <button
+      onclick="logoutMainAdmin()"
+      class="btn-danger"
+    >
+      🔴 Logout
+    </button>
+
+  </div>
+
+  <hr>
+
+  <h3>🎮 Active Games</h3>
+
+  <select
+    id="activeGamesSelect"
+    style="width:100%;max-width:500px"
+  ></select>
+
+  <br>
+
+  <button
+    id="openActiveGameBtn"
+    onclick="openSelectedAdminGame('activeGamesSelect')"
+  >
+    👑 Open Selected Dashboard
+  </button>
+
+  <hr>
+
+  <h3>📁 Completed Games</h3>
+
+  <select
+    id="completedGamesSelect"
+    style="width:100%;max-width:500px"
+  ></select>
+
+  <br>
+
+  <button
+    id="openCompletedGameBtn"
+    onclick="openSelectedAdminGame('completedGamesSelect')"
+  >
+    👑 Open Selected Dashboard
+  </button>
+
+  <p id="adminGamesList"></p>
+
+</section>
+
+<!-- ADMIN SETUP -->
+
+<section id="adminSetup" class="card hidden">
+
+  <h2>👑 Create Tambola Game</h2>
+
+  <p>Maximum tickets per player</p>
+
+  <select id="maxTickets">
+    <option value="1">1 Ticket</option>
+    <option value="2">2 Tickets</option>
+    <option value="3">3 Tickets</option>
+    <option value="4">4 Tickets</option>
+    <option value="5">5 Tickets</option>
+    <option value="6" selected>6 Tickets</option>
+  </select>
+
+  <p>Winners allowed per prize</p>
+
+  <select id="winnersPerPrize">
+    <option value="1">1 Winner</option>
+    <option value="2">2 Winners</option>
+    <option value="3">3 Winners</option>
+    <option value="4">4 Winners</option>
+    <option value="5">5 Winners</option>
+  </select>
+
+  <hr>
+
+  <h3>🏆 Select Prizes for This Game</h3>
+
+  <p>Choose which prizes players can win.</p>
+
+  <div class="prize-select-actions">
+
+    <button
+      type="button"
+      onclick="selectAllPrizes()"
+      class="btn-success"
+    >
+      ✅ Select All
+    </button>
+
+    <button
+      type="button"
+      onclick="clearAllPrizes()"
+      class="btn-secondary"
+    >
+      Clear All
+    </button>
+
+  </div>
+
+  <div
+    id="prizeSelection"
+    class="prize-selection"
+  ></div>
+
+  <p
+    id="selectedPrizeCount"
+    class="status"
+  ></p>
+
+  <hr>
+
+  <h3>🏆 Winning Rules</h3>
+
+  <select
+    id="winningMode"
+    onchange="updateWinningMode()"
+  >
+
+    <option value="first_claim">
+      ⚡ First to Claim
+    </option>
+
+    <option value="same_number">
+      🎊 Same Number Winners
+    </option>
+
+    <option value="custom">
+      🎛️ Custom Prize Rules
+    </option>
+
+  </select>
+
+  <h3>⏱️ Claim Timer</h3>
+
+  <select id="claimWindow">
+    <option value="10" selected>10 Seconds</option>
+    <option value="15">15 Seconds</option>
+    <option value="30">30 Seconds</option>
+    <option value="60">60 Seconds</option>
+    <option value="0">Unlimited</option>
+  </select>
+
+  <div
+    id="customPrizeSettings"
+    class="hidden"
+  >
+
+    <h3>🎛️ Custom Winning Rules</h3>
+
+    <div id="customPrizeList"></div>
+
+  </div>
+
+  <br>
+
+  <button
+    id="createGameBtn"
+    onclick="createGame()"
+  >
+    🎮 Create Room
+  </button>
+
+</section>
+
+<!-- JOIN GAME -->
+
+<section id="joinSetup" class="card hidden">
+
+  <h2>🎟️ Join Tambola Game</h2>
+
+  <input
+    id="playerName"
+    placeholder="Your Name"
+    maxlength="30"
+    autocomplete="name"
+  >
+
+  <br>
+
+  <input
+    id="roomCode"
+    placeholder="Room Code"
+    maxlength="6"
+    autocapitalize="characters"
+  >
+
+  <p>Number of Tickets</p>
+
+  <select id="ticketCount">
+    <option value="1">1 Ticket</option>
+    <option value="2">2 Tickets</option>
+    <option value="3">3 Tickets</option>
+    <option value="4">4 Tickets</option>
+    <option value="5">5 Tickets</option>
+    <option value="6">6 Tickets</option>
+  </select>
+
+  <br>
+
+  <button
+    id="joinGameBtn"
+    onclick="joinGame()"
+  >
+    Join Game 🎉
+  </button>
+
+</section>
+
+<!-- ADMIN PANEL -->
+
+<section id="adminPanel" class="hidden">
+
+  <div class="card">
+
+    <h2>👑 Admin Dashboard</h2>
+
+    <p
+      id="adminRoleLabel"
+      class="admin-role-label"
+    >
+      Main Admin
+    </p>
+
+    <div class="admin-actions">
+
+      <button
+        id="createNewGameBtn"
+        onclick="prepareNewGame()"
+      >
+        ➕ Create New Game
+      </button>
+
+      <button
+        id="backToGamesBtn"
+        onclick="returnToAdminGames()"
+        class="btn-secondary"
+      >
+        📋 My Games
+      </button>
+
+      <button
+        id="adminLogoutBtn"
+        onclick="logoutMainAdmin()"
+        class="btn-danger"
+      >
+        🚪 Logout
+      </button>
+
+      <button
+        onclick="shareGame()"
+        class="btn-secondary"
+      >
+        🔗 Share Game
+      </button>
+
+      <!-- NEW PLAYER WHATSAPP INVITATION -->
+
+      <button
+        onclick="sharePlayerWhatsApp()"
+        class="btn-whatsapp"
+      >
+        📲 Invite Players via WhatsApp
+      </button>
+
+      <!-- CO-ADMIN INVITATION -->
+
+      <button
+        id="manageCoAdminsBtn"
+        onclick="openCoAdminManagement()"
+        class="btn-success"
+      >
+        👑 Invite Co-Admin
+      </button>
+
+      <button
+        onclick="togglePause()"
+        class="btn-warning"
+        id="pauseBtn"
+      >
+        ⏸ Pause
+      </button>
+
+      <button
+        onclick="resumeGame()"
+        class="btn-success hidden"
+        id="resumeBtn"
+      >
+        ▶ Resume
+      </button>
+
+      <button
+        onclick="endGame()"
+        class="btn-danger"
+        id="endBtn"
+      >
+        🏁 End Game
+      </button>
+
+      <button
+        onclick="toggleLock()"
+        class="btn-secondary"
+        id="lockBtn"
+      >
+        🔒 Lock Entries
+      </button>
+
+    </div>
+
+    <div class="status">
+
+      <strong id="adminRoomCode"></strong>
+
+      <br>
+
+      <span id="gameStatus"></span>
+
+      <br>
+
+      <span id="entryStatus"></span>
+
+    </div>
+
+    <div class="status">
+
+      <strong>🏆 Active Prizes</strong>
+
+      <div id="adminActivePrizes"></div>
+
+    </div>
+
+  </div>
+
+
+      <div class="card">
+        <h2>🎙️ Fun Announcements</h2>
+
+        <p>
+          Select a phrase to announce to players.
+        </p>
+
+        <select
+          id="adminAnnouncementSelect"
+          style="width:100%;max-width:500px"
+        >
+          <option value="Anyone sweating?">Anyone sweating?</option>
+<option value="Keep your eyes on the prize!">Keep your eyes on the prize!</option>
+<option value="Don&#x27;t blink or you&#x27;ll miss it!">Don&#x27;t blink or you&#x27;ll miss it!</option>
+<option value="Feeling lucky?">Feeling lucky?</option>
+<option value="Wake up, sleepyheads!">Wake up, sleepyheads!</option>
+<option value="The tension is rising!">The tension is rising!</option>
+<option value="One number closer!">One number closer!</option>
+<option value="Who&#x27;s getting excited?">Who&#x27;s getting excited?</option>
+<option value="Are you still in the game?">Are you still in the game?</option>
+<option value="House is just around the corner!">House is just around the corner!</option>
+<option value="Someone&#x27;s getting lucky tonight!">Someone&#x27;s getting lucky tonight!</option>
+<option value="Don&#x27;t let your luck run out!">Don&#x27;t let your luck run out!</option>
+<option value="The winner could be you!">The winner could be you!</option>
+<option value="Eyes down, dabbers ready!">Eyes down, dabbers ready!</option>
+<option value="Is anyone shouting Housie yet?">Is anyone shouting Housie yet?</option>
+        </select>
+
+        <br>
+
+        <button
+          id="sendAnnouncementBtn"
+          class="btn-success"
+          onclick="sendAdminAnnouncement()"
+        >
+          🎙️ Announce
+        </button>
+
+        <p id="announcementStatus"></p>
+      </div>
+
+  <div class="admin-grid">
+
+    <div>
+
+      <div class="card center">
+
+        <h2>🎲 Number Caller</h2>
+
+        <div
+          id="adminNumber"
+          class="number"
+        >
+          --
+        </div>
+
+        <div
+          id="adminTimerBox"
+          class="timer-box"
+        >
+
+          <div class="timer-title">
+            ⏱️ Latest Number Claim Window
+          </div>
+
+          <div
+            id="adminTimer"
+            class="timer-value"
+          >
+            --
+          </div>
+
+          <div class="timer-subtitle">
+            Time remaining from the latest number call
+          </div>
+
+        </div>
+
+        <button
+          id="callNextBtn"
+          onclick="callNextNumber()"
+        >
+          🎲 CALL NEXT NUMBER
+        </button>
+
+        <p id="calledCount"></p>
+
+      </div>
+
+      <div class="card">
+
+        <h2>🔢 Number Board</h2>
+
+        <div
+          id="numberBoard"
+          class="board"
+        ></div>
+
+      </div>
+
+    </div>
+
+    <div>
+
+      <div class="card">
+
+        <h2>👥 Players</h2>
+
+        <div id="playerList">
+          Total Players: 0
+        </div>
+
+        <div id="adminPlayersList"></div>
+
+      </div>
+
+      <div class="card">
+
+        <h2>🏆 Pending Claims</h2>
+
+        <div id="pendingClaims"></div>
+
+      </div>
+
+      <div class="card">
+
+        <h2>🏆 Winners</h2>
+
+        <div id="adminWinners"></div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+<!-- CO-ADMIN MANAGEMENT -->
+
+<section
+  id="coAdminManagement"
+  class="card hidden"
+>
+
+  <h2>👑 Co-Admin Management</h2>
+
+  <p>
+    Invite a friend to manage your Tambola game
+    from another device or location.
+  </p>
+
+  <div class="co-admin-card">
+
+    <h3>➕ Invite New Co-Admin</h3>
+
+    <p>Enter your friend's name:</p>
+
+    <input
+      id="coAdminName"
+      type="text"
+      placeholder="Friend's Name"
+      maxlength="50"
+      autocomplete="off"
+    >
+
+    <br>
+
+    <button
+      id="generateCoAdminBtn"
+      onclick="generateCoAdminInvitation()"
+      class="btn-success"
+    >
+      🔗 Generate Invitation Link
+    </button>
+
+  </div>
+
+  <!-- GENERATED INVITATION -->
+
+  <div
+    id="coAdminInvitationResult"
+    class="co-admin-card hidden"
+  >
+
+    <h3>✅ Invitation Created!</h3>
+
+    <p>
+      Share this private invitation link with your friend.
+    </p>
+
+    <input
+      id="coAdminInvitationLink"
+      class="co-admin-link"
+      type="text"
+      readonly
+    >
+
+    <div class="co-admin-actions">
+
+      <button
+        onclick="copyCoAdminInvitation()"
+      >
+        📋 Copy Link
+      </button>
+
+      <button
+        onclick="shareCoAdminWhatsApp()"
+        class="btn-whatsapp"
+      >
+        📲 Share via WhatsApp
+      </button>
+
+    </div>
+
+    <p style="font-size:12px;color:#b02a37">
+      🔐 Keep this link private.
+      Anyone possessing it can use the Co-Admin invitation.
+    </p>
+
+  </div>
+
+  <hr>
+
+  <h3>👥 Existing Co-Admins</h3>
+
+  <div id="coAdminList">
+    No Co-Admins added yet.
+  </div>
+
+  <br>
+
+  <button
+    onclick="closeCoAdminManagement()"
+    class="btn-secondary"
+  >
+    ← Back to Dashboard
+  </button>
+
+</section>
+
+<!-- PLAYER PANEL -->
+
+<section id="playerPanel" class="hidden">
+
+  <div class="card center player-number-card">
+
+    <h2 id="welcomePlayer"></h2>
+
+    <p id="playerRoom"></p>
+
+    <div class="player-number-header">
+      <h3>🎯 Latest Number</h3>
+      <button
+        id="playerSoundToggle"
+        type="button"
+        onclick="togglePlayerSound()"
+      >Sound OFF</button>
+    </div>
+
+    <div
+      id="playerNumber"
+      class="player-number"
+    >
+      --
+    </div>
+
+    <p id="playerCalledCount"></p>
+
+    <p
+      id="playerGameStatus"
+      class="status"
+    ></p>
+
+    <div
+      id="playerTimerBox"
+      class="timer-box"
+    >
+
+      <div class="timer-title">
+        ⏱️ Claim Countdown
+      </div>
+
+      <div
+        id="playerTimer"
+        class="timer-value"
+      >
+        --
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <div class="card">
+    <h2>🔢 Number Board (1–90)</h2>
+
+    <p class="ticket-legend">
+      🟡 Yellow = Called Number
+    </p>
+
+    <div
+      id="playerNumberBoard"
+      class="board"
+    ></div>
+  </div>
+
+  <div class="card player-claims-card">
+
+    <h2>🏆 Claim Prizes</h2>
+
+    <div id="claimContainer"></div>
+
+  </div>
+
+  <div class="card center">
+
+    <h2>📢 Fun Announcements</h2>
+
+    <div id="playerAnnouncementBox">
+      <div id="playerAnnouncementText">Waiting for announcements...</div>
+      <div id="playerAnnouncementList"></div>
+    </div>
+
+  </div>
+
+  <div class="card">
+
+    <h2>🎟️ My Tambola Tickets</h2>
+
+    <p class="ticket-legend">
+      🟡 Yellow = Called
+      &nbsp;&nbsp;
+      🟢 Green = Selected
+    </p>
+
+    <div id="ticketsContainer"></div>
+
+  </div>
+
+  <div class="claim-note">
+
+    <strong>📢 Important Claim Rule</strong>
+
+    <p>
+      The default claim time is
+      <strong>10 seconds</strong>.
+      Your admin has selected
+      <strong id="playerClaimDuration">
+        10 seconds
+      </strong>
+      for this game.
+    </p>
+
+    <p>
+      The countdown begins when the number
+      completing your winning combination
+      is called.
+      Claim your prize before the timer expires.
+    </p>
+
+  </div>
+
+  <div class="card">
+
+    <h2>🎊 Winners</h2>
+
+    <div id="playerWinners"></div>
+
+  </div>
+
+</section>
+
+</div>
+
+<!-- WINNER POPUP -->
+
+<div
+  id="winnerPopup"
+  class="popup hidden"
+>
+
+  <div class="popup-box">
+
+    <h1>🎊 WE HAVE A WINNER! 🎊</h1>
+
+    <h2 id="winnerName"></h2>
+
+    <h2 id="winnerPrize"></h2>
+
+    <p id="winnerTicket"></p>
+
+    <p>🏆 Congratulations! 🏆</p>
+
+    <button onclick="closePopup()">
+      Continue Playing
+    </button>
+
+  </div>
+
+</div>
+
+<script>
+  "use strict";
+
+// =====================================
+// SUPABASE CONFIGURATION
+// =====================================
+
+const SUPABASE_URL =
+  "https://prdgeodluuiylzrywdxm.supabase.co";
+
+const SUPABASE_KEY =
+  "sb_publishable_W0xi00YmUDEpF8j38xs7kw_PVRCgRjy";
+
+const db = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
+
+// =====================================
+// GLOBAL VARIABLES
+// =====================================
+
+let game = null;
+let player = null;
+let tickets = [];
+
+let hostToken = null;
+let playerToken = null;
+
+let coAdminToken = null;
+let coAdminName = null;
+
+let winners = [];
+let players = [];
+let marked = {};
+
+let realtimeChannel = null;
+let refreshTimer = null;
+let countdownTimer = null;
+
+let currentView = "home";
+
+let initialWinnersLoaded = false;
+let lastWinnerIds = new Set();
+
+let refreshing = false;
+let refreshAgain = false;
+let switchingGame = false;
+let callingNumber = false;
+
+let claimingPrizes = new Set();
+
+let winnerPopupTimer = null;
+let winnerPopupQueue = [];
+let winnerPopupActive = false;
+
+let numberCallHistory = [];
+let serverTimeOffset = 0;
+
+const PLAYER_SOUND_KEY = "tambola_player_sound";
+let playerSoundEnabled =
+  localStorage.getItem(PLAYER_SOUND_KEY) === "true";
+let playerSoundReady = false;
+let playerNumberAnnouncements = {
+  gameId: null,
+  observed: new Set()
+};
+
+let adminValidationInProgress = false;
+let lastAdminValidation = 0;
+
+const SESSION_KEY = "tambola_session";
+
+const CO_ADMIN_SESSION_KEY =
+  "tambola_co_admin_session";
+
+const prizes = [
+  "Early 5",
+  "Early 7",
+  "Any Line",
+  "Top Line",
+  "Middle Line",
+  "Bottom Line",
+  "Four Corners",
+  "Full House"
+];
+
+// =====================================
+// HELPERS
+// =====================================
+
+function element(id) {
+  return document.getElementById(id);
+}
+
+function show(id) {
+  [
+    "home",
+    "adminLogin",
+    "adminGames",
+    "adminSetup",
+    "joinSetup",
+    "adminPanel",
+    "playerPanel",
+    "coAdminManagement"
+  ].forEach(section => {
+    element(section).classList.add("hidden");
+  });
+
+  element(id).classList.remove("hidden");
+  currentView = id;
+}
+
+function escapeHtml(value) {
+  return String(value ?? "").replace(
+    /[&<>"']/g,
+    character => ({
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#39;"
+    }[character])
+  );
+}
+
+function getError(error) {
+  alert(error?.message || String(error));
+}
+
+function setBusy(id, busy) {
+  const button = element(id);
+  if (button) button.disabled = busy;
+}
+
+function togglePlayerSound() {
+  if (
+    !("speechSynthesis" in window) ||
+    typeof SpeechSynthesisUtterance === "undefined"
+  ) {
+    return;
+  }
+
+  if (playerSoundEnabled && playerSoundReady) {
+    playerSoundEnabled = false;
+    playerSoundReady = false;
+    localStorage.setItem(
+      PLAYER_SOUND_KEY,
+      "false"
+    );
+    window.speechSynthesis.cancel();
+  } else {
+    playerSoundEnabled = true;
+    playerSoundReady = true;
+    localStorage.setItem(
+      PLAYER_SOUND_KEY,
+      "true"
+    );
+
+    try {
+      const activationSpeech =
+        new SpeechSynthesisUtterance("Sound enabled");
+      activationSpeech.lang = "en-US";
+      window.speechSynthesis.speak(activationSpeech);
+    } catch (error) {
+      console.warn("Player speech activation failed:", error);
+    }
+  }
+
+  renderPlayerSoundControl();
+}
+
+function renderPlayerSoundControl() {
+  const button = element("playerSoundToggle");
+  if (!button) return;
+
+  const supported =
+    "speechSynthesis" in window &&
+    typeof SpeechSynthesisUtterance !== "undefined";
+
+  button.disabled = !supported;
+  button.textContent = !supported
+    ? "Sound unavailable"
+    : playerSoundEnabled
+      ? playerSoundReady
+        ? "Sound ON"
+        : "Enable Sound"
+      : "Enable Sound (OFF)";
+}
+
+function resetPlayerNumberAnnouncements() {
+  playerNumberAnnouncements = {
+    gameId: null,
+    observed: new Set()
+  };
+}
+
+function initializePlayerNumberAnnouncements() {
+  playerNumberAnnouncements = {
+    gameId: game?.id ?? null,
+    observed: new Set(calledNumbers())
+  };
+}
+
+function announceNewPlayerNumbers() {
+  if (playerNumberAnnouncements.gameId !== game.id) {
+    playerNumberAnnouncements = {
+      gameId: game.id,
+      observed: new Set(calledNumbers())
+    };
+    return;
+  }
+
+  calledNumbers().forEach(number => {
+    if (playerNumberAnnouncements.observed.has(number)) {
+      return;
+    }
+
+    playerNumberAnnouncements.observed.add(number);
+
+    if (!playerSoundEnabled || !playerSoundReady) {
+      return;
+    }
+
+    try {
+      const speech = new SpeechSynthesisUtterance(
+        "Number " + number
+      );
+      speech.lang = "en-US";
+      speech.rate = 0.85;
+      window.speechSynthesis.speak(speech);
+    } catch (error) {
+      console.warn("Player number announcement failed:", error);
+    }
+  });
+}
+
+function calledNumbers() {
+  return Array.isArray(game?.called)
+    ? game.called.map(Number)
+    : [];
+}
+
+function calledSet() {
+  return new Set(calledNumbers());
+}
+
+function normalizeGame(data) {
+  return {
+    ...data,
+    called: Array.isArray(data.called)
+      ? data.called.map(Number)
+      : [],
+    prizes: Array.isArray(data.prizes)
+      ? data.prizes
+      : prizes
+  };
+}
+
+function activePrizes() {
+  return Array.isArray(game?.prizes)
+    ? game.prizes
+    : prizes;
+}
+
+// =====================================
+// ADMIN ROLE HELPERS
+// =====================================
+
+function isMainAdmin() {
+  return Boolean(hostToken && !coAdminToken);
+}
+
+function isCoAdmin() {
+  return Boolean(coAdminToken);
+}
+
+function currentAdminToken() {
+  return coAdminToken || hostToken;
+}
+
+function updateCoAdminInterface() {
+  const isCo = isCoAdmin();
+
+  element("manageCoAdminsBtn")
+    .classList.toggle("hidden", isCo);
+
+  element("createNewGameBtn")
+    .classList.toggle("hidden", isCo);
+
+  element("backToGamesBtn")
+    .classList.toggle("hidden", isCo);
+
+  element("adminLogoutBtn")
+    .classList.toggle("hidden", isCo);
+
+  element("adminRoleLabel").textContent =
+    isCo
+      ? "👑 Co-Admin: " + (coAdminName || "Admin")
+      : "👑 Main Admin";
+}
+
+
+// =====================================
+// PERMANENT MAIN ADMIN AUTHENTICATION
+// =====================================
+
+let authenticatedAdmin = null;
+
+async function verifyMainAdmin() {
+  const { data, error } = await db.auth.getUser();
+
+  if (error || !data?.user) {
+    authenticatedAdmin = null;
+    return false;
+  }
+
+  try {
+    // Server-side RPC verifies main_admin + active.
+    const result = await db.rpc("get_admin_games");
+
+    if (result.error) {
+      authenticatedAdmin = null;
+      return false;
+    }
+
+    authenticatedAdmin = data.user;
+    return true;
+
+  } catch (error) {
+    console.error("Admin verification failed:", error);
+    authenticatedAdmin = null;
+    return false;
+  }
+}
+
+async function openMainAdminLogin() {
+  const valid = await verifyMainAdmin();
+
+  if (valid) {
+    await loadAdminGames();
+  } else {
+    show("adminLogin");
+  }
+}
+
+async function loginMainAdmin() {
+  const email = element("adminEmail").value.trim();
+  const password = element("adminPassword").value;
+
+  if (!email || !password) {
+    alert("Enter your email and password.");
+    return;
+  }
+
+  setBusy("adminLoginBtn", true);
+
+  try {
+    const { error } = await db.auth.signInWithPassword({
+      email,
+      password
+    });
+
+    if (error) throw error;
+
+    if (!(await verifyMainAdmin())) {
+      await db.auth.signOut();
+
+      throw new Error(
+        "This account does not have active Main Admin access."
+      );
+    }
+
+    element("adminPassword").value = "";
+
+    await loadAdminGames();
+
+  } catch (error) {
+    getError(error);
+  } finally {
+    setBusy("adminLoginBtn", false);
+  }
+}
+
+
+function populateGameDropdown(selectId, games) {
+  const select = element(selectId);
+
+  select.innerHTML = "";
+
+  if (!games.length) {
+    const option = document.createElement("option");
+
+    option.textContent = "No games available";
+    option.value = "";
+
+    select.appendChild(option);
+    return;
+  }
+
+  games.forEach(item => {
+    const option = document.createElement("option");
+
+    option.value = item.game_id;
+
+    option.textContent =
+      "🎮 " + item.room_code +
+      " — " + item.game_status;
+
+    select.appendChild(option);
+  });
+}
+
+function openSelectedAdminGame(selectId) {
+  const gameId = element(selectId).value;
+
+  if (!gameId) {
+    alert("Please select a game.");
+    return;
+  }
+
+  openAdminGame(gameId);
+}
+
+async function loadAdminGames() {
+  if (!(await verifyMainAdmin())) {
+    show("adminLogin");
+    return;
+  }
+
+  try {
+    const { data, error } = await db.rpc(
+      "get_admin_games"
+    );
+
+    if (error) throw error;
+
+    show("adminGames");
+
+    element("adminWelcome").textContent =
+      "Logged in as: " + authenticatedAdmin.email;
+
+
+    const allGames = data || [];
+
+    const activeGames = allGames.filter(
+      item => item.game_status !== "ended"
+    );
+
+    const completedGames = allGames.filter(
+      item => item.game_status === "ended"
+    );
+
+    populateGameDropdown(
+      "activeGamesSelect",
+      activeGames
+    );
+
+    populateGameDropdown(
+      "completedGamesSelect",
+      completedGames
+    );
+
+    element("openActiveGameBtn").disabled =
+      activeGames.length === 0;
+
+    element("openCompletedGameBtn").disabled =
+      completedGames.length === 0;
+
+    element("adminGamesList").textContent =
+      "Total Games: " + allGames.length +
+      " | Active: " + activeGames.length +
+      " | Completed: " + completedGames.length;
+
+  } catch (error) {
+    getError(error);
+  }
+}
+
+async function openAdminSetup() {
+  if (!(await verifyMainAdmin())) {
+    show("adminLogin");
+    return;
+  }
+
+  show("adminSetup");
+}
+
+async function openAdminGame(gameId) {
+  if (!(await verifyMainAdmin())) {
+    show("adminLogin");
+    return;
+  }
+
+  try {
+    const { data, error } = await db.rpc(
+      "get_admin_game_access",
+      {
+        p_game_id: gameId
+      }
+    );
+
+    if (error) throw error;
+
+    if (!data?.host_token) {
+      throw new Error("Game access unavailable.");
+    }
+
+    const response = await db
+      .from("games")
+      .select("*")
+      .eq("id", gameId)
+      .single();
+
+    if (response.error) throw response.error;
+
+    await resetGameState();
+
+    localStorage.removeItem(CO_ADMIN_SESSION_KEY);
+
+    hostToken = data.host_token;
+    game = normalizeGame(response.data);
+
+    saveSession();
+
+    show("adminPanel");
+    updateCoAdminInterface();
+
+    await refreshGame();
+
+    if (game) {
+      subscribeToGame();
+      startRefreshing();
+    }
+
+  } catch (error) {
+    getError(error);
+  }
+}
+
+async function returnToAdminGames() {
+  if (isCoAdmin()) return;
+
+  await resetGameState();
+
+  localStorage.removeItem(SESSION_KEY);
+
+  await loadAdminGames();
+}
+
+async function logoutMainAdmin() {
+  await resetGameState();
+
+  localStorage.removeItem(SESSION_KEY);
+  localStorage.removeItem(CO_ADMIN_SESSION_KEY);
+
+  const { error } = await db.auth.signOut();
+
+  if (error) {
+    getError(error);
+    return;
+  }
+
+  authenticatedAdmin = null;
+
+  show("home");
+}
+
+// =====================================
+// SESSION MANAGEMENT
+// =====================================
+
+function saveSession() {
+  if (!game) return;
+
+  if (isCoAdmin()) {
+    localStorage.setItem(
+      CO_ADMIN_SESSION_KEY,
+      JSON.stringify({
+        token: coAdminToken,
+        gameId: game.id
+      })
+    );
+
+    return;
+  }
+
+  localStorage.setItem(
+    SESSION_KEY,
+    JSON.stringify({
+      gameId: game.id,
+      hostToken,
+      playerToken,
+      playerId: player?.id ?? null
+    })
+  );
+}
+
+// =====================================
+// PRIZE SELECTION
+// =====================================
+
+function renderPrizeSelection() {
+  const container = element("prizeSelection");
+  container.innerHTML = "";
+
+  prizes.forEach((prize, index) => {
+    const label = document.createElement("label");
+    label.className = "prize-option";
+
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.value = prize;
+    checkbox.id = "prize_" + index;
+    checkbox.checked = true;
+    checkbox.addEventListener(
+      "change",
+      updatePrizeSelection
+    );
+
+    const text = document.createElement("span");
+    text.textContent = "🏆 " + prize;
+
+    label.appendChild(checkbox);
+    label.appendChild(text);
+    container.appendChild(label);
+  });
+
+  updatePrizeSelection();
+}
+
+function getSelectedPrizes() {
+  return prizes.filter(
+    (prize, index) =>
+      element("prize_" + index)?.checked
+  );
+}
+
+function selectAllPrizes() {
+  prizes.forEach((prize, index) => {
+    element("prize_" + index).checked = true;
+  });
+
+  updatePrizeSelection();
+}
+
+function clearAllPrizes() {
+  prizes.forEach((prize, index) => {
+    element("prize_" + index).checked = false;
+  });
+
+  updatePrizeSelection();
+}
+
+function updatePrizeSelection() {
+  const selected = getSelectedPrizes();
+
+  element("selectedPrizeCount").textContent =
+    "Selected Prizes: " +
+    selected.length +
+    " of " +
+    prizes.length;
+
+  renderCustomPrizeSettings();
+}
+
+// =====================================
+// CUSTOM WINNING RULES
+// =====================================
+
+function updateWinningMode() {
+  const custom =
+    element("winningMode").value === "custom";
+
+  element("customPrizeSettings")
+    .classList.toggle("hidden", !custom);
+
+  renderCustomPrizeSettings();
+}
+
+function renderCustomPrizeSettings() {
+  const container = element("customPrizeList");
+  const previousValues = {};
+
+  prizes.forEach((prize, index) => {
+    const oldSelect =
+      element("customPrize_" + index);
+
+    if (oldSelect) {
+      previousValues[prize] = oldSelect.value;
+    }
+  });
+
+  container.innerHTML = "";
+
+  getSelectedPrizes().forEach(prize => {
+    const index = prizes.indexOf(prize);
+
+    const row = document.createElement("div");
+    row.className = "custom-prize-row";
+
+    const label = document.createElement("p");
+    label.textContent = "🏆 " + prize;
+
+    const select = document.createElement("select");
+    select.id = "customPrize_" + index;
+
+    select.innerHTML = `
+      <option value="first_claim">
+        ⚡ First to Claim
+      </option>
+      <option value="same_number">
+        🎊 Same Number Winners
+      </option>
+    `;
+
+    select.value =
+      previousValues[prize] || "first_claim";
+
+    row.appendChild(label);
+    row.appendChild(select);
+
+    container.appendChild(row);
+  });
+}
+
+function getCustomPrizeRules() {
+  const rules = {};
+
+  getSelectedPrizes().forEach(prize => {
+    const index = prizes.indexOf(prize);
+
+    rules[prize] =
+      element("customPrize_" + index).value;
+  });
+
+  return rules;
+}
+
+// =====================================
+// TIMER HELPERS
+// =====================================
+
+function getClaimDuration() {
+  return Number(
+    game?.claim_window_seconds ?? 10
+  );
+}
+
+function currentTime() {
+  return Date.now() + serverTimeOffset;
+}
+
+function formatSeconds(milliseconds) {
+  return Math.max(
+    0,
+    Math.ceil(milliseconds / 1000)
+  ) + "s";
+}
+
+function getLatestCall() {
+  if (!numberCallHistory.length) return null;
+
+  return numberCallHistory[
+    numberCallHistory.length - 1
+  ];
+}
+
+function getLatestDeadline() {
+  const latest = getLatestCall();
+
+  if (!latest) return null;
+
+  const duration = getClaimDuration();
+
+  if (duration === 0) return Infinity;
+
+  const calledAt = Date.parse(
+    latest.called_at
+  );
+
+  if (!Number.isFinite(calledAt)) {
+    return null;
+  }
+
+  return calledAt + duration * 1000;
+}
+
+async function loadNumberCallHistory(gameId) {
+  const { data, error } = await db
+    .from("number_calls")
+    .select("draw_position,called_at")
+    .eq("game_id", gameId)
+    .order("draw_position", {
+      ascending: true
+    });
+
+  if (error) {
+    console.warn(
+      "Number history unavailable:",
+      error
+    );
+
+    return false;
+  }
+
+  if (!game || game.id !== gameId) {
+    return false;
+  }
+
+  numberCallHistory = data || [];
+
+  return true;
+}
+
+// =====================================
+// TIMER DISPLAY
+// =====================================
+
+function updateTimerDisplay(boxId, valueId) {
+  const box = element(boxId);
+  const value = element(valueId);
+
+  if (!box || !value) return;
+
+  box.classList.remove(
+    "warning",
+    "expired",
+    "unlimited"
+  );
+
+  const duration = getClaimDuration();
+
+  if (duration === 0) {
+    value.textContent = "Unlimited";
+    box.classList.add("unlimited");
+    return;
+  }
+
+  const deadline = getLatestDeadline();
+
+  if (deadline === null) {
+    value.textContent = "--";
+    return;
+  }
+
+  const remaining =
+    deadline - currentTime();
+
+  if (remaining <= 0) {
+    value.textContent = "Time Up";
+    box.classList.add("expired");
+    return;
+  }
+
+  value.textContent =
+    formatSeconds(remaining);
+
+  if (remaining <= 5000) {
+    box.classList.add("warning");
+  }
+}
+
+function updateCountdowns() {
+  if (!game) return;
+
+  if (
+    currentView === "adminPanel" ||
+    currentView === "coAdminManagement"
+  ) {
+    updateTimerDisplay(
+      "adminTimerBox",
+      "adminTimer"
+    );
+  }
+
+  if (currentView === "playerPanel") {
+    updateTimerDisplay(
+      "playerTimerBox",
+      "playerTimer"
+    );
+
+    updateClaimCountdowns();
+  }
+}
+
+function startCountdownTimer() {
+  if (countdownTimer) {
+    clearInterval(countdownTimer);
+  }
+
+  countdownTimer = setInterval(
+    updateCountdowns,
+    250
+  );
+
+  updateCountdowns();
+}
+
+// =====================================
+// PRIZE COMPLETION DRAW
+// =====================================
+
+function getPrizeCompletionDraw(ticket, prize) {
+  if (prize === "Any Line") {
+    const draws = [
+      "Top Line",
+      "Middle Line",
+      "Bottom Line"
+    ].map(line =>
+      getPrizeCompletionDraw(ticket, line)
+    ).filter(draw => draw !== null);
+
+    return draws.length
+      ? Math.min(...draws)
+      : null;
+  }
+
+  const numbers = patternNumbers(
+    ticket,
+    prize
+  );
+
+  if (!numbers.length) return null;
+
+  const required =
+    prize === "Early 5"
+      ? 5
+      : prize === "Early 7"
+        ? 7
+        : numbers.length;
+
+  const called = calledNumbers();
+
+  const numberLookup = new Set(
+    numbers.map(Number)
+  );
+
+  let hits = 0;
+
+  for (
+    let i = 0;
+    i < called.length;
+    i++
+  ) {
+    if (numberLookup.has(called[i])) {
+      hits++;
+
+      if (hits >= required) {
+        return i + 1;
+      }
+    }
+  }
+
+  return null;
+}
+
+function getPrizeDeadline(ticket, prize) {
+  const duration = getClaimDuration();
+
+  if (duration === 0) return Infinity;
+
+  const completionDraw =
+    getPrizeCompletionDraw(ticket, prize);
+
+  if (completionDraw === null) {
+    return null;
+  }
+
+  const call = numberCallHistory.find(
+    item =>
+      Number(item.draw_position) ===
+      completionDraw
+  );
+
+  if (!call) return null;
+
+  const calledAt = Date.parse(
+    call.called_at
+  );
+
+  if (!Number.isFinite(calledAt)) {
+    return null;
+  }
+
+  return calledAt + duration * 1000;
+}
+
+function updateClaimCountdowns() {
+  if (!game || !player) return;
+
+  const buttons =
+    document.querySelectorAll(
+      "[data-claim-ticket][data-claim-prize]"
+    );
+
+  buttons.forEach(button => {
+    const ticketId =
+      button.dataset.claimTicket;
+
+    const prize =
+      button.dataset.claimPrize;
+
+    const ticket = tickets.find(
+      t => String(t.id) === ticketId
+    );
+
+    if (!ticket) return;
+
+    const deadline =
+      getPrizeDeadline(ticket, prize);
+
+    const timeLabel =
+      button.querySelector(".claim-time");
+
+    if (!timeLabel) return;
+
+    if (getClaimDuration() === 0) {
+      timeLabel.textContent = "Unlimited";
+      return;
+    }
+
+    if (deadline === null) {
+      timeLabel.textContent =
+        "Checking time";
+      return;
+    }
+
+    const remaining =
+      deadline - currentTime();
+
+    if (remaining <= 0) {
+      button.disabled = true;
+
+      button.classList.remove("ready");
+      button.classList.add("expired");
+
+      timeLabel.textContent = "Expired";
+    } else {
+      timeLabel.textContent =
+        formatSeconds(remaining);
+    }
+  });
+}
+
+// =====================================
+// CLEANUP
+// =====================================
+
+async function stopLiveUpdates() {
+  if (refreshTimer) {
+    clearInterval(refreshTimer);
+    refreshTimer = null;
+  }
+
+  if (countdownTimer) {
+    clearInterval(countdownTimer);
+    countdownTimer = null;
+  }
+
+  if (realtimeChannel) {
+    const oldChannel = realtimeChannel;
+    realtimeChannel = null;
+
+    await db.removeChannel(oldChannel);
+  }
+}
+
+function resetNotifications() {
+  initialWinnersLoaded = false;
+  lastWinnerIds.clear();
+
+  winnerPopupQueue = [];
+  winnerPopupActive = false;
+
+  if (winnerPopupTimer) {
+    clearTimeout(winnerPopupTimer);
+    winnerPopupTimer = null;
+  }
+
+  element("winnerPopup")
+    .classList.add("hidden");
+}
+
+async function resetGameState() {
+  switchingGame = true;
+
+  await stopLiveUpdates();
+
+  game = null;
+  player = null;
+  tickets = [];
+
+  winners = [];
+  players = [];
+  marked = {};
+
+  numberCallHistory = [];
+  serverTimeOffset = 0;
+  resetPlayerNumberAnnouncements();
+  resetAnnouncementTracking();
+
+  hostToken = null;
+  playerToken = null;
+
+  coAdminToken = null;
+  coAdminName = null;
+
+  lastAdminValidation = 0;
+
+  claimingPrizes.clear();
+  resetNotifications();
+
+  switchingGame = false;
+}
+
+// =====================================
+// CREATE GAME
+// =====================================
+
+async function prepareNewGame() {
+  if (isCoAdmin()) {
+    alert(
+      "Only the Main Admin can create another game."
+    );
+
+    return;
+  }
+
+  const confirmed = confirm(
+    "Create another game?\n\n" +
+    "Your current game will remain in Supabase."
+  );
+
+  if (!confirmed) return;
+
+  await openAdminSetup();
+}
+
+async function createGame() {
+  if (element("createGameBtn").disabled) {
+    return;
+  }
+
+  if (!(await verifyMainAdmin())) {
+    alert("Please log in as Main Admin.");
+    show("adminLogin");
+    return;
+  }
+
+  const selectedPrizes =
+    getSelectedPrizes();
+
+  if (!selectedPrizes.length) {
+    alert(
+      "Please select at least one prize."
+    );
+
+    return;
+  }
+
+  setBusy("createGameBtn", true);
+
+  try {
+    const maxTickets = Number(
+      element("maxTickets").value
+    );
+
+    const winnersPerPrize = Number(
+      element("winnersPerPrize").value
+    );
+
+    const winningMode =
+      element("winningMode").value;
+
+    const claimWindow = Number(
+      element("claimWindow").value
+    );
+
+    const customRules =
+      winningMode === "custom"
+        ? getCustomPrizeRules()
+        : {};
+
+    const { data, error } = await db.rpc(
+      "create_admin_game",
+      {
+        p_max_tickets: maxTickets,
+        p_winners_per_prize: winnersPerPrize,
+        p_winning_mode: winningMode,
+        p_claim_window_seconds: claimWindow,
+        p_custom_prize_rules: customRules,
+        p_prizes: selectedPrizes
+      }
+    );
+
+    if (error) throw error;
+
+    if (
+      !data?.game_id ||
+      !data?.host_token
+    ) {
+      throw new Error(
+        "Invalid game response."
+      );
+    }
+
+    await resetGameState();
+
+    localStorage.removeItem(
+      CO_ADMIN_SESSION_KEY
+    );
+
+    hostToken = data.host_token;
+
+    game = normalizeGame({
+      id: data.game_id,
+      code: data.code,
+      called: [],
+      last_number: null,
+      status: "lobby",
+      locked: false,
+      winners_per_prize: winnersPerPrize,
+      winning_mode: winningMode,
+      claim_window_seconds: claimWindow,
+      prizes: selectedPrizes
+    });
+
+    saveSession();
+
+    show("adminPanel");
+    updateCoAdminInterface();
+
+    await refreshGame();
+
+    if (game) {
+      subscribeToGame();
+      startRefreshing();
+    }
+
+    alert(
+      "🎉 Game Created Successfully!\n\n" +
+      "Room Code: " + data.code
+    );
+
+  } catch (error) {
+    getError(error);
+  } finally {
+    setBusy("createGameBtn", false);
+  }
+}
+
+// =====================================
+// JOIN GAME
+// =====================================
+
+async function joinGame() {
+  if (element("joinGameBtn").disabled) {
+    return;
+  }
+
+  const name =
+    element("playerName").value.trim();
+
+  const code =
+    element("roomCode")
+      .value.trim()
+      .toUpperCase();
+
+  const count = Number(
+    element("ticketCount").value
+  );
+
+  if (!name || !code) {
+    alert(
+      "Enter your name and room code."
+    );
+
+    return;
+  }
+
+  setBusy("joinGameBtn", true);
+
+  try {
+    const { data, error } = await db.rpc(
+      "join_game",
+      {
+        p_code: code,
+        p_name: name,
+        p_ticket_count: count
+      }
+    );
+
+    if (error) throw error;
+
+    if (
+      !data?.player_token ||
+      !data?.game_id
+    ) {
+      throw new Error(
+        "Invalid player response."
+      );
+    }
+
+    await resetGameState();
+
+    localStorage.removeItem(
+      CO_ADMIN_SESSION_KEY
+    );
+
+    playerToken = data.player_token;
+
+    player = {
+      id: data.player_id,
+      name: data.player_name
+    };
+
+    tickets = data.tickets || [];
+
+    game = normalizeGame({
+      id: data.game_id,
+      code: data.code,
+      called: data.called,
+      status: data.status,
+      prizes: data.prizes
+    });
+
+    initializePlayerNumberAnnouncements();
+
+    loadMarks();
+    saveSession();
+
+    show("playerPanel");
+
+    await refreshGame();
+
+    if (game) {
+      subscribeToGame();
+      startRefreshing();
+    }
+
+  } catch (error) {
+    getError(error);
+  } finally {
+    setBusy("joinGameBtn", false);
+  }
+}
+
+// =====================================
+// RESTORE PLAYER SESSION
+// =====================================
+
+async function restoreSession() {
+  const saved = localStorage.getItem(SESSION_KEY);
+
+  if (!saved) return;
+
+  try {
+    const session = JSON.parse(saved);
+
+    // Main Admin sessions must be recovered through
+    // authenticated, owner-checked Supabase RPCs.
+    if (session.hostToken && session.gameId) {
+      localStorage.removeItem(SESSION_KEY);
+      return;
+    }
+
+    if (!session.playerToken) return;
+
+    playerToken = session.playerToken;
+
+    const { data, error } = await db.rpc(
+      "get_my_state",
+      {
+        p_player_token: playerToken
+      }
+    );
+
+    if (error) throw error;
+
+    player = {
+      id: data.player_id,
+      name: data.player_name
+    };
+
+    tickets = data.tickets || [];
+
+    game = normalizeGame({
+      id: data.game_id,
+      code: data.code,
+      called: data.called,
+      status: data.status,
+      prizes: data.prizes
+    });
+
+    initializePlayerNumberAnnouncements();
+
+    loadMarks();
+
+    show("playerPanel");
+
+    await refreshGame();
+
+    if (game) {
+      subscribeToGame();
+      startRefreshing();
+    }
+
+  } catch (error) {
+    console.error(error);
+
+    localStorage.removeItem(SESSION_KEY);
+
+    await resetGameState();
+
+    show("home");
+  }
+}
+
+// =====================================
+
+// PLAYER WHATSAPP INVITATION
+// =====================================
+
+function getPlayerInvitationLink() {
+  if (!game) return null;
+
+  const url = new URL(
+    window.location.href
+  );
+
+  // Remove any previous room or admin credentials.
+  url.search = "";
+  url.hash = "";
+
+  url.searchParams.set(
+    "room",
+    game.code
+  );
+
+  return url.toString();
+}
+
+function sharePlayerWhatsApp() {
+  if (!game) {
+    alert(
+      "Please create a game first."
+    );
+
+    return;
+  }
+
+  const shareUrl =
+    getPlayerInvitationLink();
+
+  const message =
+    "🎉 *TAMBOLA PARTY INVITATION* 🎉\n\n" +
+    "You're invited to play Tambola with us! 🎟️\n\n" +
+    "🎮 *Room Code:* " + game.code + "\n\n" +
+    "👇 *Click here to join the game:*\n" +
+    shareUrl + "\n\n" +
+    "✅ Enter your name\n" +
+    "✅ Select your tickets\n" +
+    "✅ Join the fun!\n\n" +
+    "🏆 Good luck and happy playing! 🎉";
+
+  const whatsappUrl =
+    "https://wa.me/?text=" +
+    encodeURIComponent(message);
+
+  window.open(
+    whatsappUrl,
+    "_blank",
+    "noopener,noreferrer"
+  );
+}
+
+// =====================================
+// SHARE GAME
+// =====================================
+
+async function shareGame() {
+  if (!game) return;
+
+  const shareUrl =
+    getPlayerInvitationLink();
+
+  if (navigator.share) {
+    try {
+      await navigator.share({
+        title: "Tambola Party",
+        text:
+          "Join my Tambola game! Room: " +
+          game.code,
+        url: shareUrl
+      });
+
+      return;
+
+    } catch (error) {
+      if (
+        error.name === "AbortError"
+      ) {
+        return;
+      }
+    }
+  }
+
+  try {
+    await navigator.clipboard.writeText(
+      shareUrl
+    );
+
+    alert(
+      "Player invitation link copied!"
+    );
+
+  } catch (error) {
+    window.prompt(
+      "Copy this invitation link:",
+      shareUrl
+    );
+  }
+}
+
+// =====================================
+// CO-ADMIN INVITATION MANAGEMENT
+// =====================================
+
+async function openCoAdminManagement() {
+  if (!game || !isMainAdmin()) {
+    alert(
+      "Only the Main Admin can manage Co-Admins."
+    );
+
+    return;
+  }
+
+  element("coAdminInvitationResult")
+    .classList.add("hidden");
+
+  show("coAdminManagement");
+
+  await loadCoAdmins();
+}
+
+function closeCoAdminManagement() {
+  show("adminPanel");
+
+  if (game) {
+    renderAdmin();
+  }
+}
+
+async function generateCoAdminInvitation() {
+  if (!game || !isMainAdmin()) {
+    alert(
+      "Only the Main Admin can invite Co-Admins."
+    );
+
+    return;
+  }
+
+  const name =
+    element("coAdminName").value.trim();
+
+  if (!name) {
+    alert(
+      "Please enter your friend's name."
+    );
+
+    return;
+  }
+
+  setBusy("generateCoAdminBtn", true);
+
+  try {
+    const { data, error } = await db.rpc(
+      "create_co_admin",
+      {
+        p_game_id: game.id,
+        p_host_token: hostToken,
+        p_admin_name: name
+      }
+    );
+
+    if (error) throw error;
+
+    if (!data?.admin_token) {
+      throw new Error(
+        "Unable to generate invitation."
+      );
+    }
+
+    const url = new URL(
+      window.location.href
+    );
+
+    url.search = "";
+    url.hash = "";
+
+    url.hash =
+      "coadmin=" +
+      encodeURIComponent(
+        data.admin_token
+      );
+
+    element(
+      "coAdminInvitationLink"
+    ).value = url.toString();
+
+    element("coAdminInvitationResult")
+      .classList.remove("hidden");
+
+    await loadCoAdmins();
+
+  } catch (error) {
+    getError(error);
+  } finally {
+    setBusy("generateCoAdminBtn", false);
+  }
+}
+
+async function copyCoAdminInvitation() {
+  const link =
+    element("coAdminInvitationLink").value;
+
+  if (!link) return;
+
+  try {
+    await navigator.clipboard.writeText(
+      link
+    );
+
+    alert(
+      "✅ Invitation link copied!"
+    );
+
+  } catch (error) {
+    window.prompt(
+      "Copy invitation link:",
+      link
+    );
+  }
+}
+
+function shareCoAdminWhatsApp() {
+  const link =
+    element("coAdminInvitationLink").value;
+
+  if (!link) return;
+
+  const message =
+    "👑 Tambola Party Co-Admin Invitation\n\n" +
+    "You have been invited to help manage " +
+    "my Tambola game.\n\n" +
+    "Open this private link:\n" +
+    link +
+    "\n\nPlease do not share this link.";
+
+  const whatsappUrl =
+    "https://wa.me/?text=" +
+    encodeURIComponent(message);
+
+  window.open(
+    whatsappUrl,
+    "_blank",
+    "noopener,noreferrer"
+  );
+}
+
+async function loadCoAdmins() {
+  if (!game || !isMainAdmin()) {
+    return;
+  }
+
+  try {
+    const { data, error } = await db.rpc(
+      "list_co_admins",
+      {
+        p_game_id: game.id,
+        p_host_token: hostToken
+      }
+    );
+
+    if (error) throw error;
+
+    const container =
+      element("coAdminList");
+
+    container.innerHTML = "";
+
+    const admins = data?.admins || [];
+
+    if (!admins.length) {
+      container.textContent =
+        "No Co-Admins added yet.";
+
+      return;
+    }
+
+    admins.forEach(admin => {
+      const row =
+        document.createElement("div");
+
+      row.className = "player-row";
+
+      const title =
+        document.createElement("strong");
+
+      title.textContent =
+        "👑 " + admin.name;
+
+      row.appendChild(title);
+
+      const status =
+        document.createElement("p");
+
+      status.className =
+        "co-admin-badge" +
+        (admin.active
+          ? ""
+          : " co-admin-revoked");
+
+      status.textContent =
+        admin.active
+          ? "✅ Active"
+          : "🚫 Revoked";
+
+      row.appendChild(status);
+
+      if (admin.active) {
+        const button =
+          document.createElement("button");
+
+        button.className = "btn-danger";
+
+        button.textContent =
+          "🚫 Remove Access";
+
+        button.onclick = () =>
+          revokeCoAdmin(
+            admin.id,
+            admin.name
+          );
+
+        row.appendChild(button);
+      }
+
+      container.appendChild(row);
+    });
+
+  } catch (error) {
+    getError(error);
+  }
+}
+
+async function revokeCoAdmin(
+  adminId,
+  name
+) {
+  if (!game || !isMainAdmin()) {
+    return;
+  }
+
+  const confirmed = confirm(
+    "Remove admin access for " +
+    name +
+    "?"
+  );
+
+  if (!confirmed) return;
+
+  try {
+    const { error } = await db.rpc(
+      "revoke_co_admin",
+      {
+        p_game_id: game.id,
+        p_host_token: hostToken,
+        p_admin_id: adminId
+      }
+    );
+
+    if (error) throw error;
+
+    alert(
+      "✅ Co-Admin access removed."
+    );
+
+    await loadCoAdmins();
+
+  } catch (error) {
+    getError(error);
+  }
+}
+
+// =====================================
+// CO-ADMIN SESSION VALIDATION
+// =====================================
+
+async function validateCoAdminAccess(
+  force = false
+) {
+  if (!coAdminToken) return true;
+
+  if (
+    adminValidationInProgress
+  ) {
+    return true;
+  }
+
+  const now = Date.now();
+
+  if (
+    !force &&
+    now - lastAdminValidation < 5000
+  ) {
+    return true;
+  }
+
+  adminValidationInProgress = true;
+
+  try {
+    const { data, error } = await db.rpc(
+      "join_as_co_admin",
+      {
+        p_admin_token: coAdminToken
+      }
+    );
+
+    if (error) {
+      throw error;
+    }
+
+    if (
+      !data?.ok ||
+      data.game_id !== game?.id
+    ) {
+      throw new Error(
+        "Co-Admin access is no longer valid."
+      );
+    }
+
+    lastAdminValidation = Date.now();
+
+    return true;
+
+  } catch (error) {
+    console.warn(
+      "Co-Admin validation failed:",
+      error
+    );
+
+    const message = String(
+      error?.message || ""
+    );
+
+    if (
+      /invalid|revoked|not authorised|not authorized/i
+        .test(message)
+    ) {
+      await handleCoAdminRevoked();
+    }
+
+    return false;
+
+  } finally {
+    adminValidationInProgress = false;
+  }
+}
+
+async function handleCoAdminRevoked() {
+  localStorage.removeItem(
+    CO_ADMIN_SESSION_KEY
+  );
+
+  localStorage.removeItem(
+    SESSION_KEY
+  );
+
+  await resetGameState();
+
+  show("home");
+
+  alert(
+    "🚫 Your Co-Admin access has been revoked."
+  );
+}
+
+// =====================================
+// JOIN AS CO-ADMIN
+// =====================================
+
+async function joinAsCoAdmin(token) {
+  if (!token) return false;
+
+  try {
+    const { data, error } = await db.rpc(
+      "join_as_co_admin",
+      {
+        p_admin_token: token
+      }
+    );
+
+    if (error) throw error;
+
+    if (
+      !data?.ok ||
+      !data?.game_id
+    ) {
+      throw new Error(
+        "Invalid Co-Admin invitation."
+      );
+    }
+
+    await resetGameState();
+
+    coAdminToken = token;
+    coAdminName = data.admin_name;
+
+    hostToken = null;
+
+    game = normalizeGame({
+      id: data.game_id,
+      code: data.code,
+      called: [],
+      status: "lobby"
+    });
+
+    localStorage.setItem(
+      CO_ADMIN_SESSION_KEY,
+      JSON.stringify({
+        token: coAdminToken,
+        gameId: data.game_id
+      })
+    );
+
+    show("adminPanel");
+
+    updateCoAdminInterface();
+
+    await refreshGame();
+
+    if (game) {
+      subscribeToGame();
+      startRefreshing();
+    }
+
+    return true;
+
+  } catch (error) {
+    console.error(error);
+
+    alert(
+      "Unable to access Co-Admin dashboard.\n" +
+      (error.message || "")
+    );
+
+    return false;
+  }
+}
+
+// =====================================
+// HANDLE INVITATION LINK
+// =====================================
+
+async function handleCoAdminInvitation() {
+  const hash =
+    window.location.hash.replace(
+      /^#/,
+      ""
+    );
+
+  const params =
+    new URLSearchParams(hash);
+
+  const token =
+    params.get("coadmin");
+
+  if (!token) return false;
+
+  const joined = await joinAsCoAdmin(token);
+
+  if (joined) {
+    history.replaceState(
+      null,
+      "",
+      window.location.pathname +
+      window.location.search
+    );
+  }
+
+  return joined;
+}
+
+// =====================================
+// RESTORE CO-ADMIN SESSION
+// =====================================
+
+async function restoreCoAdminSession() {
+  const saved =
+    localStorage.getItem(
+      CO_ADMIN_SESSION_KEY
+    );
+
+  if (!saved) return false;
+
+  try {
+    const session = JSON.parse(saved);
+
+    if (!session.token) {
+      return false;
+    }
+
+    const joined = await joinAsCoAdmin(
+      session.token
+    );
+
+    if (!joined) {
+      localStorage.removeItem(
+        CO_ADMIN_SESSION_KEY
+      );
+    }
+
+    return joined;
+
+  } catch (error) {
+    console.error(error);
+
+    localStorage.removeItem(
+      CO_ADMIN_SESSION_KEY
+    );
+
+    return false;
+  }
+}
+
+// =====================================
+// REFRESH GAME
+// =====================================
+
+async function refreshGame() {
+  if (!game || switchingGame) return;
+
+  if (refreshing) {
+    refreshAgain = true;
+    return;
+  }
+
+  refreshing = true;
+
+  const gameId = game.id;
+
+  try {
+    if (isCoAdmin()) {
+      const valid =
+        await validateCoAdminAccess();
+
+      if (!valid) return;
+    }
+
+    const { data, error } = await db
+      .from("games")
+      .select("*")
+      .eq("id", gameId)
+      .single();
+
+    if (error) throw error;
+
+    if (
+      !game ||
+      game.id !== gameId
+    ) {
+      return;
+    }
+
+    game = normalizeGame(data);
+
+    if (
+      game.status === "ended" &&
+      currentView === "playerPanel"
+    ) {
+      switchingGame = true;
+
+      localStorage.removeItem(
+        SESSION_KEY
+      );
+
+      await stopLiveUpdates();
+
+      game = null;
+      player = null;
+      playerToken = null;
+
+      tickets = [];
+      winners = [];
+      marked = {};
+
+      numberCallHistory = [];
+
+      resetNotifications();
+
+      show("home");
+
+      switchingGame = false;
+
+      alert(
+        "🏁 The Tambola Game Has Ended!\n\n" +
+        "Thank you for playing! 🎉"
+      );
+
+      return;
+    }
+
+    await loadNumberCallHistory(
+      gameId
+    );
+
+    if (
+      !game ||
+      game.id !== gameId
+    ) {
+      return;
+    }
+
+    const {
+      data: winnerData,
+      error: winnerError
+    } = await db
+      .from("winners")
+      .select("*")
+      .eq("game_id", gameId)
+      .order("won_at", {
+        ascending: true
+      });
+
+    if (winnerError) {
+      throw winnerError;
+    }
+
+    if (
+      !game ||
+      game.id !== gameId
+    ) {
+      return;
+    }
+
+    winners = winnerData || [];
+
+    if (
+      currentView === "adminPanel" ||
+      currentView === "coAdminManagement"
+    ) {
+      const {
+        data: playerData,
+        error: playerError
+      } = await db.rpc(
+        "get_game_player_ticket_counts",
+        {
+          p_game_id: gameId,
+          p_host_token: currentAdminToken()
+        }
+      );
+
+      if (!playerError) {
+        players = (playerData || []).map(p => ({
+          id: p.player_id,
+          name: p.player_name,
+          ticket_count: Number(p.ticket_count)
+        }));
+      } else {
+        console.warn(
+          "Ticket counts unavailable:",
+          playerError
+        );
+      }
+
+      renderAdmin();
+    }
+
+    if (
+      currentView === "playerPanel"
+    ) {
+      renderPlayer();
+    }
+
+    checkNewWinners();
+    updateCountdowns();
+
+    if (currentView === "playerPanel") {
+      await checkGameAnnouncements();
+    }
+
+  } catch (error) {
+    console.error(
+      "Refresh error:",
+      error
+    );
+
+  } finally {
+    refreshing = false;
+
+    if (refreshAgain) {
+      refreshAgain = false;
+
+      if (
+        game &&
+        !switchingGame
+      ) {
+        setTimeout(
+          refreshGame,
+          0
+        );
+      }
+    }
+  }
+}
+
+// =====================================
+// REALTIME
+// =====================================
+
+function subscribeToGame() {
+  if (!game) return;
+
+  const gameId = game.id;
+
+  if (realtimeChannel) {
+    db.removeChannel(
+      realtimeChannel
+    );
+
+    realtimeChannel = null;
+  }
+
+  const channel = db.channel(
+    "tambola-" +
+    gameId +
+    "-" +
+    Math.random()
+      .toString(36)
+      .slice(2)
+  );
+
+  channel
+    .on(
+      "postgres_changes",
+      {
+        event: "*",
+        schema: "public",
+        table: "games",
+        filter: "id=eq." + gameId
+      },
+      refreshGame
+    )
+    .on(
+      "postgres_changes",
+      {
+        event: "*",
+        schema: "public",
+        table: "winners",
+        filter: "game_id=eq." + gameId
+      },
+      refreshGame
+    )
+    .on(
+      "postgres_changes",
+      {
+        event: "*",
+        schema: "public",
+        table: "players",
+        filter: "game_id=eq." + gameId
+      },
+      refreshGame
+    )
+    .subscribe(status => {
+      if (
+        status === "CHANNEL_ERROR"
+      ) {
+        console.warn(
+          "Realtime unavailable. Polling active."
+        );
+      }
+    });
+
+  realtimeChannel = channel;
+}
+
+function startRefreshing() {
+  if (refreshTimer) {
+    clearInterval(refreshTimer);
+  }
+
+  refreshTimer = setInterval(
+    refreshGame,
+    3000
+  );
+
+  startCountdownTimer();
+}
+
+// =====================================
+// ADMIN CONTROLS
+// =====================================
+
+async function callNextNumber() {
+  if (
+    !game ||
+    !currentAdminToken() ||
+    callingNumber
+  ) {
+    return;
+  }
+
+  if (
+    game.status === "ended" ||
+    game.status === "paused" ||
+    calledNumbers().length >= 90
+  ) {
+    return;
+  }
+
+  callingNumber = true;
+
+  element("callNextBtn").disabled = true;
+
+  try {
+    if (
+      isCoAdmin() &&
+      !(await validateCoAdminAccess(true))
+    ) {
+      return;
+    }
+
+    const { data, error } = await db.rpc(
+      "call_number",
+      {
+        p_game_id: game.id,
+        p_host_token: currentAdminToken()
+      }
+    );
+
+    if (error) throw error;
+
+    if (data?.number != null) {
+      announceNumber(
+        data.number
+      );
+    }
+
+    await refreshGame();
+
+  } catch (error) {
+    getError(error);
+  } finally {
+    callingNumber = false;
+
+    if (game) {
+      updateAdminControls();
+    }
+  }
+}
+
+function announceNumber(number) {
+  if (
+    !("speechSynthesis" in window)
+  ) {
+    return;
+  }
+
+  try {
+    speechSynthesis.cancel();
+
+    const speech =
+      new SpeechSynthesisUtterance(
+        "Number " + number
+      );
+
+    speech.rate = 0.85;
+
+    speechSynthesis.speak(speech);
+
+  } catch (error) {
+    console.warn(error);
+  }
+}
+
+async function setStatus(status) {
+  if (
+    !game ||
+    !currentAdminToken()
+  ) {
+    return false;
+  }
+
+  try {
+    if (
+      isCoAdmin() &&
+      !(await validateCoAdminAccess(true))
+    ) {
+      return false;
+    }
+
+    const { error } = await db.rpc(
+      "set_game_state",
+      {
+        p_game_id: game.id,
+        p_host_token: currentAdminToken(),
+        p_status: status
+      }
+    );
+
+    if (error) throw error;
+
+    await refreshGame();
+
+    return true;
+
+  } catch (error) {
+    getError(error);
+    return false;
+  }
+}
+
+async function togglePause() {
+  if (
+    game &&
+    game.status !== "ended"
+  ) {
+    await setStatus("paused");
+  }
+}
+
+async function resumeGame() {
+  if (
+    game &&
+    game.status !== "ended"
+  ) {
+    await setStatus("running");
+  }
+}
+
+async function endGame() {
+  if (
+    !game ||
+    game.status === "ended"
+  ) {
+    return;
+  }
+
+  if (
+    !confirm(
+      "Are you sure you want to END this game?"
+    )
+  ) {
+    return;
+  }
+
+  if (
+    await setStatus("ended")
+  ) {
+    alert(
+      "Game ended successfully."
+    );
+  }
+}
+
+async function toggleLock() {
+  if (
+    !game ||
+    !currentAdminToken() ||
+    game.status === "ended"
+  ) {
+    return;
+  }
+
+  try {
+    if (
+      isCoAdmin() &&
+      !(await validateCoAdminAccess(true))
+    ) {
+      return;
+    }
+
+    const { error } = await db.rpc(
+      "set_game_state",
+      {
+        p_game_id: game.id,
+        p_host_token: currentAdminToken(),
+        p_locked: !game.locked
+      }
+    );
+
+    if (error) throw error;
+
+    await refreshGame();
+
+  } catch (error) {
+    getError(error);
+  }
+}
+
+// =====================================
+// ADMIN DISPLAY
+// =====================================
+
+function updateAdminControls() {
+  if (!game) return;
+
+  const ended =
+    game.status === "ended";
+
+  const paused =
+    game.status === "paused";
+
+  element("pauseBtn")
+    .classList.toggle(
+      "hidden",
+      paused || ended
+    );
+
+  element("resumeBtn")
+    .classList.toggle(
+      "hidden",
+      !paused || ended
+    );
+
+  element("pauseBtn").disabled = ended;
+  element("resumeBtn").disabled = ended;
+  element("endBtn").disabled = ended;
+  element("lockBtn").disabled = ended;
+
+  element("lockBtn").textContent =
+    game.locked
+      ? "🔓 Unlock Entries"
+      : "🔒 Lock Entries";
+
+  element("callNextBtn").disabled =
+    ended ||
+    paused ||
+    callingNumber ||
+    calledNumbers().length >= 90;
+
+  updateCoAdminInterface();
+}
+
+function renderAdmin() {
+  if (!game) return;
+
+  const called = calledNumbers();
+
+  const calledLookup =
+    new Set(called);
+
+  element("adminRoomCode").textContent =
+    "Room Code: " + game.code;
+
+  element("adminNumber").textContent =
+    game.last_number ?? "--";
+
+  element("calledCount").textContent =
+    "Numbers Called: " +
+    called.length +
+    "/90";
+
+  element("gameStatus").textContent =
+    "Status: " + game.status;
+
+  element("entryStatus").textContent =
+    "Entries: " +
+    (game.locked
+      ? "Locked"
+      : "Open");
+
+  element("adminActivePrizes").textContent =
+    activePrizes().join(" • ");
+
+  updateAdminControls();
+
+  const board =
+    element("numberBoard");
+
+  board.innerHTML = "";
+
+  for (
+    let n = 1;
+    n <= 90;
+    n++
+  ) {
+    const cell =
+      document.createElement("div");
+
+    cell.className =
+      "board-cell";
+
+    if (
+      calledLookup.has(n)
+    ) {
+      cell.classList.add(
+        "called"
+      );
+    }
+
+    cell.textContent = n;
+
+    board.appendChild(cell);
+  }
+
+  element("playerList").textContent =
+    "Total Players: " +
+    players.length;
+
+  const container =
+    element("adminPlayersList");
+
+  container.innerHTML = "";
+
+  players.forEach(
+    (p, index) => {
+      const row =
+        document.createElement("div");
+
+      row.className =
+        "player-row";
+
+      const count = Number(p.ticket_count || 0);
+
+      row.textContent =
+        (index + 1) +
+        ". 🎟️ " +
+        p.name +
+        " — " +
+        count +
+        (count === 1 ? " Ticket" : " Tickets");
+
+      container.appendChild(row);
+    }
+  );
+
+  renderPendingClaims();
+  renderWinners();
+}
+
+function renderPendingClaims() {
+  element("pendingClaims").textContent =
+    "Claims are processed by the game server. " +
+    "No pending-claim review API is configured.";
+}
+
+// =====================================
+// PLAYER MARKING
+// =====================================
+
+function loadMarks() {
+  if (!player) return;
+
+  const key =
+    "tambola_marks_" +
+    player.id;
+
+  try {
+    const stored = JSON.parse(
+      localStorage.getItem(key) ||
+      "{}"
+    );
+
+    marked =
+      stored &&
+      typeof stored === "object" &&
+      !Array.isArray(stored)
+        ? stored
+        : {};
+
+  } catch (error) {
+    marked = {};
+  }
+}
+
+function saveMarks() {
+  if (!player) return;
+
+  localStorage.setItem(
+    "tambola_marks_" + player.id,
+    JSON.stringify(marked)
+  );
+}
+
+function toggleMark(ticketId, number) {
+  if (
+    !game ||
+    !player
+  ) {
+    return;
+  }
+
+  const numericNumber =
+    Number(number);
+
+  if (
+    !calledSet().has(numericNumber)
+  ) {
+    return;
+  }
+
+  if (
+    !Array.isArray(
+      marked[ticketId]
+    )
+  ) {
+    marked[ticketId] = [];
+  }
+
+  marked[ticketId] =
+    marked[ticketId].map(Number);
+
+  const values =
+    marked[ticketId];
+
+  if (
+    values.includes(numericNumber)
+  ) {
+    marked[ticketId] =
+      values.filter(
+        n => n !== numericNumber
+      );
+  } else {
+    values.push(
+      numericNumber
+    );
+  }
+
+  saveMarks();
+  renderPlayer();
+}
+
+
+function renderPlayerNumberBoard() {
+  const board = element("playerNumberBoard");
+
+  if (!board || !game) return;
+
+  const called = calledSet();
+
+  board.innerHTML = "";
+
+  for (let n = 1; n <= 90; n++) {
+    const cell = document.createElement("div");
+
+    cell.className = "board-cell";
+
+    if (called.has(n)) {
+      cell.classList.add("called");
+    }
+
+    cell.textContent = n;
+
+    board.appendChild(cell);
+  }
+}
+
+// =====================================
+// PLAYER DISPLAY
+// =====================================
+
+function renderPlayer() {
+  if (
+    !player ||
+    !game
+  ) {
+    return;
+  }
+
+  const called =
+    calledSet();
+
+  announceNewPlayerNumbers();
+  renderPlayerSoundControl();
+  renderPlayerNumberBoard();
+
+  element("welcomePlayer").textContent =
+    "Welcome, " +
+    player.name +
+    "! 🎉";
+
+  element("playerRoom").textContent =
+    "Room: " +
+    game.code;
+
+  element("playerNumber").textContent =
+    game.last_number ?? "--";
+
+  element("playerCalledCount").textContent =
+    "Numbers Called: " +
+    called.size +
+    "/90";
+
+  element("playerGameStatus").textContent =
+    "Game Status: " +
+    game.status;
+
+  const duration =
+    getClaimDuration();
+
+  element("playerClaimDuration").textContent =
+    duration === 0
+      ? "Unlimited"
+      : duration + " seconds";
+
+  const container =
+    element("ticketsContainer");
+
+  container.innerHTML = "";
+
+  tickets.forEach(ticket => {
+    const heading =
+      document.createElement("h3");
+
+    heading.textContent =
+      "🎟️ Ticket #" +
+      ticket.ticket_no;
+
+    container.appendChild(
+      heading
+    );
+
+    const grid =
+      document.createElement("div");
+
+    grid.className =
+      "ticket";
+
+    if (
+      !Array.isArray(
+        ticket.numbers
+      )
+    ) {
+      const error =
+        document.createElement("p");
+
+      error.textContent =
+        "Ticket data is unavailable.";
+
+      container.appendChild(error);
+      return;
+    }
+
+    ticket.numbers.forEach(row => {
+      if (
+        !Array.isArray(row)
+      ) {
+        return;
+      }
+
+      row.forEach(number => {
+        const cell =
+          document.createElement(
+            number === null
+              ? "div"
+              : "button"
+          );
+
+        cell.className =
+          "ticket-cell";
+
+        if (
+          number === null
+        ) {
+          cell.classList.add(
+            "empty"
+          );
+        } else {
+          const numericNumber =
+            Number(number);
+
+          const wasCalled =
+            called.has(
+              numericNumber
+            );
+
+          const isMarked =
+            wasCalled &&
+            Array.isArray(
+              marked[ticket.id]
+            ) &&
+            marked[ticket.id]
+              .map(Number)
+              .includes(
+                numericNumber
+              );
+
+          cell.textContent =
+            numericNumber;
+
+          cell.type =
+            "button";
+
+          if (isMarked) {
+            cell.classList.add(
+              "marked"
+            );
+          } else if (wasCalled) {
+            cell.classList.add(
+              "called"
+            );
+          } else {
+            cell.classList.add(
+              "uncalled"
+            );
+
+            cell.disabled = true;
+          }
+
+          cell.onclick = () =>
+            toggleMark(
+              ticket.id,
+              numericNumber
+            );
+        }
+
+        grid.appendChild(
+          cell
+        );
+      });
+    });
+
+    container.appendChild(
+      grid
+    );
+  });
+
+  renderClaims();
+  renderWinners();
+  updateCountdowns();
+}
+
+// =====================================
+// PRIZE PATTERNS
+// =====================================
+
+function rowNumbers(ticket, row) {
+  if (
+    !Array.isArray(ticket.numbers) ||
+    !Array.isArray(
+      ticket.numbers[row]
+    )
+  ) {
+    return [];
+  }
+
+  return ticket.numbers[row]
+    .filter(
+      n => n !== null
+    )
+    .map(Number);
+}
+
+function patternNumbers(ticket, prize) {
+  const top =
+    rowNumbers(ticket, 0);
+
+  const middle =
+    rowNumbers(ticket, 1);
+
+  const bottom =
+    rowNumbers(ticket, 2);
+
+  const all = [
+    ...top,
+    ...middle,
+    ...bottom
+  ];
+
+  if (prize === "Any Line") {
+    return [
+      ...top,
+      ...middle,
+      ...bottom
+    ];
+  }
+
+  if (
+    prize === "Top Line"
+  ) {
+    return top;
+  }
+
+  if (
+    prize === "Middle Line"
+  ) {
+    return middle;
+  }
+
+  if (
+    prize === "Bottom Line"
+  ) {
+    return bottom;
+  }
+
+  if (
+    prize === "Four Corners"
+  ) {
+    if (
+      !top.length ||
+      !bottom.length
+    ) {
+      return [];
+    }
+
+    return [
+      top[0],
+      top[top.length - 1],
+      bottom[0],
+      bottom[bottom.length - 1]
+    ];
+  }
+
+  if (
+    prize === "Early 5" ||
+    prize === "Early 7" ||
+    prize === "Full House"
+  ) {
+    return all;
+  }
+
+  return [];
+}
+
+function qualifies(ticket, prize) {
+  if (
+    !game ||
+    !activePrizes().includes(prize)
+  ) {
+    return false;
+  }
+
+  const numbers =
+    patternNumbers(ticket, prize);
+
+  if (!numbers.length) return false;
+
+  const called = calledSet();
+
+  if (prize === "Any Line") {
+    return [0, 1, 2].some(row => {
+      const line = rowNumbers(ticket, row);
+
+      return line.length > 0 &&
+        line.every(n => called.has(n));
+    });
+  }
+
+  const hits = numbers.filter(
+    n => called.has(n)
+  ).length;
+
+  if (
+    prize === "Early 5"
+  ) {
+    return hits >= 5;
+  }
+
+  if (
+    prize === "Early 7"
+  ) {
+    return hits >= 7;
+  }
+
+  return hits === numbers.length;
+}
+
+// =====================================
+// CLAIM BUTTONS
+// =====================================
+
+function renderClaims() {
+  if (
+    !game ||
+    !player
+  ) {
+    return;
+  }
+
+  const container =
+    element("claimContainer");
+
+  container.innerHTML = "";
+
+  const gamePrizes =
+    activePrizes();
+
+  tickets.forEach(ticket => {
+    const heading =
+      document.createElement("h3");
+
+    heading.textContent =
+      "🎟️ Ticket #" +
+      ticket.ticket_no;
+
+    container.appendChild(
+      heading
+    );
+
+    const buttonRow =
+      document.createElement("div");
+
+    buttonRow.className =
+      "claim-buttons";
+
+    gamePrizes.forEach(prize => {
+      const alreadyWon =
+        winners.some(
+          w =>
+            w.ticket_id === ticket.id &&
+            w.prize === prize
+        );
+
+      if (alreadyWon) {
+        const badge =
+          document.createElement("span");
+
+        badge.className =
+          "winner";
+
+        badge.textContent =
+          "🏆 " +
+          prize +
+          " WON!";
+
+        buttonRow.appendChild(
+          badge
+        );
+
+        return;
+      }
+
+      const eligible =
+        qualifies(
+          ticket,
+          prize
+        );
+
+      const winnerCount =
+        winners.filter(
+          w => w.prize === prize
+        ).length;
+
+      const maxWinners =
+        Number(
+          game.winners_per_prize ?? 1
+        );
+
+      const prizeFull =
+        winnerCount >= maxWinners;
+
+      const claimKey =
+        ticket.id +
+        "_" +
+        prize;
+
+      const claimInProgress =
+        claimingPrizes.has(
+          claimKey
+        );
+
+      const gameAllowsClaims =
+        game.status !== "ended" &&
+        game.status !== "paused";
+
+      const deadline =
+        eligible
+          ? getPrizeDeadline(
+              ticket,
+              prize
+            )
+          : null;
+
+      const expired =
+        eligible &&
+        deadline !== null &&
+        deadline !== Infinity &&
+        currentTime() >= deadline;
+
+      const button =
+        document.createElement("button");
+
+      button.className =
+        "prize-button";
+
+      button.dataset.claimTicket =
+        String(ticket.id);
+
+      button.dataset.claimPrize =
+        prize;
+
+      button.disabled =
+        !eligible ||
+        prizeFull ||
+        !gameAllowsClaims ||
+        claimInProgress ||
+        expired;
+
+      if (
+        eligible &&
+        !prizeFull &&
+        !expired &&
+        gameAllowsClaims
+      ) {
+        button.classList.add(
+          "ready"
+        );
+      }
+
+      if (expired) {
+        button.classList.add(
+          "expired"
+        );
+      }
+
+      const label =
+        document.createElement("span");
+
+      label.textContent =
+        claimInProgress
+          ? "⏳ Claiming..."
+          : prizeFull
+            ? "🏆 " + prize + " Closed"
+            : expired
+              ? "⌛ " + prize
+              : eligible
+                ? "🏆 Claim " + prize
+                : "🔒 " + prize;
+
+      button.appendChild(
+        label
+      );
+
+      if (
+        eligible &&
+        !prizeFull &&
+        !claimInProgress
+      ) {
+        const time =
+          document.createElement("span");
+
+        time.className =
+          "claim-time";
+
+        if (expired) {
+          time.textContent =
+            "Expired";
+        } else if (
+          deadline === Infinity
+        ) {
+          time.textContent =
+            "Unlimited";
+        } else if (
+          deadline === null
+        ) {
+          time.textContent =
+            "Checking time";
+        } else {
+          time.textContent =
+            formatSeconds(
+              deadline - currentTime()
+            );
+        }
+
+        button.appendChild(
+          time
+        );
+      }
+
+      button.onclick = () =>
+        claimPrize(
+          ticket.id,
+          prize
+        );
+
+      buttonRow.appendChild(
+        button
+      );
+    });
+
+    container.appendChild(
+      buttonRow
+    );
+  });
+}
+
+// =====================================
+// SERVER CLAIM
+// =====================================
+
+async function claimPrize(
+  ticketId,
+  prize
+) {
+  if (
+    !playerToken ||
+    !game ||
+    !activePrizes().includes(prize)
+  ) {
+    return;
+  }
+
+  const claimKey =
+    ticketId +
+    "_" +
+    prize;
+
+  if (
+    claimingPrizes.has(
+      claimKey
+    )
+  ) {
+    return;
+  }
+
+  claimingPrizes.add(
+    claimKey
+  );
+
+  renderClaims();
+
+  try {
+    const { data, error } = await db.rpc(
+      "claim_prize",
+      {
+        p_player_token: playerToken,
+        p_ticket_id: ticketId,
+        p_prize: prize
+      }
+    );
+
+    if (error) throw error;
+
+    if (
+      data?.ok === true
+    ) {
+      alert(
+        "🏆 Congratulations!\n" +
+        "You won " +
+        prize +
+        "!"
+      );
+    } else {
+      alert(
+        data?.message ||
+        data?.reason ||
+        "Your claim was not accepted."
+      );
+    }
+
+    await refreshGame();
+
+  } catch (error) {
+    getError(error);
+
+    await refreshGame();
+
+  } finally {
+    claimingPrizes.delete(
+      claimKey
+    );
+
+    if (
+      game &&
+      currentView === "playerPanel"
+    ) {
+      renderClaims();
+    }
+  }
+}
+
+// =====================================
+// WINNER ANNOUNCEMENTS
+// =====================================
+
+function checkNewWinners() {
+  if (!initialWinnersLoaded) {
+    winners.forEach(
+      w => lastWinnerIds.add(w.id)
+    );
+
+    initialWinnersLoaded = true;
+    return;
+  }
+
+  const newWinners =
+    winners.filter(
+      w => !lastWinnerIds.has(w.id)
+    );
+
+  winners.forEach(
+    w => lastWinnerIds.add(w.id)
+  );
+
+  newWinners.forEach(
+    winner =>
+      winnerPopupQueue.push(
+        winner
+      )
+  );
+
+  showNextWinnerPopup();
+}
+
+function showNextWinnerPopup() {
+  if (
+    winnerPopupActive ||
+    !winnerPopupQueue.length
+  ) {
+    return;
+  }
+
+  const winner =
+    winnerPopupQueue.shift();
+
+  winnerPopupActive = true;
+
+  element("winnerName").textContent =
+    winner.player_name ||
+    "Winner";
+
+  element("winnerPrize").textContent =
+    "🏆 " +
+    winner.prize;
+
+  element("winnerTicket").textContent =
+    "Ticket #" +
+    winner.ticket_no;
+
+  element("winnerPopup")
+    .classList.remove("hidden");
+
+  winnerPopupTimer = setTimeout(
+    closePopup,
+    5000
+  );
+}
+
+function closePopup() {
+  if (winnerPopupTimer) {
+    clearTimeout(
+      winnerPopupTimer
+    );
+
+    winnerPopupTimer = null;
+  }
+
+  element("winnerPopup")
+    .classList.add("hidden");
+
+  winnerPopupActive = false;
+
+  if (
+    winnerPopupQueue.length
+  ) {
+    setTimeout(
+      showNextWinnerPopup,
+      300
+    );
+  }
+}
+
+function renderWinners() {
+  const html =
+    winners.length
+      ? winners.map(
+          w => `
+            <div class="winner">
+              🏆 ${escapeHtml(w.player_name)}
+              won
+              <strong>
+                ${escapeHtml(w.prize)}
+              </strong>
+              —
+              Ticket #
+              ${escapeHtml(w.ticket_no)}
+            </div>
+          `
+        ).join("")
+      : "<p>No winners yet.</p>";
+
+  element("adminWinners").innerHTML =
+    html;
+
+  element("playerWinners").innerHTML =
+    html;
+}
+
+
+// =====================================
+// MANUAL ANNOUNCEMENTS
+// =====================================
+
+let announcementGameId = null;
+let announcementInitialized = false;
+let lastAnnouncementTime = null;
+let lastAnnouncementId = null;
+let announcementRequestInProgress = false;
+
+function resetAnnouncementTracking() {
+  announcementGameId = null;
+  announcementInitialized = false;
+  lastAnnouncementTime = null;
+  lastAnnouncementId = null;
+}
+
+async function sendAdminAnnouncement() {
+  if (!game || !currentAdminToken()) {
+    alert("Admin access required.");
+    return;
+  }
+
+  const select = element("adminAnnouncementSelect");
+  const phrase = select.value;
+
+  setBusy("sendAnnouncementBtn", true);
+
+  try {
+    if (
+      isCoAdmin() &&
+      !(await validateCoAdminAccess(true))
+    ) {
+      throw new Error("Co-Admin access unavailable.");
+    }
+
+    const { error } = await db.rpc(
+      "send_game_announcement",
+      {
+        p_game_id: game.id,
+        p_host_token: currentAdminToken(),
+        p_phrase: phrase
+      }
+    );
+
+    if (error) throw error;
+
+    element("announcementStatus").textContent =
+      "✅ Announcement sent: " + phrase;
+
+  } catch (error) {
+    getError(error);
+
+  } finally {
+    setBusy("sendAnnouncementBtn", false);
+  }
+}
+
+function speakFunAnnouncement(phrase) {
+  if (
+    !playerSoundEnabled ||
+    !playerSoundReady ||
+    !("speechSynthesis" in window)
+  ) {
+    return;
+  }
+
+  try {
+    const speech =
+      new SpeechSynthesisUtterance(phrase);
+
+    speech.lang = "en-US";
+    speech.rate = 0.9;
+
+    window.speechSynthesis.speak(speech);
+
+  } catch (error) {
+    console.warn(
+      "Announcement speech failed:",
+      error
+    );
+  }
+}
+
+function renderPlayerAnnouncements(newestFirst) {
+  const box = element("playerAnnouncementBox");
+  const textEl = element("playerAnnouncementText");
+  const listEl = element("playerAnnouncementList");
+  if (!box || !textEl) return;
+  const items = Array.isArray(newestFirst) ? newestFirst : [];
+  if (!items.length) {
+    textEl.textContent = "Waiting for announcements...";
+    if (listEl) listEl.innerHTML = "";
+    return;
+  }
+  const latest = items[0] || {};
+  textEl.textContent = "\uD83D\uDCE3 " + (latest.phrase || "New announcement!");
+  if (listEl) {
+    listEl.innerHTML = "";
+    items.slice(0, 5).forEach(function(item) {
+      const div = document.createElement("div");
+      div.className = "player-announcement-item";
+      div.textContent = "\uD83D\uDCE3 " + (item.phrase || "");
+      listEl.appendChild(div);
+    });
+  }
+}
+
+async function checkGameAnnouncements() {
+  if (
+    !game ||
+    !playerToken ||
+    currentView !== "playerPanel" ||
+    announcementRequestInProgress
+  ) {
+    return;
+  }
+
+  const gameId = game.id;
+
+  if (announcementGameId !== gameId) {
+    resetAnnouncementTracking();
+    announcementGameId = gameId;
+  }
+
+  announcementRequestInProgress = true;
+
+  try {
+    const { data, error } = await db.rpc(
+      "get_game_announcements",
+      {
+        p_player_token: playerToken
+      }
+    );
+
+    if (error) throw error;
+
+    if (
+      !game ||
+      game.id !== gameId ||
+      currentView !== "playerPanel"
+    ) {
+      return;
+    }
+
+    try {
+      renderPlayerAnnouncements((data || []).slice());
+    } catch (displayError) {
+      console.warn("Announcement display failed:", displayError);
+    }
+
+    const announcements = (data || [])
+      .slice()
+      .reverse();
+
+    if (!announcementInitialized) {
+      const latest =
+        announcements[announcements.length - 1];
+
+      if (latest) {
+        lastAnnouncementTime = latest.created_at;
+        lastAnnouncementId = latest.announcement_id;
+      }
+
+      announcementInitialized = true;
+      return;
+    }
+
+    for (const item of announcements) {
+      const timestamp = item.created_at;
+      const id = item.announcement_id;
+
+      const isNew =
+        !lastAnnouncementTime ||
+        timestamp > lastAnnouncementTime ||
+        (
+          timestamp === lastAnnouncementTime &&
+          String(id) > String(lastAnnouncementId)
+        );
+
+      if (!isNew) continue;
+
+      speakFunAnnouncement(item.phrase);
+
+      lastAnnouncementTime = timestamp;
+      lastAnnouncementId = id;
+    }
+
+  } catch (error) {
+    console.warn(
+      "Announcement refresh failed:",
+      error
+    );
+
+  } finally {
+    announcementRequestInProgress = false;
+  }
+}
+
+if (!window._tambolaAnnouncementTimer) {
+  window._tambolaAnnouncementTimer = setInterval(function() {
+    try {
+      if (typeof currentView !== "undefined" && currentView === "playerPanel") {
+        if (typeof checkGameAnnouncements === "function") {
+          checkGameAnnouncements();
+        }
+      }
+    } catch (e) {}
+  }, 3000);
+}
+
+// =====================================
+// INITIALISE
+// =====================================
+
+async function initialise() {
+  renderPrizeSelection();
+  updateWinningMode();
+
+  const params = new URLSearchParams(
+    window.location.search
+  );
+
+  const room = params.get("room");
+
+  if (room) {
+    element("roomCode").value =
+      room.toUpperCase();
+  }
+
+  const hashParams = new URLSearchParams(
+    window.location.hash.replace(/^#/, "")
+  );
+
+  // Invitation links take priority.
+  if (hashParams.has("coadmin")) {
+    const joined = await handleCoAdminInvitation();
+
+    if (joined) return;
+  }
+
+  // Player invitation links take priority over
+  // an existing administrator login.
+  if (room) {
+    await restoreSession();
+
+    if (!game) {
+      show("joinSetup");
+    }
+
+    return;
+  }
+
+  const restoredCoAdmin =
+    await restoreCoAdminSession();
+
+  if (restoredCoAdmin) return;
+
+  // Restore permanent Main Admin login.
+  if (await verifyMainAdmin()) {
+    await loadAdminGames();
+    return;
+  }
+
+  // Restore ordinary player session.
+  await restoreSession();
+}
+
+initialise();
+
+</script>
+</body>
+</html>
