@@ -1,13 +1,11 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>Tambola Party 🎉</title>
-
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 <style>
 * {
   box-sizing: border-box;
@@ -659,670 +657,364 @@ button.ticket-cell:disabled {
 }
 </style>
 </head>
-
 <body>
-
 <div class="container">
-
 <header class="header">
-  <h1>🎉 TAMBOLA PARTY 🎉</h1>
-  <p>Play Housie With Friends!</p>
+<h1>🎉 TAMBOLA PARTY 🎉</h1>
+<p>Play Housie With Friends!</p>
 </header>
-
 <!-- HOME -->
-
-<section id="home" class="card center">
-
-  <h2>Welcome to Tambola Party!</h2>
-
-  <p>Create a game or join your friends.</p>
-
-  <button onclick="openMainAdminLogin()">
+<section class="card center" id="home">
+<h2>Welcome to Tambola Party!</h2>
+<p>Create a game or join your friends.</p>
+<button onclick="openMainAdminLogin()">
     👑 Main Admin Login
   </button>
-
-  <button onclick="show('joinSetup')">
+<button onclick="show('joinSetup')">
     🎟️ Join Game
   </button>
-
 </section>
-
-
 <!-- PERMANENT MAIN ADMIN LOGIN -->
-
-<section id="adminLogin" class="card center hidden">
-
-  <h2>👑 Main Admin Login</h2>
-
-  <p>Sign in to manage your Tambola games.</p>
-
-  <input
-    id="adminEmail"
-    type="email"
-    placeholder="Email Address"
-    autocomplete="username"
-  >
-
-  <br>
-
-  <input
-    id="adminPassword"
-    type="password"
-    placeholder="Password"
-    autocomplete="current-password"
-  >
-
-  <br>
-
-  <button
-    id="adminLoginBtn"
-    onclick="loginMainAdmin()"
-    class="btn-success"
-  >
+<section class="card center hidden" id="adminLogin">
+<h2>👑 Main Admin Login</h2>
+<p>Sign in to manage your Tambola games.</p>
+<input autocomplete="username" id="adminEmail" placeholder="Email Address" type="email"/>
+<br/>
+<input autocomplete="current-password" id="adminPassword" placeholder="Password" type="password"/>
+<br/>
+<button class="btn-success" id="adminLoginBtn" onclick="loginMainAdmin()">
     🔐 Login
   </button>
-
-  <button
-    onclick="show('home')"
-    class="btn-secondary"
-  >
+<button class="btn-secondary" onclick="show('home')">
     ← Back
   </button>
-
 </section>
-
 <!-- MAIN ADMIN GAME LIST -->
-
-<section id="adminGames" class="card hidden">
-
-  <h2>👑 My Tambola Games</h2>
-
-  <p id="adminWelcome"></p>
-
-  <div id="adminGamesList"></div>
-
-  <button
-    onclick="openAdminSetup()"
-    class="btn-success"
-  >
-    ➕ Create New Game
+<section class="card hidden" id="adminGames">
+<h2>👑 My Tambola Games</h2>
+<p id="adminWelcome"></p>
+<div class="admin-actions">
+<button class="btn-success" onclick="openAdminSetup()">
+      🟢 Create New Game
+    </button>
+<button class="btn-danger" onclick="logoutMainAdmin()">
+      🔴 Logout
+    </button>
+</div>
+<hr/>
+<h3>🎮 Active Games</h3>
+<select id="activeGamesSelect" style="width:100%;max-width:500px"></select>
+<br/>
+<button id="openActiveGameBtn" onclick="openSelectedAdminGame('activeGamesSelect')">
+    👑 Open Selected Dashboard
   </button>
-
-  <button
-    onclick="logoutMainAdmin()"
-    class="btn-danger"
-  >
-    🚪 Logout
+<hr/>
+<h3>📁 Completed Games</h3>
+<select id="completedGamesSelect" style="width:100%;max-width:500px"></select>
+<br/>
+<button id="openCompletedGameBtn" onclick="openSelectedAdminGame('completedGamesSelect')">
+    👑 Open Selected Dashboard
   </button>
-
+<p id="adminGamesList"></p>
 </section>
-
 <!-- ADMIN SETUP -->
-
-<section id="adminSetup" class="card hidden">
-
-  <h2>👑 Create Tambola Game</h2>
-
-  <p>Maximum tickets per player</p>
-
-  <select id="maxTickets">
-    <option value="1">1 Ticket</option>
-    <option value="2">2 Tickets</option>
-    <option value="3">3 Tickets</option>
-    <option value="4">4 Tickets</option>
-    <option value="5">5 Tickets</option>
-    <option value="6" selected>6 Tickets</option>
-  </select>
-
-  <p>Winners allowed per prize</p>
-
-  <select id="winnersPerPrize">
-    <option value="1">1 Winner</option>
-    <option value="2">2 Winners</option>
-    <option value="3">3 Winners</option>
-    <option value="4">4 Winners</option>
-    <option value="5">5 Winners</option>
-  </select>
-
-  <hr>
-
-  <h3>🏆 Select Prizes for This Game</h3>
-
-  <p>Choose which prizes players can win.</p>
-
-  <div class="prize-select-actions">
-
-    <button
-      type="button"
-      onclick="selectAllPrizes()"
-      class="btn-success"
-    >
+<section class="card hidden" id="adminSetup">
+<h2>👑 Create Tambola Game</h2>
+<p>Maximum tickets per player</p>
+<select id="maxTickets">
+<option value="1">1 Ticket</option>
+<option value="2">2 Tickets</option>
+<option value="3">3 Tickets</option>
+<option value="4">4 Tickets</option>
+<option value="5">5 Tickets</option>
+<option selected="" value="6">6 Tickets</option>
+</select>
+<p>Winners allowed per prize</p>
+<select id="winnersPerPrize">
+<option value="1">1 Winner</option>
+<option value="2">2 Winners</option>
+<option value="3">3 Winners</option>
+<option value="4">4 Winners</option>
+<option value="5">5 Winners</option>
+</select>
+<hr/>
+<h3>🏆 Select Prizes for This Game</h3>
+<p>Choose which prizes players can win.</p>
+<div class="prize-select-actions">
+<button class="btn-success" onclick="selectAllPrizes()" type="button">
       ✅ Select All
     </button>
-
-    <button
-      type="button"
-      onclick="clearAllPrizes()"
-      class="btn-secondary"
-    >
+<button class="btn-secondary" onclick="clearAllPrizes()" type="button">
       Clear All
     </button>
-
-  </div>
-
-  <div
-    id="prizeSelection"
-    class="prize-selection"
-  ></div>
-
-  <p
-    id="selectedPrizeCount"
-    class="status"
-  ></p>
-
-  <hr>
-
-  <h3>🏆 Winning Rules</h3>
-
-  <select
-    id="winningMode"
-    onchange="updateWinningMode()"
-  >
-
-    <option value="first_claim">
+</div>
+<div class="prize-selection" id="prizeSelection"></div>
+<p class="status" id="selectedPrizeCount"></p>
+<hr/>
+<h3>🏆 Winning Rules</h3>
+<select id="winningMode" onchange="updateWinningMode()">
+<option value="first_claim">
       ⚡ First to Claim
     </option>
-
-    <option value="same_number">
+<option value="same_number">
       🎊 Same Number Winners
     </option>
-
-    <option value="custom">
+<option value="custom">
       🎛️ Custom Prize Rules
     </option>
-
-  </select>
-
-  <h3>⏱️ Claim Timer</h3>
-
-  <select id="claimWindow">
-    <option value="10" selected>10 Seconds</option>
-    <option value="15">15 Seconds</option>
-    <option value="30">30 Seconds</option>
-    <option value="60">60 Seconds</option>
-    <option value="0">Unlimited</option>
-  </select>
-
-  <div
-    id="customPrizeSettings"
-    class="hidden"
-  >
-
-    <h3>🎛️ Custom Winning Rules</h3>
-
-    <div id="customPrizeList"></div>
-
-  </div>
-
-  <br>
-
-  <button
-    id="createGameBtn"
-    onclick="createGame()"
-  >
+</select>
+<h3>⏱️ Claim Timer</h3>
+<select id="claimWindow">
+<option selected="" value="10">10 Seconds</option>
+<option value="15">15 Seconds</option>
+<option value="30">30 Seconds</option>
+<option value="60">60 Seconds</option>
+<option value="0">Unlimited</option>
+</select>
+<div class="hidden" id="customPrizeSettings">
+<h3>🎛️ Custom Winning Rules</h3>
+<div id="customPrizeList"></div>
+</div>
+<br/>
+<button id="createGameBtn" onclick="createGame()">
     🎮 Create Room
   </button>
-
 </section>
-
 <!-- JOIN GAME -->
-
-<section id="joinSetup" class="card hidden">
-
-  <h2>🎟️ Join Tambola Game</h2>
-
-  <input
-    id="playerName"
-    placeholder="Your Name"
-    maxlength="30"
-    autocomplete="name"
-  >
-
-  <br>
-
-  <input
-    id="roomCode"
-    placeholder="Room Code"
-    maxlength="6"
-    autocapitalize="characters"
-  >
-
-  <p>Number of Tickets</p>
-
-  <select id="ticketCount">
-    <option value="1">1 Ticket</option>
-    <option value="2">2 Tickets</option>
-    <option value="3">3 Tickets</option>
-    <option value="4">4 Tickets</option>
-    <option value="5">5 Tickets</option>
-    <option value="6">6 Tickets</option>
-  </select>
-
-  <br>
-
-  <button
-    id="joinGameBtn"
-    onclick="joinGame()"
-  >
+<section class="card hidden" id="joinSetup">
+<h2>🎟️ Join Tambola Game</h2>
+<input autocomplete="name" id="playerName" maxlength="30" placeholder="Your Name"/>
+<br/>
+<input autocapitalize="characters" id="roomCode" maxlength="6" placeholder="Room Code"/>
+<p>Number of Tickets</p>
+<select id="ticketCount">
+<option value="1">1 Ticket</option>
+<option value="2">2 Tickets</option>
+<option value="3">3 Tickets</option>
+<option value="4">4 Tickets</option>
+<option value="5">5 Tickets</option>
+<option value="6">6 Tickets</option>
+</select>
+<br/>
+<button id="joinGameBtn" onclick="joinGame()">
     Join Game 🎉
   </button>
-
 </section>
-
 <!-- ADMIN PANEL -->
-
-<section id="adminPanel" class="hidden">
-
-  <div class="card">
-
-    <h2>👑 Admin Dashboard</h2>
-
-    <p
-      id="adminRoleLabel"
-      class="admin-role-label"
-    >
+<section class="hidden" id="adminPanel">
+<div class="card">
+<h2>👑 Admin Dashboard</h2>
+<p class="admin-role-label" id="adminRoleLabel">
       Main Admin
     </p>
-
-    <div class="admin-actions">
-
-      <button
-        id="createNewGameBtn"
-        onclick="prepareNewGame()"
-      >
+<div class="admin-actions">
+<button id="createNewGameBtn" onclick="prepareNewGame()">
         ➕ Create New Game
       </button>
-
-      <button
-        id="backToGamesBtn"
-        onclick="returnToAdminGames()"
-        class="btn-secondary"
-      >
+<button class="btn-secondary" id="backToGamesBtn" onclick="returnToAdminGames()">
         📋 My Games
       </button>
-
-      <button
-        id="adminLogoutBtn"
-        onclick="logoutMainAdmin()"
-        class="btn-danger"
-      >
+<button class="btn-danger" id="adminLogoutBtn" onclick="logoutMainAdmin()">
         🚪 Logout
       </button>
-
-      <button
-        onclick="shareGame()"
-        class="btn-secondary"
-      >
+<button class="btn-secondary" onclick="shareGame()">
         🔗 Share Game
       </button>
-
-      <!-- NEW PLAYER WHATSAPP INVITATION -->
-
-      <button
-        onclick="sharePlayerWhatsApp()"
-        class="btn-whatsapp"
-      >
+<!-- NEW PLAYER WHATSAPP INVITATION -->
+<button class="btn-whatsapp" onclick="sharePlayerWhatsApp()">
         📲 Invite Players via WhatsApp
       </button>
-
-      <!-- CO-ADMIN INVITATION -->
-
-      <button
-        id="manageCoAdminsBtn"
-        onclick="openCoAdminManagement()"
-        class="btn-success"
-      >
+<!-- CO-ADMIN INVITATION -->
+<button class="btn-success" id="manageCoAdminsBtn" onclick="openCoAdminManagement()">
         👑 Invite Co-Admin
       </button>
-
-      <button
-        onclick="togglePause()"
-        class="btn-warning"
-        id="pauseBtn"
-      >
+<button class="btn-warning" id="pauseBtn" onclick="togglePause()">
         ⏸ Pause
       </button>
-
-      <button
-        onclick="resumeGame()"
-        class="btn-success hidden"
-        id="resumeBtn"
-      >
+<button class="btn-success hidden" id="resumeBtn" onclick="resumeGame()">
         ▶ Resume
       </button>
-
-      <button
-        onclick="endGame()"
-        class="btn-danger"
-        id="endBtn"
-      >
+<button class="btn-danger" id="endBtn" onclick="endGame()">
         🏁 End Game
       </button>
-
-      <button
-        onclick="toggleLock()"
-        class="btn-secondary"
-        id="lockBtn"
-      >
+<button class="btn-secondary" id="lockBtn" onclick="toggleLock()">
         🔒 Lock Entries
       </button>
-
-    </div>
-
-    <div class="status">
-
-      <strong id="adminRoomCode"></strong>
-
-      <br>
-
-      <span id="gameStatus"></span>
-
-      <br>
-
-      <span id="entryStatus"></span>
-
-    </div>
-
-    <div class="status">
-
-      <strong>🏆 Active Prizes</strong>
-
-      <div id="adminActivePrizes"></div>
-
-    </div>
-
-  </div>
-
-  <div class="admin-grid">
-
-    <div>
-
-      <div class="card center">
-
-        <h2>🎲 Number Caller</h2>
-
-        <div
-          id="adminNumber"
-          class="number"
-        >
+</div>
+<div class="status">
+<strong id="adminRoomCode"></strong>
+<br/>
+<span id="gameStatus"></span>
+<br/>
+<span id="entryStatus"></span>
+</div>
+<div class="status">
+<strong>🏆 Active Prizes</strong>
+<div id="adminActivePrizes"></div>
+</div>
+</div>
+<div class="card">
+<h2>🎙️ Fun Announcements</h2>
+<p>
+          Select a phrase to announce to players.
+        </p>
+<select id="adminAnnouncementSelect" style="width:100%;max-width:500px">
+<option value="Anyone sweating?">Anyone sweating?</option>
+<option value="Keep your eyes on the prize!">Keep your eyes on the prize!</option>
+<option value="Don't blink or you'll miss it!">Don't blink or you'll miss it!</option>
+<option value="Feeling lucky?">Feeling lucky?</option>
+<option value="Wake up, sleepyheads!">Wake up, sleepyheads!</option>
+<option value="The tension is rising!">The tension is rising!</option>
+<option value="One number closer!">One number closer!</option>
+<option value="Who's getting excited?">Who's getting excited?</option>
+<option value="Are you still in the game?">Are you still in the game?</option>
+<option value="House is just around the corner!">House is just around the corner!</option>
+<option value="Someone's getting lucky tonight!">Someone's getting lucky tonight!</option>
+<option value="Don't let your luck run out!">Don't let your luck run out!</option>
+<option value="The winner could be you!">The winner could be you!</option>
+<option value="Eyes down, dabbers ready!">Eyes down, dabbers ready!</option>
+<option value="Is anyone shouting Housie yet?">Is anyone shouting Housie yet?</option>
+</select>
+<br/>
+<button class="btn-success" id="sendAnnouncementBtn" onclick="sendAdminAnnouncement()">
+          🎙️ Announce
+        </button>
+<p id="announcementStatus"></p>
+</div>
+<div class="admin-grid">
+<div>
+<div class="card center">
+<h2>🎲 Number Caller</h2>
+<div class="number" id="adminNumber">
           --
         </div>
-
-        <div
-          id="adminTimerBox"
-          class="timer-box"
-        >
-
-          <div class="timer-title">
+<div class="timer-box" id="adminTimerBox">
+<div class="timer-title">
             ⏱️ Latest Number Claim Window
           </div>
-
-          <div
-            id="adminTimer"
-            class="timer-value"
-          >
+<div class="timer-value" id="adminTimer">
             --
           </div>
-
-          <div class="timer-subtitle">
+<div class="timer-subtitle">
             Time remaining from the latest number call
           </div>
-
-        </div>
-
-        <button
-          id="callNextBtn"
-          onclick="callNextNumber()"
-        >
+</div>
+<button id="callNextBtn" onclick="callNextNumber()">
           🎲 CALL NEXT NUMBER
         </button>
-
-        <p id="calledCount"></p>
-
-      </div>
-
-      <div class="card">
-
-        <h2>🔢 Number Board</h2>
-
-        <div
-          id="numberBoard"
-          class="board"
-        ></div>
-
-      </div>
-
-    </div>
-
-    <div>
-
-      <div class="card">
-
-        <h2>👥 Players</h2>
-
-        <div id="playerList">
+<p id="calledCount"></p>
+</div>
+<div class="card">
+<h2>🔢 Number Board</h2>
+<div class="board" id="numberBoard"></div>
+</div>
+</div>
+<div>
+<div class="card">
+<h2>👥 Players</h2>
+<div id="playerList">
           Total Players: 0
         </div>
-
-        <div id="adminPlayersList"></div>
-
-      </div>
-
-      <div class="card">
-
-        <h2>🏆 Pending Claims</h2>
-
-        <div id="pendingClaims"></div>
-
-      </div>
-
-      <div class="card">
-
-        <h2>🏆 Winners</h2>
-
-        <div id="adminWinners"></div>
-
-      </div>
-
-    </div>
-
-  </div>
-
+<div id="adminPlayersList"></div>
+</div>
+<div class="card">
+<h2>🏆 Pending Claims</h2>
+<div id="pendingClaims"></div>
+</div>
+<div class="card">
+<h2>🏆 Winners</h2>
+<div id="adminWinners"></div>
+</div>
+</div>
+</div>
 </section>
-
 <!-- CO-ADMIN MANAGEMENT -->
-
-<section
-  id="coAdminManagement"
-  class="card hidden"
->
-
-  <h2>👑 Co-Admin Management</h2>
-
-  <p>
+<section class="card hidden" id="coAdminManagement">
+<h2>👑 Co-Admin Management</h2>
+<p>
     Invite a friend to manage your Tambola game
     from another device or location.
   </p>
-
-  <div class="co-admin-card">
-
-    <h3>➕ Invite New Co-Admin</h3>
-
-    <p>Enter your friend's name:</p>
-
-    <input
-      id="coAdminName"
-      type="text"
-      placeholder="Friend's Name"
-      maxlength="50"
-      autocomplete="off"
-    >
-
-    <br>
-
-    <button
-      id="generateCoAdminBtn"
-      onclick="generateCoAdminInvitation()"
-      class="btn-success"
-    >
+<div class="co-admin-card">
+<h3>➕ Invite New Co-Admin</h3>
+<p>Enter your friend's name:</p>
+<input autocomplete="off" id="coAdminName" maxlength="50" placeholder="Friend's Name" type="text"/>
+<br/>
+<button class="btn-success" id="generateCoAdminBtn" onclick="generateCoAdminInvitation()">
       🔗 Generate Invitation Link
     </button>
-
-  </div>
-
-  <!-- GENERATED INVITATION -->
-
-  <div
-    id="coAdminInvitationResult"
-    class="co-admin-card hidden"
-  >
-
-    <h3>✅ Invitation Created!</h3>
-
-    <p>
+</div>
+<!-- GENERATED INVITATION -->
+<div class="co-admin-card hidden" id="coAdminInvitationResult">
+<h3>✅ Invitation Created!</h3>
+<p>
       Share this private invitation link with your friend.
     </p>
-
-    <input
-      id="coAdminInvitationLink"
-      class="co-admin-link"
-      type="text"
-      readonly
-    >
-
-    <div class="co-admin-actions">
-
-      <button
-        onclick="copyCoAdminInvitation()"
-      >
+<input class="co-admin-link" id="coAdminInvitationLink" readonly="" type="text"/>
+<div class="co-admin-actions">
+<button onclick="copyCoAdminInvitation()">
         📋 Copy Link
       </button>
-
-      <button
-        onclick="shareCoAdminWhatsApp()"
-        class="btn-whatsapp"
-      >
+<button class="btn-whatsapp" onclick="shareCoAdminWhatsApp()">
         📲 Share via WhatsApp
       </button>
-
-    </div>
-
-    <p style="font-size:12px;color:#b02a37">
+</div>
+<p style="font-size:12px;color:#b02a37">
       🔐 Keep this link private.
       Anyone possessing it can use the Co-Admin invitation.
     </p>
-
-  </div>
-
-  <hr>
-
-  <h3>👥 Existing Co-Admins</h3>
-
-  <div id="coAdminList">
+</div>
+<hr/>
+<h3>👥 Existing Co-Admins</h3>
+<div id="coAdminList">
     No Co-Admins added yet.
   </div>
-
-  <br>
-
-  <button
-    onclick="closeCoAdminManagement()"
-    class="btn-secondary"
-  >
+<br/>
+<button class="btn-secondary" onclick="closeCoAdminManagement()">
     ← Back to Dashboard
   </button>
-
 </section>
-
 <!-- PLAYER PANEL -->
-
-<section id="playerPanel" class="hidden">
-
-  <div class="card center player-number-card">
-
-    <h2 id="welcomePlayer"></h2>
-
-    <p id="playerRoom"></p>
-
-    <div class="player-number-header">
-      <h3>🎯 Latest Number</h3>
-      <button
-        id="playerSoundToggle"
-        type="button"
-        onclick="togglePlayerSound()"
-      >Sound OFF</button>
-    </div>
-
-    <div
-      id="playerNumber"
-      class="player-number"
-    >
+<section class="hidden" id="playerPanel"><div class="card center player-number-card">
+<h2 id="welcomePlayer"></h2>
+<p id="playerRoom"></p>
+<div class="player-number-header">
+<h3>🎯 Latest Number</h3>
+<button id="playerSoundToggle" onclick="togglePlayerSound()" type="button">Sound OFF</button>
+</div>
+<div class="player-number" id="playerNumber">
       --
     </div>
-
-    <p id="playerCalledCount"></p>
-
-    <p
-      id="playerGameStatus"
-      class="status"
-    ></p>
-
-    <div
-      id="playerTimerBox"
-      class="timer-box"
-    >
-
-      <div class="timer-title">
+<p id="playerCalledCount"></p>
+<p class="status" id="playerGameStatus"></p>
+<div class="timer-box" id="playerTimerBox">
+<div class="timer-title">
         ⏱️ Claim Countdown
       </div>
-
-      <div
-        id="playerTimer"
-        class="timer-value"
-      >
+<div class="timer-value" id="playerTimer">
         --
       </div>
-
-    </div>
-
-  </div>
-
-  <div class="card player-claims-card">
-
-    <h2>🏆 Claim Prizes</h2>
-
-    <div id="claimContainer"></div>
-
-  </div>
+</div>
+</div>
 
   <div class="card">
-
-    <h2>🎟️ My Tambola Tickets</h2>
-
-    <p class="ticket-legend">
+<h2>🎟️ My Tambola Tickets</h2>
+<p class="ticket-legend">
       🟡 Yellow = Called
-      &nbsp;&nbsp;
+        
       🟢 Green = Selected
     </p>
+<div id="ticketsContainer"></div>
+</div>
 
-    <div id="ticketsContainer"></div>
-
-  </div>
+  <div class="card player-claims-card">
+<h2>🏆 Claim Prizes</h2>
+<div id="claimContainer"></div>
+</div>
 
   <div class="claim-note">
-
-    <strong>📢 Important Claim Rule</strong>
-
-    <p>
+<strong>📢 Important Claim Rule</strong>
+<p>
       The default claim time is
       <strong>10 seconds</strong>.
       Your admin has selected
@@ -1331,55 +1023,42 @@ button.ticket-cell:disabled {
       </strong>
       for this game.
     </p>
-
-    <p>
+<p>
       The countdown begins when the number
       completing your winning combination
       is called.
       Claim your prize before the timer expires.
     </p>
-
-  </div>
+</div>
 
   <div class="card">
-
-    <h2>🎊 Winners</h2>
-
-    <div id="playerWinners"></div>
-
-  </div>
-
-</section>
-
+<h2>🎊 Winners</h2>
+<div id="playerWinners"></div>
 </div>
 
+  <div class="card">
+<h2>🔢 Number Board (1–90)</h2>
+<p class="ticket-legend">
+      🟡 Yellow = Called Number
+    </p>
+<div class="board" id="playerNumberBoard"></div>
+</div>
+
+  </section>
+</div>
 <!-- WINNER POPUP -->
-
-<div
-  id="winnerPopup"
-  class="popup hidden"
->
-
-  <div class="popup-box">
-
-    <h1>🎊 WE HAVE A WINNER! 🎊</h1>
-
-    <h2 id="winnerName"></h2>
-
-    <h2 id="winnerPrize"></h2>
-
-    <p id="winnerTicket"></p>
-
-    <p>🏆 Congratulations! 🏆</p>
-
-    <button onclick="closePopup()">
+<div class="popup hidden" id="winnerPopup">
+<div class="popup-box">
+<h1>🎊 WE HAVE A WINNER! 🎊</h1>
+<h2 id="winnerName"></h2>
+<h2 id="winnerPrize"></h2>
+<p id="winnerTicket"></p>
+<p>🏆 Congratulations! 🏆</p>
+<button onclick="closePopup()">
       Continue Playing
     </button>
-
-  </div>
-
 </div>
-
+</div>
 <script>
   "use strict";
 
@@ -1459,6 +1138,7 @@ const CO_ADMIN_SESSION_KEY =
 const prizes = [
   "Early 5",
   "Early 7",
+  "Any Line",
   "Top Line",
   "Middle Line",
   "Bottom Line",
@@ -1763,6 +1443,46 @@ async function loginMainAdmin() {
   }
 }
 
+
+function populateGameDropdown(selectId, games) {
+  const select = element(selectId);
+
+  select.innerHTML = "";
+
+  if (!games.length) {
+    const option = document.createElement("option");
+
+    option.textContent = "No games available";
+    option.value = "";
+
+    select.appendChild(option);
+    return;
+  }
+
+  games.forEach(item => {
+    const option = document.createElement("option");
+
+    option.value = item.game_id;
+
+    option.textContent =
+      "🎮 " + item.room_code +
+      " — " + item.game_status;
+
+    select.appendChild(option);
+  });
+}
+
+function openSelectedAdminGame(selectId) {
+  const gameId = element(selectId).value;
+
+  if (!gameId) {
+    alert("Please select a game.");
+    return;
+  }
+
+  openAdminGame(gameId);
+}
+
 async function loadAdminGames() {
   if (!(await verifyMainAdmin())) {
     show("adminLogin");
@@ -1781,38 +1501,37 @@ async function loadAdminGames() {
     element("adminWelcome").textContent =
       "Logged in as: " + authenticatedAdmin.email;
 
-    const container = element("adminGamesList");
 
-    container.innerHTML = "";
+    const allGames = data || [];
 
-    if (!data?.length) {
-      container.textContent =
-        "No games found. Create your first game.";
-      return;
-    }
+    const activeGames = allGames.filter(
+      item => item.game_status !== "ended"
+    );
 
-    data.forEach(item => {
-      const row = document.createElement("div");
-      row.className = "player-row";
+    const completedGames = allGames.filter(
+      item => item.game_status === "ended"
+    );
 
-      const label = document.createElement("p");
+    populateGameDropdown(
+      "activeGamesSelect",
+      activeGames
+    );
 
-      label.textContent =
-        "🎮 Room: " + item.room_code +
-        " | Status: " + item.game_status;
+    populateGameDropdown(
+      "completedGamesSelect",
+      completedGames
+    );
 
-      const button = document.createElement("button");
+    element("openActiveGameBtn").disabled =
+      activeGames.length === 0;
 
-      button.textContent = "👑 Open Dashboard";
+    element("openCompletedGameBtn").disabled =
+      completedGames.length === 0;
 
-      button.onclick = () =>
-        openAdminGame(item.game_id);
-
-      row.appendChild(label);
-      row.appendChild(button);
-
-      container.appendChild(row);
-    });
+    element("adminGamesList").textContent =
+      "Total Games: " + allGames.length +
+      " | Active: " + activeGames.length +
+      " | Completed: " + completedGames.length;
 
   } catch (error) {
     getError(error);
@@ -2244,6 +1963,20 @@ function startCountdownTimer() {
 // =====================================
 
 function getPrizeCompletionDraw(ticket, prize) {
+  if (prize === "Any Line") {
+    const draws = [
+      "Top Line",
+      "Middle Line",
+      "Bottom Line"
+    ].map(line =>
+      getPrizeCompletionDraw(ticket, line)
+    ).filter(draw => draw !== null);
+
+    return draws.length
+      ? Math.min(...draws)
+      : null;
+  }
+
   const numbers = patternNumbers(
     ticket,
     prize
@@ -2426,6 +2159,7 @@ async function resetGameState() {
   numberCallHistory = [];
   serverTimeOffset = 0;
   resetPlayerNumberAnnouncements();
+  resetAnnouncementTracking();
 
   hostToken = null;
   playerToken = null;
@@ -3481,13 +3215,25 @@ async function refreshGame() {
       const {
         data: playerData,
         error: playerError
-      } = await db
-        .from("players")
-        .select("id,name")
-        .eq("game_id", gameId);
+      } = await db.rpc(
+        "get_game_player_ticket_counts",
+        {
+          p_game_id: gameId,
+          p_host_token: currentAdminToken()
+        }
+      );
 
       if (!playerError) {
-        players = playerData || [];
+        players = (playerData || []).map(p => ({
+          id: p.player_id,
+          name: p.player_name,
+          ticket_count: Number(p.ticket_count)
+        }));
+      } else {
+        console.warn(
+          "Ticket counts unavailable:",
+          playerError
+        );
       }
 
       renderAdmin();
@@ -3501,6 +3247,10 @@ async function refreshGame() {
 
     checkNewWinners();
     updateCountdowns();
+
+    if (currentView === "playerPanel") {
+      await checkGameAnnouncements();
+    }
 
   } catch (error) {
     console.error(
@@ -3934,10 +3684,15 @@ function renderAdmin() {
       row.className =
         "player-row";
 
+      const count = Number(p.ticket_count || 0);
+
       row.textContent =
         (index + 1) +
         ". 🎟️ " +
-        p.name;
+        p.name +
+        " — " +
+        count +
+        (count === 1 ? " Ticket" : " Tickets");
 
       container.appendChild(row);
     }
@@ -4039,6 +3794,31 @@ function toggleMark(ticketId, number) {
   renderPlayer();
 }
 
+
+function renderPlayerNumberBoard() {
+  const board = element("playerNumberBoard");
+
+  if (!board || !game) return;
+
+  const called = calledSet();
+
+  board.innerHTML = "";
+
+  for (let n = 1; n <= 90; n++) {
+    const cell = document.createElement("div");
+
+    cell.className = "board-cell";
+
+    if (called.has(n)) {
+      cell.classList.add("called");
+    }
+
+    cell.textContent = n;
+
+    board.appendChild(cell);
+  }
+}
+
 // =====================================
 // PLAYER DISPLAY
 // =====================================
@@ -4056,6 +3836,7 @@ function renderPlayer() {
 
   announceNewPlayerNumbers();
   renderPlayerSoundControl();
+  renderPlayerNumberBoard();
 
   element("welcomePlayer").textContent =
     "Welcome, " +
@@ -4250,6 +4031,14 @@ function patternNumbers(ticket, prize) {
     ...bottom
   ];
 
+  if (prize === "Any Line") {
+    return [
+      ...top,
+      ...middle,
+      ...bottom
+    ];
+  }
+
   if (
     prize === "Top Line"
   ) {
@@ -4306,22 +4095,24 @@ function qualifies(ticket, prize) {
   }
 
   const numbers =
-    patternNumbers(
-      ticket,
-      prize
-    );
+    patternNumbers(ticket, prize);
 
-  if (!numbers.length) {
-    return false;
+  if (!numbers.length) return false;
+
+  const called = calledSet();
+
+  if (prize === "Any Line") {
+    return [0, 1, 2].some(row => {
+      const line = rowNumbers(ticket, row);
+
+      return line.length > 0 &&
+        line.every(n => called.has(n));
+    });
   }
 
-  const called =
-    calledSet();
-
-  const hits =
-    numbers.filter(
-      n => called.has(n)
-    ).length;
+  const hits = numbers.filter(
+    n => called.has(n)
+  ).length;
 
   if (
     prize === "Early 5"
@@ -4757,6 +4548,189 @@ function renderWinners() {
 
   element("playerWinners").innerHTML =
     html;
+}
+
+
+// =====================================
+// MANUAL ANNOUNCEMENTS
+// =====================================
+
+let announcementGameId = null;
+let announcementInitialized = false;
+let lastAnnouncementTime = null;
+let lastAnnouncementId = null;
+let announcementRequestInProgress = false;
+
+function resetAnnouncementTracking() {
+  announcementGameId = null;
+  announcementInitialized = false;
+  lastAnnouncementTime = null;
+  lastAnnouncementId = null;
+}
+
+async function sendAdminAnnouncement() {
+  if (!game || !currentAdminToken()) {
+    alert("Admin access required.");
+    return;
+  }
+
+  const select = element("adminAnnouncementSelect");
+  const phrase = select.value;
+
+  setBusy("sendAnnouncementBtn", true);
+
+  try {
+    if (
+      isCoAdmin() &&
+      !(await validateCoAdminAccess(true))
+    ) {
+      throw new Error("Co-Admin access unavailable.");
+    }
+
+    const { error } = await db.rpc(
+      "send_game_announcement",
+      {
+        p_game_id: game.id,
+        p_host_token: currentAdminToken(),
+        p_phrase: phrase
+      }
+    );
+
+    if (error) throw error;
+
+    element("announcementStatus").textContent =
+      "✅ Announcement sent: " + phrase;
+
+  } catch (error) {
+    getError(error);
+
+  } finally {
+    setBusy("sendAnnouncementBtn", false);
+  }
+}
+
+function speakFunAnnouncement(phrase) {
+  if (
+    !playerSoundEnabled ||
+    !playerSoundReady ||
+    !("speechSynthesis" in window)
+  ) {
+    return;
+  }
+
+  try {
+    const speech =
+      new SpeechSynthesisUtterance(phrase);
+
+    speech.lang = "en-US";
+    speech.rate = 0.9;
+
+    window.speechSynthesis.speak(speech);
+
+  } catch (error) {
+    console.warn(
+      "Announcement speech failed:",
+      error
+    );
+  }
+}
+
+
+async function checkGameAnnouncements() {
+  if (
+    !game ||
+    !playerToken ||
+    currentView !== "playerPanel" ||
+    announcementRequestInProgress
+  ) {
+    return;
+  }
+
+  const gameId = game.id;
+
+  if (announcementGameId !== gameId) {
+    resetAnnouncementTracking();
+    announcementGameId = gameId;
+  }
+
+  announcementRequestInProgress = true;
+
+  try {
+    const { data, error } = await db.rpc(
+      "get_game_announcements",
+      {
+        p_player_token: playerToken
+      }
+    );
+
+    if (error) throw error;
+
+    if (
+      !game ||
+      game.id !== gameId ||
+      currentView !== "playerPanel"
+    ) {
+      return;
+    }
+
+    const announcements = (data || [])
+      .slice()
+      .reverse();
+
+    if (!announcementInitialized) {
+      const latest =
+        announcements[announcements.length - 1];
+
+      if (latest) {
+        lastAnnouncementTime = latest.created_at;
+        lastAnnouncementId = latest.announcement_id;
+      }
+
+      announcementInitialized = true;
+      return;
+    }
+
+    for (const item of announcements) {
+      const timestamp = item.created_at;
+      const id = item.announcement_id;
+
+      const isNew =
+        !lastAnnouncementTime ||
+        timestamp > lastAnnouncementTime ||
+        (
+          timestamp === lastAnnouncementTime &&
+          String(id) > String(lastAnnouncementId)
+        );
+
+      if (!isNew) continue;
+
+      speakFunAnnouncement(item.phrase);
+
+      lastAnnouncementTime = timestamp;
+      lastAnnouncementId = id;
+    }
+
+  } catch (error) {
+    console.warn(
+      "Announcement refresh failed:",
+      error
+    );
+
+  } finally {
+    announcementRequestInProgress = false;
+  }
+}
+
+if (!window._tambolaAnnouncementTimer) {
+  window._tambolaAnnouncementTimer = setInterval(function() {
+    try {
+      if (typeof currentView !== "undefined" && currentView === "playerPanel") {
+        if (typeof checkGameAnnouncements === "function") {
+          checkGameAnnouncements();
+        }
+      }
+    } catch (e) {}
+  }, 3000);
 }
 
 // =====================================
