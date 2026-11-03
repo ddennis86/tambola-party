@@ -929,10 +929,6 @@ button.ticket-cell:disabled {
 <div id="adminTicketsList"></div>
 </div>
 <div class="card">
-<h2>🏆 Pending Claims</h2>
-<div id="pendingClaims"></div>
-</div>
-<div class="card">
 <h2>🏆 Winners</h2>
 <div id="adminWinners"></div>
 </div>
@@ -3728,14 +3724,7 @@ function renderAdmin() {
     }
   );
 
-  renderPendingClaims();
   renderWinners();
-}
-
-function renderPendingClaims() {
-  element("pendingClaims").textContent =
-    "Claims are processed by the game server. " +
-    "No pending-claim review API is configured.";
 }
 
 function renderAdminTickets() {
