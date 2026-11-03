@@ -2,7 +2,7 @@
   "name": "tambola-party",
   "compatibility_date": "2026-10-18",
   "assets": {
-    "directory": "."
+    "directory": "./cloudflare-release/public"
   },
   "previews": {}
 }

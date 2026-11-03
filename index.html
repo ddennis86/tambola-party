@@ -918,6 +918,17 @@ button.ticket-cell:disabled {
 <div id="adminPlayersList"></div>
 </div>
 <div class="card">
+<h2>🎟️ Ticket Management</h2>
+<p id="adminTicketsStatus" role="status" aria-live="polite">
+  Load active tickets for this game.
+</p>
+<button class="btn-secondary" id="loadAdminTicketsBtn"
+        onclick="loadAdminTickets()" type="button">
+  Load Active Tickets
+</button>
+<div id="adminTicketsList"></div>
+</div>
+<div class="card">
 <h2>🏆 Pending Claims</h2>
 <div id="pendingClaims"></div>
 </div>
@@ -1117,6 +1128,11 @@ let winnerPopupActive = false;
 
 let numberCallHistory = [];
 let serverTimeOffset = 0;
+let adminTickets = [];
+let adminTicketsGameId = null;
+let adminTicketListRequestId = 0;
+let adminTicketListLoading = false;
+let deletingAdminTicketSerial = null;
 
 const PLAYER_SOUND_KEY = "tambola_player_sound";
 let playerSoundEnabled =
@@ -2155,6 +2171,20 @@ async function resetGameState() {
   winners = [];
   players = [];
   marked = {};
+  adminTickets = [];
+  adminTicketsGameId = null;
+  adminTicketListRequestId++;
+  adminTicketListLoading = false;
+  deletingAdminTicketSerial = null;
+  setBusy("loadAdminTicketsBtn", false);
+
+  const adminTicketsList = element("adminTicketsList");
+  if (adminTicketsList) adminTicketsList.replaceChildren();
+  const adminTicketsStatus = element("adminTicketsStatus");
+  if (adminTicketsStatus) {
+    adminTicketsStatus.textContent =
+      "Load active tickets for this game.";
+  }
 
   numberCallHistory = [];
   serverTimeOffset = 0;
@@ -3708,6 +3738,234 @@ function renderPendingClaims() {
     "No pending-claim review API is configured.";
 }
 
+function renderAdminTickets() {
+  const container = element("adminTicketsList");
+  if (!container) return;
+
+  container.replaceChildren();
+
+  if (!game || adminTicketsGameId !== game.id) {
+    return;
+  }
+
+  if (!adminTickets.length) {
+    const emptyMessage = document.createElement("p");
+    emptyMessage.textContent = "No active tickets.";
+    container.appendChild(emptyMessage);
+    return;
+  }
+
+  adminTickets.forEach(ticket => {
+    const row = document.createElement("div");
+    row.className = "player-row";
+
+    const serial = ticket.serial_no_display ||
+      String(ticket.serial_no ?? "Unavailable");
+    const details = document.createElement("span");
+    details.textContent =
+      "Serial: " + serial +
+      " — " + String(ticket.player_name ?? "Unknown player") +
+      " — Ticket #" + String(ticket.ticket_no ?? "");
+
+    const deleteButton = document.createElement("button");
+    deleteButton.className = "btn-danger";
+    deleteButton.type = "button";
+    deleteButton.textContent = "Delete";
+    deleteButton.disabled =
+      deletingAdminTicketSerial !== null ||
+      ticket.serial_no == null;
+    deleteButton.addEventListener("click", () => {
+      deleteAdminTicket(ticket);
+    });
+
+    row.append(details, deleteButton);
+    container.appendChild(row);
+  });
+}
+
+async function loadAdminTickets() {
+  if (!game || !currentAdminToken()) {
+    element("adminTicketsStatus").textContent =
+      "An authorized admin session is required.";
+    return false;
+  }
+
+  if (adminTicketListLoading) return false;
+
+  adminTicketListLoading = true;
+  setBusy("loadAdminTicketsBtn", true);
+  const requestId = ++adminTicketListRequestId;
+  const gameId = game.id;
+  const adminToken = currentAdminToken();
+  element("adminTicketsStatus").textContent =
+    "Loading active tickets...";
+
+  try {
+    if (
+      isCoAdmin() &&
+      !(await validateCoAdminAccess(true))
+    ) {
+      element("adminTicketsStatus").textContent =
+        "Administrator access is no longer valid.";
+      return false;
+    }
+
+    if (
+      requestId !== adminTicketListRequestId ||
+      !game ||
+      game.id !== gameId ||
+      currentAdminToken() !== adminToken
+    ) {
+      return false;
+    }
+
+    const { data, error } = await db.rpc(
+      "admin_list_game_tickets",
+      {
+        p_game_id: gameId,
+        p_host_token: adminToken
+      }
+    );
+
+    if (
+      requestId !== adminTicketListRequestId ||
+      !game ||
+      game.id !== gameId ||
+      currentAdminToken() !== adminToken
+    ) {
+      return false;
+    }
+
+    if (error) throw error;
+    if (!Array.isArray(data)) {
+      throw new Error("The server returned an invalid ticket list.");
+    }
+
+    adminTickets = data;
+    adminTicketsGameId = gameId;
+    element("adminTicketsStatus").textContent =
+      "Active tickets: " + adminTickets.length;
+    renderAdminTickets();
+    return true;
+  } catch (error) {
+    if (
+      requestId === adminTicketListRequestId &&
+      game?.id === gameId
+    ) {
+      element("adminTicketsStatus").textContent =
+        "Could not load tickets: " +
+        (error?.message || String(error));
+      console.error("Admin ticket list failed:", error);
+    }
+    return false;
+  } finally {
+    if (requestId === adminTicketListRequestId) {
+      adminTicketListLoading = false;
+      setBusy("loadAdminTicketsBtn", false);
+    }
+  }
+}
+
+async function deleteAdminTicket(ticket) {
+  if (
+    !game ||
+    !currentAdminToken() ||
+    ticket?.serial_no == null ||
+    deletingAdminTicketSerial !== null ||
+    adminTicketsGameId !== game.id
+  ) {
+    return;
+  }
+
+  const gameId = game.id;
+  const adminToken = currentAdminToken();
+
+  if (
+    isCoAdmin() &&
+    !(await validateCoAdminAccess(true))
+  ) {
+    element("adminTicketsStatus").textContent =
+      "Administrator access is no longer valid.";
+    return;
+  }
+
+  if (
+    !game ||
+    game.id !== gameId ||
+    currentAdminToken() !== adminToken
+  ) {
+    return;
+  }
+
+  const serial = String(
+    ticket.serial_no_display || ticket.serial_no
+  );
+  const serialNo = serial.replace(/^0+(?=\d)/, "");
+  if (!/^[1-9]\d*$/.test(serialNo)) {
+    element("adminTicketsStatus").textContent =
+      "The ticket has an invalid serial number.";
+    return;
+  }
+
+  const serialDisplay = ticket.serial_no_display ||
+    serialNo.padStart(6, "0");
+  const playerName = String(ticket.player_name ?? "Unknown player");
+
+  if (!confirm(
+    "Soft-delete ticket Serial " + serialDisplay +
+    " for " + playerName + "?\n\n" +
+    "The ticket record will be preserved. Tickets with recorded wins " +
+    "cannot be deleted."
+  )) {
+    return;
+  }
+
+  deletingAdminTicketSerial = serialNo;
+  renderAdminTickets();
+
+  try {
+    const { data, error } = await db.rpc(
+      "admin_delete_ticket",
+      {
+        p_game_id: gameId,
+        p_host_token: adminToken,
+        p_serial_no: serialNo
+      }
+    );
+
+    if (
+      !game ||
+      game.id !== gameId ||
+      currentAdminToken() !== adminToken
+    ) {
+      return;
+    }
+
+    if (error) throw error;
+    if (data?.ok !== true) {
+      throw new Error("The server did not confirm ticket deletion.");
+    }
+
+    const ticketsReloaded = await loadAdminTickets();
+    await refreshGame();
+    element("adminTicketsStatus").textContent =
+      ticketsReloaded
+        ? "Deleted Serial " + serialDisplay + " for " + playerName + "."
+        : "Deleted Serial " + serialDisplay + " for " + playerName +
+          ", but the active ticket list could not be refreshed.";
+  } catch (error) {
+    if (game?.id === gameId) {
+      element("adminTicketsStatus").textContent =
+        "Could not delete Serial " + serialDisplay + ": " +
+        (error?.message || String(error));
+      console.error("Admin ticket deletion failed:", error);
+    }
+  } finally {
+    deletingAdminTicketSerial = null;
+    renderAdminTickets();
+  }
+}
+
 // =====================================
 // PLAYER MARKING
 // =====================================
@@ -3876,9 +4134,14 @@ function renderPlayer() {
     const heading =
       document.createElement("h3");
 
+    const serial = ticket.serial_no == null
+      ? ""
+      : String(ticket.serial_no).padStart(6, "0");
+
     heading.textContent =
       "🎟️ Ticket #" +
-      ticket.ticket_no;
+      ticket.ticket_no +
+      (serial ? " — Serial: " + serial : "");
 
     container.appendChild(
       heading
