@@ -1116,6 +1116,8 @@ let currentView = "home";
 
 let initialWinnersLoaded = false;
 let lastWinnerIds = new Set();
+let winnersRefreshRequestId = 0;
+let latestWinnersRefresh = null;
 
 let refreshing = false;
 let refreshAgain = false;
@@ -2163,6 +2165,7 @@ function resetNotifications() {
 
 async function resetGameState() {
   switchingGame = true;
+  winnersRefreshRequestId++;
 
   await stopLiveUpdates();
 
@@ -3132,6 +3135,87 @@ async function restoreCoAdminSession() {
 // REFRESH GAME
 // =====================================
 
+async function loadGameWinners(gameId) {
+  const requestId =
+    ++winnersRefreshRequestId;
+
+  const request = (async () => {
+    const { data, error } = await db
+      .from("winners")
+      .select("*")
+      .eq("game_id", gameId)
+      .order("won_at", {
+        ascending: true
+      });
+
+    if (error) {
+      throw error;
+    }
+
+    if (
+      requestId !== winnersRefreshRequestId ||
+      !game ||
+      game.id !== gameId ||
+      switchingGame
+    ) {
+      return false;
+    }
+
+    winners = data || [];
+    return true;
+  })();
+
+  latestWinnersRefresh = {
+    gameId,
+    requestId,
+    promise: request
+  };
+
+  return {
+    requestId,
+    applied: await request
+  };
+}
+
+async function refreshWinnersDisplay(gameId) {
+  let result =
+    await loadGameWinners(gameId);
+
+  while (
+    !result.applied &&
+    game &&
+    game.id === gameId &&
+    !switchingGame
+  ) {
+    const latestRefresh =
+      latestWinnersRefresh;
+
+    if (
+      !latestRefresh ||
+      latestRefresh.requestId === result.requestId
+    ) {
+      return false;
+    }
+
+    result = {
+      requestId: latestRefresh.requestId,
+      applied: await latestRefresh.promise
+    };
+  }
+
+  if (!result.applied) return false;
+
+  checkNewWinners();
+
+  if (currentView === "playerPanel") {
+    renderClaims();
+  }
+
+  renderWinners();
+  updateCountdowns();
+  return true;
+}
+
 async function refreshGame() {
   if (!game || switchingGame) return;
 
@@ -3216,29 +3300,12 @@ async function refreshGame() {
       return;
     }
 
-    const {
-      data: winnerData,
-      error: winnerError
-    } = await db
-      .from("winners")
-      .select("*")
-      .eq("game_id", gameId)
-      .order("won_at", {
-        ascending: true
-      });
+    const winnersLoaded =
+      await loadGameWinners(gameId);
 
-    if (winnerError) {
-      throw winnerError;
-    }
-
-    if (
-      !game ||
-      game.id !== gameId
-    ) {
+    if (!winnersLoaded.applied) {
       return;
     }
-
-    winners = winnerData || [];
 
     if (
       currentView === "adminPanel" ||
@@ -3354,7 +3421,19 @@ function subscribeToGame() {
         table: "winners",
         filter: "game_id=eq." + gameId
       },
-      refreshGame
+      () => {
+        console.info(
+          "Realtime winners change received."
+        );
+
+        refreshWinnersDisplay(gameId)
+          .catch(error => {
+            console.error(
+              "Winners refresh error:",
+              error
+            );
+          });
+      }
     )
     .on(
       "postgres_changes",
@@ -3367,11 +3446,19 @@ function subscribeToGame() {
       refreshGame
     )
     .subscribe(status => {
-      if (
-        status === "CHANNEL_ERROR"
+      if (status === "SUBSCRIBED") {
+        console.info(
+          "Realtime connected."
+        );
+      } else if (
+        status === "CHANNEL_ERROR" ||
+        status === "TIMED_OUT" ||
+        status === "CLOSED"
       ) {
         console.warn(
-          "Realtime unavailable. Polling active."
+          "Realtime unavailable (" +
+          status +
+          "). Polling remains active."
         );
       }
     });
@@ -4633,6 +4720,8 @@ async function claimPrize(
     "_" +
     prize;
 
+  const claimGameId = game.id;
+
   if (
     claimingPrizes.has(
       claimKey
@@ -4662,21 +4751,28 @@ async function claimPrize(
     if (
       data?.ok === true
     ) {
-      alert(
-        "🏆 Congratulations!\n" +
-        "You won " +
-        prize +
-        "!"
-      );
+      const winnersRefreshed =
+        await refreshWinnersDisplay(
+          claimGameId
+        );
+
+      if (winnersRefreshed) {
+        alert(
+          "🏆 Congratulations!\n" +
+          "You won " +
+          prize +
+          "!"
+        );
+      }
     } else {
       alert(
         data?.message ||
         data?.reason ||
         "Your claim was not accepted."
       );
-    }
 
-    await refreshGame();
+      await refreshGame();
+    }
 
   } catch (error) {
     getError(error);
