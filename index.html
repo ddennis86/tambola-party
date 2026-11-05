@@ -350,6 +350,12 @@ select {
   color: white;
 }
 
+.prize-button.claimed,
+.prize-button.claimed:hover:not(:disabled) {
+  background: #dc3545;
+  color: white;
+}
+
 .prize-button.expired {
   background: #dc3545 !important;
   color: white;
@@ -4498,6 +4504,12 @@ function renderClaims() {
 
       button.className =
         "prize-button";
+
+      if (winnerCount > 0) {
+        button.classList.add(
+          "claimed"
+        );
+      }
 
       button.dataset.claimTicket =
         String(ticket.id);
