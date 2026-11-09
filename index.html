@@ -3332,15 +3332,36 @@ async function refreshGame() {
       return;
     }
 
-    await loadNumberCallHistory(
-      gameId
-    );
+    let numberHistoryLoaded =
+      await loadNumberCallHistory(
+        gameId
+      );
+
+    if (!numberHistoryLoaded) {
+      if (
+        !game ||
+        game.id !== gameId ||
+        switchingGame
+      ) {
+        return;
+      }
+
+      numberHistoryLoaded =
+        await loadNumberCallHistory(
+          gameId
+        );
+    }
 
     if (
       !game ||
-      game.id !== gameId
+      game.id !== gameId ||
+      switchingGame
     ) {
       return;
+    }
+
+    if (!numberHistoryLoaded) {
+      numberCallHistory = [];
     }
 
     const winnersLoaded =
@@ -4754,6 +4775,10 @@ function renderClaims() {
         deadline !== Infinity &&
         currentTime() >= deadline;
 
+      const deadlineUnknown =
+        eligible &&
+        deadline === null;
+
       const button =
         document.createElement("button");
 
@@ -4777,11 +4802,13 @@ function renderClaims() {
         prizeFull ||
         !gameAllowsClaims ||
         claimInProgress ||
+        deadlineUnknown ||
         expired;
 
       if (
         eligible &&
         !prizeFull &&
+        !deadlineUnknown &&
         !expired &&
         gameAllowsClaims
       ) {
@@ -4804,11 +4831,13 @@ function renderClaims() {
           ? "⏳ Claiming..."
           : prizeFull
             ? "🏆 " + prize + " Closed"
-            : expired
-              ? "⌛ " + prize
-              : eligible
-                ? "🏆 Claim " + prize
-                : "🔒 " + prize;
+            : deadlineUnknown
+              ? "Checking time…"
+              : expired
+                ? "⌛ " + prize
+                : eligible
+                  ? "🏆 Claim " + prize
+                  : "🔒 " + prize;
 
       button.appendChild(
         label
@@ -4817,7 +4846,8 @@ function renderClaims() {
       if (
         eligible &&
         !prizeFull &&
-        !claimInProgress
+        !claimInProgress &&
+        !deadlineUnknown
       ) {
         const time =
           document.createElement("span");
