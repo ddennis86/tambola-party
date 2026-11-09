@@ -489,6 +489,25 @@ button.ticket-cell:disabled {
   overflow-wrap: anywhere;
 }
 
+.player-presence {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 4px 0 0 24px;
+  font-size: 12px;
+}
+
+.presence-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #888;
+}
+
+.presence-dot.online {
+  background: #2e9d50;
+}
+
 /* CO-ADMIN MANAGEMENT */
 
 .co-admin-card {
@@ -1109,6 +1128,8 @@ let players = [];
 let marked = {};
 
 let realtimeChannel = null;
+let presenceChannel = null;
+let onlinePlayerIds = new Set();
 let refreshTimer = null;
 let countdownTimer = null;
 
@@ -1611,6 +1632,7 @@ async function openAdminGame(gameId) {
 
     if (game) {
       subscribeToGame();
+      await subscribeToAdminPresence();
       startRefreshing();
     }
 
@@ -2145,6 +2167,19 @@ async function stopLiveUpdates() {
 
     await db.removeChannel(oldChannel);
   }
+
+  await stopPresenceUpdates();
+}
+
+async function stopPresenceUpdates() {
+  onlinePlayerIds.clear();
+
+  if (!presenceChannel) return;
+
+  const oldChannel = presenceChannel;
+  presenceChannel = null;
+
+  await db.removeChannel(oldChannel);
 }
 
 function resetNotifications() {
@@ -2331,6 +2366,7 @@ async function createGame() {
 
     if (game) {
       subscribeToGame();
+      await subscribeToAdminPresence();
       startRefreshing();
     }
 
@@ -2431,6 +2467,7 @@ async function joinGame() {
     await refreshGame();
 
     if (game) {
+      await subscribeToPlayerPresence();
       subscribeToGame();
       startRefreshing();
     }
@@ -2498,6 +2535,7 @@ async function restoreSession() {
     await refreshGame();
 
     if (game) {
+      await subscribeToPlayerPresence();
       subscribeToGame();
       startRefreshing();
     }
@@ -3039,6 +3077,7 @@ async function joinAsCoAdmin(token) {
 
     if (game) {
       subscribeToGame();
+      await subscribeToAdminPresence();
       startRefreshing();
     }
 
@@ -3253,6 +3292,10 @@ async function refreshGame() {
 
     game = normalizeGame(data);
 
+    if (game.status === "ended") {
+      await stopPresenceUpdates();
+    }
+
     if (
       game.status === "ended" &&
       currentView === "playerPanel"
@@ -3289,15 +3332,36 @@ async function refreshGame() {
       return;
     }
 
-    await loadNumberCallHistory(
-      gameId
-    );
+    let numberHistoryLoaded =
+      await loadNumberCallHistory(
+        gameId
+      );
+
+    if (!numberHistoryLoaded) {
+      if (
+        !game ||
+        game.id !== gameId ||
+        switchingGame
+      ) {
+        return;
+      }
+
+      numberHistoryLoaded =
+        await loadNumberCallHistory(
+          gameId
+        );
+    }
 
     if (
       !game ||
-      game.id !== gameId
+      game.id !== gameId ||
+      switchingGame
     ) {
       return;
+    }
+
+    if (!numberHistoryLoaded) {
+      numberCallHistory = [];
     }
 
     const winnersLoaded =
@@ -3464,6 +3528,99 @@ function subscribeToGame() {
     });
 
   realtimeChannel = channel;
+}
+
+async function subscribeToPlayerPresence() {
+  if (!game || !player) return;
+
+  await stopPresenceUpdates();
+
+  const playerId = String(player.id);
+  const channel = db.channel(
+    "presence:" + game.id,
+    {
+      config: {
+        presence: {
+          key: playerId
+        }
+      }
+    }
+  );
+
+  presenceChannel = channel;
+
+  channel.subscribe(status => {
+    if (status === "SUBSCRIBED") {
+      channel.track({
+        player_id: playerId
+      }).then(trackStatus => {
+        if (trackStatus !== "ok") {
+          console.error(
+            "Player presence tracking failed:",
+            trackStatus
+          );
+        }
+      }).catch(error => {
+        console.error(
+          "Player presence tracking failed:",
+          error
+        );
+      });
+    } else if (
+      status === "CHANNEL_ERROR" ||
+      status === "TIMED_OUT" ||
+      status === "CLOSED"
+    ) {
+      console.warn(
+        "Player presence unavailable (" +
+        status +
+        ")."
+      );
+    }
+  });
+}
+
+async function subscribeToAdminPresence() {
+  if (!game) return;
+
+  await stopPresenceUpdates();
+
+  const channel = db.channel(
+    "presence:" + game.id
+  );
+
+  presenceChannel = channel;
+
+  channel
+    .on(
+      "presence",
+      { event: "sync" },
+      () => {
+        onlinePlayerIds = new Set(
+          Object.keys(channel.presenceState())
+        );
+
+        if (
+          currentView === "adminPanel" ||
+          currentView === "coAdminManagement"
+        ) {
+          renderAdmin();
+        }
+      }
+    )
+    .subscribe(status => {
+      if (
+        status === "CHANNEL_ERROR" ||
+        status === "TIMED_OUT" ||
+        status === "CLOSED"
+      ) {
+        console.warn(
+          "Admin player presence unavailable (" +
+          status +
+          ")."
+        );
+      }
+    });
 }
 
 function startRefreshing() {
@@ -3805,13 +3962,45 @@ function renderAdmin() {
 
       const count = Number(p.ticket_count || 0);
 
-      row.textContent =
+      const name =
         (index + 1) +
         ". 🎟️ " +
         p.name +
         " — " +
         count +
         (count === 1 ? " Ticket" : " Tickets");
+
+      const nameElement =
+        document.createElement("div");
+
+      nameElement.textContent = name;
+
+      const isOnline =
+        onlinePlayerIds.has(String(p.id));
+
+      const presenceElement =
+        document.createElement("div");
+
+      presenceElement.className =
+        "player-presence";
+
+      const dot =
+        document.createElement("span");
+
+      dot.className =
+        "presence-dot" +
+        (isOnline ? " online" : "");
+
+      dot.setAttribute("aria-hidden", "true");
+
+      const status =
+        document.createElement("span");
+
+      status.textContent =
+        isOnline ? "Online" : "Offline";
+
+      presenceElement.append(dot, status);
+      row.append(nameElement, presenceElement);
 
       container.appendChild(row);
     }
@@ -4586,6 +4775,10 @@ function renderClaims() {
         deadline !== Infinity &&
         currentTime() >= deadline;
 
+      const deadlineUnknown =
+        eligible &&
+        deadline === null;
+
       const button =
         document.createElement("button");
 
@@ -4609,11 +4802,13 @@ function renderClaims() {
         prizeFull ||
         !gameAllowsClaims ||
         claimInProgress ||
+        deadlineUnknown ||
         expired;
 
       if (
         eligible &&
         !prizeFull &&
+        !deadlineUnknown &&
         !expired &&
         gameAllowsClaims
       ) {
@@ -4636,11 +4831,13 @@ function renderClaims() {
           ? "⏳ Claiming..."
           : prizeFull
             ? "🏆 " + prize + " Closed"
-            : expired
-              ? "⌛ " + prize
-              : eligible
-                ? "🏆 Claim " + prize
-                : "🔒 " + prize;
+            : deadlineUnknown
+              ? "Checking time…"
+              : expired
+                ? "⌛ " + prize
+                : eligible
+                  ? "🏆 Claim " + prize
+                  : "🔒 " + prize;
 
       button.appendChild(
         label
@@ -4649,7 +4846,8 @@ function renderClaims() {
       if (
         eligible &&
         !prizeFull &&
-        !claimInProgress
+        !claimInProgress &&
+        !deadlineUnknown
       ) {
         const time =
           document.createElement("span");
