@@ -876,6 +876,41 @@ button.ticket-cell:disabled {
 <div class="status">
 <strong>🏆 Active Prizes</strong>
 <div id="adminActivePrizes"></div>
+
+<button
+  id="editActivePrizesBtn"
+  class="btn-secondary"
+  onclick="openEditActivePrizes()"
+  style="margin-top:10px">
+  ✏️ Edit Active Prizes
+</button>
+
+<div id="editActivePrizesPanel"
+     class="hidden"
+     style="margin-top:15px">
+
+  <h3>🏆 Edit Active Prizes</h3>
+
+  <p>Select the prizes available for this game.</p>
+
+  <div id="editActivePrizesList"></div>
+
+  <div style="margin-top:15px">
+    <button
+      id="saveActivePrizesBtn"
+      class="btn-success"
+      onclick="saveActivePrizes()">
+      💾 Save Prizes
+    </button>
+
+    <button
+      class="btn-secondary"
+      onclick="closeEditActivePrizes()">
+      Cancel
+    </button>
+  </div>
+
+</div>
 </div>
 </div>
 <div class="card">
@@ -2658,6 +2693,155 @@ async function shareGame() {
 }
 
 // =====================================
+// EDIT ACTIVE PRIZES
+// =====================================
+
+function canEditActivePrizes() {
+  return Boolean(
+    game &&
+    isMainAdmin() &&
+    ["lobby", "running"].includes(game.status)
+  );
+}
+
+function closeEditActivePrizes() {
+  element("editActivePrizesPanel")
+    .classList.add("hidden");
+}
+
+function renderEditActivePrizes() {
+  const container = element("editActivePrizesList");
+  container.innerHTML = "";
+
+  const selected = activePrizes();
+  const custom = game.winning_mode === "custom";
+
+  prizes.forEach((prize, index) => {
+    const row = document.createElement("div");
+    row.style.marginBottom = "10px";
+
+    const label = document.createElement("label");
+
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.id = "editPrize_" + index;
+    checkbox.checked = selected.includes(prize);
+
+    const text = document.createElement("span");
+    text.textContent = " 🏆 " + prize;
+
+    label.appendChild(checkbox);
+    label.appendChild(text);
+
+    row.appendChild(label);
+
+    if (custom) {
+      const select = document.createElement("select");
+      select.id = "editPrizeRule_" + index;
+
+      select.innerHTML = `
+        <option value="first_claim">First to Claim</option>
+        <option value="same_number">Same Number Winners</option>
+      `;
+
+      select.value =
+        game.custom_prize_rules?.[prize] ||
+        "first_claim";
+
+      select.style.marginLeft = "10px";
+
+      row.appendChild(select);
+    }
+
+    container.appendChild(row);
+  });
+}
+
+function openEditActivePrizes() {
+  if (!canEditActivePrizes()) {
+    alert("Only the Main Admin can edit prizes in an active game.");
+    return;
+  }
+
+  renderEditActivePrizes();
+
+  element("editActivePrizesPanel")
+    .classList.remove("hidden");
+}
+
+async function saveActivePrizes() {
+  if (!canEditActivePrizes()) {
+    alert("Prize editing is unavailable.");
+    return;
+  }
+
+  const selected = prizes.filter((prize, index) =>
+    element("editPrize_" + index)?.checked
+  );
+
+  if (!selected.length) {
+    alert("Select at least one prize.");
+    return;
+  }
+
+  const customRules = {};
+
+  if (game.winning_mode === "custom") {
+    selected.forEach(prize => {
+      const index = prizes.indexOf(prize);
+
+      customRules[prize] =
+        element("editPrizeRule_" + index).value;
+    });
+  }
+
+  if (!confirm("Save the updated prize selection?")) {
+    return;
+  }
+
+  setBusy("saveActivePrizesBtn", true);
+
+  try {
+    const { data, error } = await db.rpc(
+      "update_game_prizes",
+      {
+        p_game_id: game.id,
+        p_host_token: hostToken,
+        p_prizes: selected,
+        p_custom_prize_rules:
+          game.winning_mode === "custom"
+            ? customRules
+            : null
+      }
+    );
+
+    if (error) throw error;
+
+    if (!data?.success) {
+      throw new Error("Unable to update prizes.");
+    }
+
+    game.prizes = data.prizes;
+
+    if (data.custom_prize_rules) {
+      game.custom_prize_rules =
+        data.custom_prize_rules;
+    }
+
+    closeEditActivePrizes();
+
+    await refreshGame();
+
+    alert("✅ Active prizes updated successfully!");
+
+  } catch (error) {
+    getError(error);
+  } finally {
+    setBusy("saveActivePrizesBtn", false);
+  }
+}
+
+// =====================================
 // CO-ADMIN INVITATION MANAGEMENT
 // =====================================
 
@@ -3911,6 +4095,18 @@ function renderAdmin() {
 
   element("adminActivePrizes").textContent =
     activePrizes().join(" • ");
+
+  const editPrizesButton =
+    element("editActivePrizesBtn");
+
+  editPrizesButton.classList.toggle(
+    "hidden",
+    !canEditActivePrizes()
+  );
+
+  if (!canEditActivePrizes()) {
+    closeEditActivePrizes();
+  }
 
   updateAdminControls();
 
